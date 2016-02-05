@@ -1,0 +1,13 @@
+Status|Priority (optional)|Due Date (optional)|The Rest of the TODO item
+
+Types:
+{TODO|DONE}|Integer|Time Stamp|String
+
+---------
+Examples:
+---------
+TODO||| Dinner with Timmy
+DONE|2|*IDK what date time stamp to use yet*| Make a boat 
+TODO|3|*IDK what date time stamp to use yet*| play tennis
+
+
