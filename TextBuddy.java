@@ -12,7 +12,7 @@ import java.io.PrintWriter;
  */
 public class TextBuddy {
 	private static final boolean APPEND_TO_FILE = false;
-	
+
 	public static void main(String[] args) throws IOException {
 		String fileName = args[0];
 		processInput(fileName);
