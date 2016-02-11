@@ -1,6 +1,8 @@
 Status|Priority (optional)|Due Date (optional)|The Rest of the TODO item
 
+------
 Types:
+------
 {TODO|DONE}|Integer|Time Stamp|String
 
 ---------
