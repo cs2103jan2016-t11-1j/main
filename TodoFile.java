@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class TodoFile {
     private String path;
@@ -12,10 +14,11 @@ public class TodoFile {
         this.line = 1;
     }
 
-    public void readTodos () {
+    public void readTodos () throws IOException {
         todos = new ArrayList<TodoItem>();
-        BufferedReader reader = new BufferedReader(new FileReader(path));
+        BufferedReader reader = null;
         try {
+            reader = new BufferedReader(new FileReader(path));
             todos.add(parseTodo(reader.readLine()));
             line++;
         } finally {
@@ -23,22 +26,22 @@ public class TodoFile {
         }
     }
 
-    public TodoItem parseTodo (String todo) {
+    private TodoItem parseTodo (String todo) {
         String[] parts = todo.split("|");
         if (parts.length < 4) {
             error("Not enough sections", line);
         }
 
-        Status s;
+        TodoItem.Status s = null;
         if (parts[0].equals("TODO")) {
-            s = TODO;
-        } else if (parts.[0].equals("DONE")) {
-            s = DONE;
+            s = TodoItem.Status.TODO;
+        } else if (parts[0].equals("DONE")) {
+            s = TodoItem.Status.DONE;
         } else {
             error("Status is incorrect format", line);
         }
 
-        int p = null; //support optional
+        int p = 0; //support optional
         try {
             p = Integer.parseInt(parts[1]);
         } catch (Exception e) {

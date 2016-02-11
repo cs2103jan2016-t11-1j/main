@@ -1,8 +1,7 @@
 import java.util.Date;
 
-public enum Status { TODO, DONE };
-
 public class TodoItem {
+    public enum Status { TODO, DONE };
     private Status stat;
     private int priority;
     private Date dueDate;
