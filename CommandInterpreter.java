@@ -11,7 +11,7 @@ public class CommandInterpreter {
 	private ArrayList<String> fileState;
 	private PrintWriter fileWriter;
 	private String fileName;
-	
+
 	public CommandInterpreter(PrintWriter p, String fN) {
 		lastCommand = null;
 		in = new BufferedReader(new InputStreamReader(System.in));
@@ -19,7 +19,7 @@ public class CommandInterpreter {
 		fileWriter = p;
 		fileName = fN;
 	}
-	
+
 	public void nextCommand() {
 		try {
 			lastCommand = in.readLine();
@@ -28,10 +28,10 @@ public class CommandInterpreter {
 			exit();
 		}
 	}
-	
+
 	public void executeCommand() {
 		String[] splitString = lastCommand.split(WHITESPACE);
-		
+
 		switch (splitString[0]) {
 		case "display":
 			if (fileState.size() == 0) {
@@ -83,8 +83,8 @@ public class CommandInterpreter {
 			System.out.print("Command not recognized.\n");
 			break;
 		}
-				
-	}	
+
+	}
 	public void exit() {
 		write();
 		fileWriter.close();
