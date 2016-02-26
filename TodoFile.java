@@ -59,4 +59,28 @@ public class TodoFile {
         System.err.print(msg + " at line " + l);
         System.exit(1);
     }
+    
+    public void searchTodos(String searchType, String toFind){
+    	if (searchType.equals("dueDate")){
+    		Date dateToFind = convertToDate(toFind);
+    		for (TodoItem tdi: todos){
+        		if (tdi.getDueDate().equals(dateToFind)){
+        			System.out.println(tdi.getContents());
+        		}
+        	}
+    	}else if(searchType.equals("time")){
+    		Date timeToFind = convertToTime(toFind);
+    		for (TodoItem tdi: todos){
+        		if (tdi.getDueDate().equals(timeToFind)){
+        			System.out.println(tdi.getContents());
+        		}
+        	}
+    	}else if(searchType.equals("keyword")){
+    		for (TodoItem tdi: todos){
+        		if (tdi.getContents().contains(toFind)){
+        			System.out.println(tdi.getContents());
+        		}
+        	}
+    	}
+    }
 }
