@@ -1,32 +1,17 @@
 import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class CommandInterpreter {
-    private static final boolean APPEND_TO_FILE = false;
     private static final String WHITESPACE = "\\s+"; // whitespace regex
     private String lastCommand;
     private BufferedReader in;
-    private ArrayList<String> fileState;
-    private PrintWriter fileWriter;
-    private String fileName;
+    private TodoFile todos;
 
-    public CommandInterpreter(String fileName) {
-        try {
-            FileWriter writer = new FileWriter(fileName, APPEND_TO_FILE);
-            this.fileWriter = new PrintWriter(writer);
-        } catch (IOException e) {
-            System.err.printf("Could not open file %s", fileName);
-            System.exit(1);
-        }
+    public CommandInterpreter(TodoFile todos) {
+        this.todos = todos;
         lastCommand = null;
         in = new BufferedReader(new InputStreamReader(System.in));
-        fileState = new ArrayList<String>();
-        this.fileName = fileName;
     }
 
     public void nextCommand() {
@@ -34,12 +19,15 @@ public class CommandInterpreter {
             lastCommand = in.readLine();
         } catch (IOException io) {
             io.printStackTrace();
-            exit();
+            todos.exit();
             System.exit(0);
         }
     }
 
     public void executeCommand() {
+        //
+        // TODO: transfer most of this stuff to the TodoFile class
+        //
         String[] splitString = lastCommand.split(WHITESPACE);
         String command = splitString[0];
 
@@ -116,10 +104,6 @@ public class CommandInterpreter {
         return fileState.size() == 0;
     }
 
-    public void exit() {
-        write();
-        fileWriter.close();
-    }
 
     private void write() {
         for (int i = fileState.size(); i > 0; i--) {

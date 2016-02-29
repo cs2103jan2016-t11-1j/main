@@ -1,35 +1,44 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.List;
 
 public class TodoFile {
-    private String path;
+    private static final boolean APPEND_TO_FILE = true;
+    private String fileName;
     private List<TodoItem> todos;
-    int line; //line is indexed at 1
+    int lines; //line is indexed at 1
+    private PrintWriter writer;
 
-    public TodoFile (String path) {
-        this.path = path;
-        this.todos = new ArrayList<TodoItem>();
-        this.line = 1;
+    public TodoFile (String fileName) {
+        this.fileName = fileName;
+        this.lines = 1;
+        readTodos(fileName);
+        try {
+            this.writer = new PrintWriter(new FileWriter(fileName, APPEND_TO_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void readTodos () throws IOException {
-        todos = new ArrayList<TodoItem>();
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(path));
-            todos.add(parseTodo(reader.readLine()));
-            line++;
-        } finally {
-            reader.close();
+    public void readTodos (String path) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String currLine;
+            while ((currLine = reader.readLine()) != null) {
+                todos.add(parseTodo(currLine));
+                lines++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     private TodoItem parseTodo (String todo) {
         String[] parts = todo.split("|");
         if (parts.length < 4) {
-            error("Not enough sections", line);
+            error("Not enough sections", lines);
         }
 
         TodoItem.Status s = null;
@@ -38,21 +47,29 @@ public class TodoFile {
         } else if (parts[0].equals("DONE")) {
             s = TodoItem.Status.DONE;
         } else {
-            error("Status is incorrect format", line);
+            error("Status is incorrect format", lines);
         }
 
-        int p = 0; //support optional
+        int p = -1;
         try {
-            p = Integer.parseInt(parts[1]);
+            p = parts[1].isEmpty() ? -1 : Integer.parseInt(parts[1]);
         } catch (Exception e) {
-            error("Priority is not a valid int", line);
+            error("Priority is not a valid int", lines);
         }
 
-        //TODO Date format
-        //TODO Date is optional
         Date d = null;
 
+        try {
+            d = parts[2].isEmpty() ? null : DateFormat.getDateInstance().parse(parts[2]);
+        } catch (ParseException e) {
+            error("Error parsing date", lines);
+        }
         return new TodoItem(s, p, d, parts[3]);
+    }
+
+    private void error (String msg) {
+        System.err.print(msg);
+        System.exit(1);
     }
 
     private void error (String msg, int l) {
@@ -73,5 +90,13 @@ public class TodoFile {
                 System.out.println(tdi.getContents());
             }
         }
+    }
+    public void write () {
+
+    }
+
+    public void exit() {
+        write();
+        fileWriter.close();
     }
 }

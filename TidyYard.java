@@ -10,7 +10,7 @@ import java.io.PrintWriter;
  * Assume: the delete method checks for problems and prints the problems to stderr
  *
  */
-public class TextBuddy {
+public class TidyYard {
     private static final String prompt = "command: ";
 
     public static void main(String[] args) throws IOException {
@@ -23,7 +23,8 @@ public class TextBuddy {
     }
 
     public static void processInput(String fileName) {
-        CommandInterpreter commander = new CommandInterpreter(fileName);
+        TodoFile todos = new TodoFile(fileName);
+        CommandInterpreter commander = new CommandInterpreter(todos);
         System.out.printf("Welcome to TextBuddy. %s is ready to use\ncommand: ", fileName);
         while (true) {
             commander.nextCommand();
