@@ -91,12 +91,36 @@ public class TodoFile {
             }
         }
     }
+    public void display() {
+        if (this.isEmpty()) {
+            System.out.println(fileName + "%s is empty");
+            return;
+        }
+        printFile();
+    }
+    public void add (String rest) {
+        //TODO make parser
+        todos.add(rest);
+        System.out.printf("added to %s: \"%s\"\n", fileName, rest);
+    }
+    private void printFile() {
+        for (int i = 1; i < todos.size() + 1; i++) {
+            printLine(i);
+        }
+    }
+    
+    private void printLine(int location) {
+        System.out.printf("%d. %s\n", location, todos.get(location - 1));
+    }
+    public boolean isEmpty() {
+        return this.todos.isEmpty();
+    }
     public void write () {
 
     }
 
     public void exit() {
         write();
-        fileWriter.close();
+        writer.close();
     }
 }

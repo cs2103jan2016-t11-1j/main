@@ -33,17 +33,13 @@ public class CommandInterpreter {
 
         switch (command) {
         case "display":
-            if (this.empty()) {
-                System.out.printf("%s is empty\n", fileName);
-                return;
-            }
-            printFile();
+            todos.display();
             break;
         case "add":
             //assuming the whitespace between the command and what is to be added is not significant
             String rest = lastCommand.substring(command.length()).replaceAll("^\\s+", "");
-            fileState.add(rest);
-            System.out.printf("added to %s: \"%s\"\n", fileName, rest);
+            //TODO change this to parse the todo entry
+            todos.add(rest);
             break;
         case "delete":
             if (this.empty()) {
@@ -66,7 +62,8 @@ public class CommandInterpreter {
                 System.out.printf("The index must be between 1 and %d, inclusive.\n", fileState.size());
             } else {
                 System.out.printf("deleted from %s: \"%s\"\n", fileName, fileState.remove(index - 1));
-            } break;
+            }
+            break;
         case "clear":
             fileState.clear();
             System.out.printf("all content deleted from %s\n", fileName);
@@ -98,10 +95,6 @@ public class CommandInterpreter {
             break;
         }
 
-    }
-
-    public boolean empty() {
-        return fileState.size() == 0;
     }
 
 
