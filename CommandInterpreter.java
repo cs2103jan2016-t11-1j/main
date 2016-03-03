@@ -42,8 +42,8 @@ public class CommandInterpreter {
             todos.add(rest);
             break;
         case "delete":
-            if (this.empty()) {
-                System.out.printf("%s is empty\n", fileName);
+            if (todos.isEmpty()) {
+                System.out.printf("No todos\n");
                 return;
             }
             int index;
@@ -58,37 +58,26 @@ public class CommandInterpreter {
                     return;
                 }
             }
-            if (index < 1 || index > fileState.size()) {
-                System.out.printf("The index must be between 1 and %d, inclusive.\n", fileState.size());
-            } else {
-                System.out.printf("deleted from %s: \"%s\"\n", fileName, fileState.remove(index - 1));
-            }
+            todos.delete(index);
             break;
         case "clear":
-            fileState.clear();
-            System.out.printf("all content deleted from %s\n", fileName);
+            todos.clear();
+            System.out.println("all todos deleted");
             break;
         case "exit":
             exit();
             System.exit(0);
             break;
         case "write":
-            write();
+            todos.write();
             break;
         case "sort":
-            Collections.sort(fileState);
+            todos.sort();
             printFile();
             break;
         case "search":
             rest = lastCommand.substring(command.length()).replaceAll("^\\s+", "");
-
-            int i = 1;
-            for (String s: fileState) {
-                if (s.contains(rest)) {
-                    this.printLine(i);
-                }
-                i++;
-            }
+            todos.searchString(rest);
             break;
         default:
             System.out.print("Command not recognized.\n");
@@ -98,21 +87,9 @@ public class CommandInterpreter {
     }
 
 
-    private void write() {
-        for (int i = fileState.size(); i > 0; i--) {
-            fileWriter.println(fileState.remove(0));
-        }
-        fileWriter.flush();
-        System.out.printf("Wrote to %s.\n", fileName);
-    }
 
     private void printFile() {
-        for (int i = 1; i < fileState.size() + 1; i++) {
-            printLine(i);
-        }
-    }
-    private void printLine(int location) {
-        System.out.printf("%d. %s\n", location, fileState.get(location - 1));
+        todos.printFile();
     }
 
     public String getLastCommand() {
@@ -121,7 +98,11 @@ public class CommandInterpreter {
     protected void setLastCommand(String last) {
         this.lastCommand = last;
     }
-    protected String getEntry(int i) {
-        return fileState.get(i);
+    protected TodoItem getEntry(int i) {
+        return todos.getItem(i);
+    }
+    private void exit() {
+        todos.exit();
+        System.exit(0);
     }
 }

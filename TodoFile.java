@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
@@ -21,6 +22,7 @@ public class TodoFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.todos = new ArrayList<TodoItem>();
     }
 
     public void readTodos (String path) {
@@ -76,6 +78,13 @@ public class TodoFile {
         System.err.print(msg + " at line " + l);
         System.exit(1);
     }
+    public void delete (int index) {
+        if (index < 1 || index > todos.size()) {
+            System.out.printf("The index must be between 1 and %d, inclusive.\n", todos.size());
+        } else {
+            System.out.printf("deleted from %s: \"%s\"\n", fileName, todos.remove(index - 1).toString());
+        }
+    }
 
     public void searchDate(Date toFind) {
         for (TodoItem tdi: todos) {
@@ -93,22 +102,25 @@ public class TodoFile {
     }
     public void display() {
         if (this.isEmpty()) {
-            System.out.println(fileName + "%s is empty");
+            System.out.println(fileName + " is empty");
             return;
         }
         printFile();
     }
     public void add (String rest) {
         //TODO make parser
-        todos.add(rest);
+        todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), rest));
         System.out.printf("added to %s: \"%s\"\n", fileName, rest);
     }
-    private void printFile() {
+    public void printFile() {
         for (int i = 1; i < todos.size() + 1; i++) {
             printLine(i);
         }
     }
-    
+    public TodoItem getItem(int i) {
+        return this.todos.get(i);
+    }
+
     private void printLine(int location) {
         System.out.printf("%d. %s\n", location, todos.get(location - 1));
     }
@@ -116,11 +128,24 @@ public class TodoFile {
         return this.todos.isEmpty();
     }
     public void write () {
-
+        // for (int i = fileState.size(); i > 0; i--) {
+        //     fileWriter.println(fileState.remove(0));
+        // }
+        // fileWriter.flush();
+        // System.out.printf("Wrote to %s.\n", fileName);
+    }
+    public void clear () {
+        todos.clear();
     }
 
     public void exit() {
         write();
         writer.close();
     }
+    public void sort() {
+        return;
+        //TODO implement proper method in TodoItem
+        //Collections.sort(todos);
+    }
+
 }

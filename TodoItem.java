@@ -27,7 +27,7 @@ public class TodoItem {
         return contents;
     }
     public String toString() {
-        return "";
+        return contents;
         //TODO should be the format that goes to the file
     }
 }
