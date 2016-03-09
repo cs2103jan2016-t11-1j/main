@@ -25,7 +25,7 @@ public class TidyYard {
     public static void processInput(String fileName) {
         TodoFile todos = new TodoFile(fileName);
         CommandInterpreter commander = new CommandInterpreter(todos);
-        System.out.printf("Welcome to TextBuddy. %s is ready to use\ncommand: ", fileName);
+        System.out.printf("Welcome to TidyYard. %s is ready to use\ncommand: ", fileName);
         while (true) {
             commander.nextCommand();
             commander.executeCommand();
