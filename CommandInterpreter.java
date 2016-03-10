@@ -72,8 +72,8 @@ public class CommandInterpreter {
             todos.write();
             break;
         case "sort":
-            todos.sort();
-            printFile();
+            todos.sortByContents();
+            todos.printFile();
             break;
         case "search":
             rest = lastCommand.substring(command.length()).replaceAll("^\\s+", "");
@@ -84,12 +84,6 @@ public class CommandInterpreter {
             break;
         }
 
-    }
-
-
-
-    private void printFile() {
-        todos.printFile();
     }
 
     public String getLastCommand() {

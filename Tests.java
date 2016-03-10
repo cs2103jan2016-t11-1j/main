@@ -9,6 +9,8 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 public class Tests {
     protected static CommandInterpreter cmdInt = null;
+    protected static TodoFile todos = null;
+
 
     private void execString (String s) {
         cmdInt.setLastCommand(s);
@@ -16,11 +18,13 @@ public class Tests {
     }
     @Before
     public void setUp() {
-        cmdInt = new CommandInterpreter("test.txt");
+        todos = new TodoFile("test.txt");
+        cmdInt = new CommandInterpreter(todos);
     }
     @After
     public void tearDown() {
-        cmdInt.exit();
+        todos.clear();
+        todos.exit();
     }
 
     @Test
@@ -30,9 +34,9 @@ public class Tests {
         execString("add neio");
         execString("display");
 
-        assertEquals(cmdInt.getEntry(0), "arst");
-        assertEquals(cmdInt.getEntry(1), "tsra");
-        assertEquals(cmdInt.getEntry(2), "neio");
+        assertEquals(cmdInt.getEntry(0).getContents(), "arst");
+        assertEquals(cmdInt.getEntry(1).getContents(), "tsra");
+        assertEquals(cmdInt.getEntry(2).getContents(), "neio");
     }
 
     @Test
@@ -41,14 +45,14 @@ public class Tests {
         execString("add tsra");
         execString("add neio");
         execString("display");
-        assertEquals(cmdInt.getEntry(0), "arst");
+        assertEquals(cmdInt.getEntry(0).getContents(), "arst");
         execString("delete 1");
-        assertEquals(cmdInt.getEntry(0), "tsra");
-        assertEquals(cmdInt.getEntry(1), "neio");
+        assertEquals(cmdInt.getEntry(0).getContents(), "tsra");
+        assertEquals(cmdInt.getEntry(1).getContents(), "neio");
         execString("delete 2");
-        assertEquals(cmdInt.getEntry(0), "tsra");
+        assertEquals(cmdInt.getEntry(0).getContents(), "tsra");
         execString("delete 1");
-        assertEquals(cmdInt.empty(), true);
+        assertEquals(todos.isEmpty(), true);
         execString("display");
     }
 
@@ -57,11 +61,11 @@ public class Tests {
         execString("add arst");
         execString("add tsra");
         execString("add neio");
-        assertEquals(cmdInt.getEntry(0), "arst");
-        assertEquals(cmdInt.getEntry(1), "tsra");
-        assertEquals(cmdInt.getEntry(2), "neio");
+        assertEquals(cmdInt.getEntry(0).getContents(), "arst");
+        assertEquals(cmdInt.getEntry(1).getContents(), "tsra");
+        assertEquals(cmdInt.getEntry(2).getContents(), "neio");
         execString("clear");
-        assertEquals(cmdInt.empty(), true);
+        assertEquals(todos.isEmpty(), true);
     }
 
     @Test
@@ -72,11 +76,11 @@ public class Tests {
         execString("add y");
         execString("add b");
         execString("sort");
-        assertEquals(cmdInt.getEntry(0), "a");
-        assertEquals(cmdInt.getEntry(1), "b");
-        assertEquals(cmdInt.getEntry(2), "y");
-        assertEquals(cmdInt.getEntry(3), "z");
-        assertEquals(cmdInt.getEntry(4), "z");
+        assertEquals(cmdInt.getEntry(0).getContents(), "a");
+        assertEquals(cmdInt.getEntry(1).getContents(), "b");
+        assertEquals(cmdInt.getEntry(2).getContents(), "y");
+        assertEquals(cmdInt.getEntry(3).getContents(), "z");
+        assertEquals(cmdInt.getEntry(4).getContents(), "z");
     }
 
 }

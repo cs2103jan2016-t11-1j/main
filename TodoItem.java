@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.Comparator;
 
 public class TodoItem {
     public enum Status { TODO, DONE };
@@ -27,7 +28,48 @@ public class TodoItem {
         return contents;
     }
     public String toString() {
-        return contents;
-        //TODO should be the format that goes to the file
+        return
+            (this.stat == Status.TODO ? "TODO|": "DONE|") +
+            (priority == -1 ? "" : Integer.toString(priority)) + "|" +
+            (dueDate != null ? dueDate.toString() : "") + "|" +
+            contents;
+    }
+    public static Comparator<TodoItem> getDateComparator () {
+        return new Comparator<TodoItem> () {
+            public int compare (TodoItem i, TodoItem j) {
+                return i.getDueDate().compareTo(j.getDueDate());
+            }
+        };
+    }
+    public static Comparator<TodoItem> getPriorityComparator () {
+        return new Comparator<TodoItem> () {
+            public int compare (TodoItem i, TodoItem j) {
+                return Integer.compare(i.getPriority(), j.getPriority());
+            }
+        };
+    }
+    public static Comparator<TodoItem> getStatusComparator () {
+        return new Comparator<TodoItem> () {
+            public int compare (TodoItem i, TodoItem j) {
+                if (i.getStatus() == Status.TODO) {
+                    if (j.getStatus () == Status.TODO) {
+                        return 0;
+                    }
+                    return 1;
+                } else {
+                    if (j.getStatus() == Status.TODO) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            }
+        };
+    }
+    public static Comparator<TodoItem> getContentsComparator () {
+        return new Comparator<TodoItem> () {
+            public int compare (TodoItem i, TodoItem j) {
+                return i.getContents().compareTo(j.getContents());
+            }
+        };
     }
 }

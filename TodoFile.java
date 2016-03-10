@@ -3,33 +3,36 @@ import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class TodoFile {
-    private static final boolean APPEND_TO_FILE = true;
+    private static final String SPLITTER = "\\|";
+    private static final DateFormat FORMATTER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
     private String fileName;
     private List<TodoItem> todos;
     int lines; //line is indexed at 1
-    private PrintWriter writer;
+    private PrintWriter writer = null;
 
     public TodoFile (String fileName) {
         this.fileName = fileName;
         this.lines = 1;
-        readTodos(fileName);
-        try {
-            this.writer = new PrintWriter(new FileWriter(fileName, APPEND_TO_FILE));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         this.todos = new ArrayList<TodoItem>();
+        if (new File(fileName).exists()) {
+            readTodos(fileName);
+        }
     }
 
     public void readTodos (String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String currLine;
             while ((currLine = reader.readLine()) != null) {
-                todos.add(parseTodo(currLine));
+                TodoItem t = parseTodo(currLine);
+                assert t != null;
+
+                todos.add(t);
                 lines++;
             }
         } catch (IOException e) {
@@ -38,9 +41,9 @@ public class TodoFile {
     }
 
     private TodoItem parseTodo (String todo) {
-        String[] parts = todo.split("|");
-        if (parts.length < 4) {
-            error("Not enough sections", lines);
+        String[] parts = todo.split(SPLITTER);
+        if (parts.length != 4) {
+            error("Wrong number of sections", lines);
         }
 
         TodoItem.Status s = null;
@@ -49,7 +52,7 @@ public class TodoFile {
         } else if (parts[0].equals("DONE")) {
             s = TodoItem.Status.DONE;
         } else {
-            error("Status is incorrect format", lines);
+            error("Status: " + parts[0] + " is incorrect format", lines);
         }
 
         int p = -1;
@@ -62,10 +65,12 @@ public class TodoFile {
         Date d = null;
 
         try {
-            d = parts[2].isEmpty() ? null : DateFormat.getDateInstance().parse(parts[2]);
+            d = parts[2].isEmpty() ? null : (Date)FORMATTER.parse(parts[2]);
         } catch (ParseException e) {
+            e.printStackTrace();
             error("Error parsing date", lines);
         }
+
         return new TodoItem(s, p, d, parts[3]);
     }
 
@@ -128,11 +133,16 @@ public class TodoFile {
         return this.todos.isEmpty();
     }
     public void write () {
-        // for (int i = fileState.size(); i > 0; i--) {
-        //     fileWriter.println(fileState.remove(0));
-        // }
-        // fileWriter.flush();
-        // System.out.printf("Wrote to %s.\n", fileName);
+        try {
+            this.writer = new PrintWriter(new FileWriter(fileName, false));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (int i = todos.size(); i > 0; i--) {
+            writer.println(todos.remove(0));
+        }
+        writer.flush();
+        System.out.printf("Wrote to %s.\n", this.fileName);
     }
     public void clear () {
         todos.clear();
@@ -143,9 +153,18 @@ public class TodoFile {
         writer.close();
     }
     public void sort() {
-        return;
-        //TODO implement proper method in TodoItem
-        //Collections.sort(todos);
+        Collections.sort(todos, TodoItem.getDateComparator());
     }
-
+    public void sortByDate() {
+        Collections.sort(todos, TodoItem.getDateComparator());
+    }
+    public void sortByPriority() {
+        Collections.sort(todos, TodoItem.getPriorityComparator());
+    }
+    public void sortByStatus() {
+        Collections.sort(todos, TodoItem.getStatusComparator());
+    }
+    public void sortByContents() {
+        Collections.sort(todos, TodoItem.getContentsComparator());
+    }
 }
