@@ -14,7 +14,10 @@ public class TodoItem {
         this.dueDate = dueDate;
         this.contents = contents;
     }
-
+    
+    public void changePriority(int level){
+    	this.priority = level;
+    }
     public Status getStatus() {
         return stat;
     }

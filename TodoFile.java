@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
@@ -105,6 +106,48 @@ public class TodoFile {
             }
         }
     }
+    public void searchTime(Date toFind){
+    	for (TodoItem tdi: todos) {
+            Date currDateTime = tdi.getDueDate();
+			boolean sameHour = currDateTime.getHours()==toFind.getHours();
+			boolean sameMinute = currDateTime.getMinutes()==toFind.getMinutes();
+			boolean sameSecond = currDateTime.getSeconds()==toFind.getSeconds();
+			if (sameHour && sameMinute && sameSecond){
+                System.out.println(tdi.getContents());
+            }
+        }
+    }
+    
+    public Comparator<TodoItem> priorityComparator(){
+		return new Comparator<TodoItem>(){
+			public int compare (TodoItem tdi1, TodoItem tdi2){
+				int cmp = tdi1.getPriority() - tdi2.getPriority();
+				if (cmp<0){
+					return -1;
+				}else if(cmp>0){
+					return 1;
+				}
+				return 0;
+			}
+		};
+    }
+    
+    public void sortByPriority(){
+    	Collections.sort(todos, priorityComparator());
+    }
+    
+    public Comparator<TodoItem> dateComparator(){
+		return new Comparator<TodoItem>(){
+			public int compare (TodoItem tdi1, TodoItem tdi2){
+				return tdi1.getDueDate().compareTo(tdi2.getDueDate());
+			}
+		};
+    }
+    
+    public void sortByDate(){
+    	Collections.sort(todos, dateComparator());
+    }
+    
     public void display() {
         if (this.isEmpty()) {
             System.out.println(fileName + " is empty");
