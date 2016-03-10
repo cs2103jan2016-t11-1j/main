@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
@@ -118,36 +117,6 @@ public class TodoFile {
         }
     }
     
-    public Comparator<TodoItem> priorityComparator(){
-		return new Comparator<TodoItem>(){
-			public int compare (TodoItem tdi1, TodoItem tdi2){
-				int cmp = tdi1.getPriority() - tdi2.getPriority();
-				if (cmp<0){
-					return -1;
-				}else if(cmp>0){
-					return 1;
-				}
-				return 0;
-			}
-		};
-    }
-    
-    public void sortByPriority(){
-    	Collections.sort(todos, priorityComparator());
-    }
-    
-    public Comparator<TodoItem> dateComparator(){
-		return new Comparator<TodoItem>(){
-			public int compare (TodoItem tdi1, TodoItem tdi2){
-				return tdi1.getDueDate().compareTo(tdi2.getDueDate());
-			}
-		};
-    }
-    
-    public void sortByDate(){
-    	Collections.sort(todos, dateComparator());
-    }
-    
     public void display() {
         if (this.isEmpty()) {
             System.out.println(fileName + " is empty");
@@ -195,6 +164,7 @@ public class TodoFile {
         write();
         writer.close();
     }
+    
     public void sort() {
         Collections.sort(todos, TodoItem.getDateComparator());
     }
