@@ -131,6 +131,18 @@ public class TodoFile {
     	Collections.sort(todos, priorityComparator());
     }
     
+    public Comparator<TodoItem> dateComparator(){
+		return new Comparator<TodoItem>(){
+			public int compare (TodoItem tdi1, TodoItem tdi2){
+				return tdi1.getDueDate().compareTo(tdi2.getDueDate());
+			}
+		};
+    }
+    
+    public void sortByDate(){
+    	Collections.sort(todos, dateComparator());
+    }
+    
     public void display() {
         if (this.isEmpty()) {
             System.out.println(fileName + " is empty");
