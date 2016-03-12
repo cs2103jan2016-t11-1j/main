@@ -7,6 +7,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import javafx.application.Application;
+
 public class Tests {
     protected static CommandInterpreter cmdInt = null;
     protected static TodoFile todos = null;
