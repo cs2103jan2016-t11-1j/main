@@ -15,6 +15,9 @@ public class TodoItem {
         this.contents = contents;
     }
 
+    public void setPriority (int level){
+        this.priority = level;
+    }
     public Status getStatus() {
         return stat;
     }

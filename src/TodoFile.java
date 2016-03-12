@@ -105,6 +105,18 @@ public class TodoFile {
             }
         }
     }
+    public void searchTime(Date toFind){
+        for (TodoItem tdi: todos) {
+            Date currDateTime = tdi.getDueDate();
+            boolean sameHour = currDateTime.getHours()==toFind.getHours();
+            boolean sameMinute = currDateTime.getMinutes()==toFind.getMinutes();
+            boolean sameSecond = currDateTime.getSeconds()==toFind.getSeconds();
+            if (sameHour && sameMinute && sameSecond){
+                System.out.println(tdi.getContents());
+            }
+        }
+    }
+
     public void display() {
         if (this.isEmpty()) {
             System.out.println(fileName + " is empty");
@@ -152,6 +164,7 @@ public class TodoFile {
         write();
         writer.close();
     }
+    
     public void sort() {
         Collections.sort(todos, TodoItem.getDateComparator());
     }
