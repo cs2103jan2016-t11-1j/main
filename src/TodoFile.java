@@ -92,29 +92,47 @@ public class TodoFile {
     }
 
     public void searchDate(Date toFind) {
-        for (TodoItem tdi: todos) {
-            if (tdi.getDueDate().equals(toFind)) {
-                System.out.println(tdi.getContents());
-            }
-        }
+    	try{
+    		for (TodoItem tdi: todos) {
+    			if (tdi.getDueDate().equals(toFind)) {
+    				System.out.println(tdi.getContents());
+    			}
+    		}
+    	}catch (Exception e){
+    		e.printStackTrace();
+    		error("Error searching by Date");
+    	}
     }
     public void searchString(String toFind) {
-        for (TodoItem tdi: todos) {
-            if (tdi.getContents().equals(toFind)){
-                System.out.println(tdi.getContents());
-            }
-        }
+    	try{
+    		for (TodoItem tdi: todos) {
+    			if (tdi.getContents().equals(toFind)){
+    				System.out.println(tdi.getContents());
+    			}
+    		}
+    	}catch (Exception e){
+    		e.printStackTrace();
+    		error("Error searching String");
+    	}
     }
     public void searchTime(Date toFind){
-        for (TodoItem tdi: todos) {
-            Date currDateTime = tdi.getDueDate();
-            boolean sameHour = currDateTime.getHours()==toFind.getHours();
-            boolean sameMinute = currDateTime.getMinutes()==toFind.getMinutes();
-            boolean sameSecond = currDateTime.getSeconds()==toFind.getSeconds();
-            if (sameHour && sameMinute && sameSecond){
-                System.out.println(tdi.getContents());
+    	try{
+    		for (TodoItem tdi: todos) {
+    			Date currDateTime = tdi.getDueDate();
+    			boolean sameHour = currDateTime.getHours()==toFind.getHours();
+    			boolean sameMinute = currDateTime.getMinutes()==toFind.getMinutes();
+    			boolean sameSecond = currDateTime.getSeconds()==toFind.getSeconds();
+            	if (sameHour && sameMinute && sameSecond){
+            		assert(sameHour);
+            		assert(sameMinute);
+            		assert(sameSecond);
+            		System.out.println(tdi.getContents());
+            	}
             }
-        }
+        }catch (Exception e){
+    		e.printStackTrace();
+    		error("Error searching by Time");
+    	}
     }
 
     public void display() {
