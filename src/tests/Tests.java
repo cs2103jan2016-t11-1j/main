@@ -1,3 +1,4 @@
+package tests;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -7,7 +8,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import javafx.application.Application;
+
+import controller.CommandInterpreter;
+import model.TodoFile;
 
 public class Tests {
     protected static CommandInterpreter cmdInt = null;

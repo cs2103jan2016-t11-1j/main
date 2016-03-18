@@ -1,3 +1,4 @@
+package model;
 import java.io.*;
 import java.util.Collections;
 import java.util.ArrayList;
@@ -6,7 +7,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class TodoFile {
     private static final String SPLITTER = "\\|";
@@ -43,6 +43,9 @@ public class TodoFile {
     private TodoItem parseTodo (String todo) {
         String[] parts = todo.split(SPLITTER);
         if (parts.length != 4) {
+        	System.err.println(todo);
+        	System.err.println(parts[2]);
+        	System.err.println(parts.length);
             error("Wrong number of sections", lines);
         }
 
@@ -90,6 +93,9 @@ public class TodoFile {
             System.out.printf("deleted from %s: \"%s\"\n", fileName, todos.remove(index - 1).toString());
         }
     }
+    public void delete (TodoItem t) {
+    	todos.remove(t);
+    }
 
     public void searchDate(Date toFind) {
         for (TodoItem tdi: todos) {
@@ -128,6 +134,9 @@ public class TodoFile {
         //TODO make parser
         todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), rest));
         System.out.printf("added to %s: \"%s\"\n", fileName, rest);
+    }
+    public void add (TodoItem t) {
+    	todos.add(t);
     }
     public void printFile() {
         for (int i = 1; i < todos.size() + 1; i++) {
@@ -179,5 +188,13 @@ public class TodoFile {
     }
     public void sortByContents() {
         Collections.sort(todos, TodoItem.getContentsComparator());
+    }
+    public String toString() {
+    	StringBuilder ret = new StringBuilder();
+    	for (TodoItem item : todos) {
+    		ret.append(item.toString());
+    		ret.append("\n");
+    	}
+    	return ret.toString();
     }
 }

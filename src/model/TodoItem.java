@@ -1,3 +1,4 @@
+package model;
 import java.util.Date;
 import java.util.Comparator;
 
@@ -35,7 +36,7 @@ public class TodoItem {
             (this.stat == Status.TODO ? "TODO|": "DONE|") +
             (priority == -1 ? "" : Integer.toString(priority)) + "|" +
             (dueDate != null ? dueDate.toString() : "") + "|" +
-            contents;
+            contents + " |";
     }
     public static Comparator<TodoItem> getDateComparator () {
         return new Comparator<TodoItem> () {
