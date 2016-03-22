@@ -14,10 +14,10 @@ import com.joestelmach.natty.Parser;
  * Eg. 12/21 is parsed as 21 December
  */
 
-public class TidyYardParser {
+public class DateParser {
 	protected Parser natty = null;
 	
-	protected TidyYardParser(){
+	protected DateParser(){
 		BasicConfigurator.configure();
 		natty = new Parser();
 	}
