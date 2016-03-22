@@ -92,47 +92,16 @@ public class TodoFile {
     }
 
     public void searchDate(Date toFind) {
-    	try{
-    		for (TodoItem tdi: todos) {
-    			if (tdi.getDueDate().equals(toFind)) {
-    				System.out.println(tdi.getContents());
-    			}
-    		}
-    	}catch (Exception e){
-    		e.printStackTrace();
-    		error("Error searching by Date");
-    	}
+    	TodoSearcher tds = new TodoSearcher();
+    	tds.searchDate(todos, toFind);
     }
     public void searchString(String toFind) {
-    	try{
-    		for (TodoItem tdi: todos) {
-    			if (tdi.getContents().equals(toFind)){
-    				System.out.println(tdi.getContents());
-    			}
-    		}
-    	}catch (Exception e){
-    		e.printStackTrace();
-    		error("Error searching String");
-    	}
+    	TodoSearcher tds = new TodoSearcher();
+    	tds.searchString(todos, toFind);
     }
     public void searchTime(Date toFind){
-    	try{
-    		for (TodoItem tdi: todos) {
-    			Date currDateTime = tdi.getDueDate();
-    			boolean sameHour = currDateTime.getHours()==toFind.getHours();
-    			boolean sameMinute = currDateTime.getMinutes()==toFind.getMinutes();
-    			boolean sameSecond = currDateTime.getSeconds()==toFind.getSeconds();
-            	if (sameHour && sameMinute && sameSecond){
-            		assert(sameHour);
-            		assert(sameMinute);
-            		assert(sameSecond);
-            		System.out.println(tdi.getContents());
-            	}
-            }
-        }catch (Exception e){
-    		e.printStackTrace();
-    		error("Error searching by Time");
-    	}
+    	TodoSearcher tds = new TodoSearcher();
+    	tds.searchTime(todos, toFind);
     }
 
     public void display() {

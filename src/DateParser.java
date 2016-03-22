@@ -20,6 +20,7 @@ public class DateParser {
 	protected DateParser(){
 		BasicConfigurator.configure();
 		natty = new Parser();
+		
 	}
 	
 	public Date parse(String input) {
@@ -27,7 +28,9 @@ public class DateParser {
 		if (dateList == null) {
 			return null;
 		} else {
-			return dateList.get(0);
+			Date date1 = dateList.get(0);
+			System.out.println(date1);
+			return date1;
 		}
 	}
 	

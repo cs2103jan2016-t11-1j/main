@@ -84,5 +84,29 @@ public class Tests {
         assertEquals(cmdInt.getEntry(3).getContents(), "z");
         assertEquals(cmdInt.getEntry(4).getContents(), "z");
     }
+    
 
+    @Test
+    public void testDateParser() {
+    	DateParser natty = new DateParser();
+    	try{
+    	System.out.println("Date = " + natty.parse("13/11/15 and 16/3/45"));
+    	}catch (Exception e){
+    		e.printStackTrace();
+    	}
+    }
+    
+    @Test
+    public void testSearch() {
+    	execString("add z");
+        execString("add a");
+        execString("add z");
+        execString("add y");
+        execString("add b");
+        execString("search a");
+        execString("search z");
+        execString("search b");
+        execString("search y");
+    }
+    
 }
