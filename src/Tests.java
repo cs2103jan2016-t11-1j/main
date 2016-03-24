@@ -90,7 +90,7 @@ public class Tests {
     public void testDateParser() {
     	DateParser natty = new DateParser();
     	try{
-    	System.out.println("Date = " + natty.parse("13/11/15 and 16/3/45"));
+    		System.out.println("Date = " + natty.parse("gibberish"));
     	}catch (Exception e){
     		e.printStackTrace();
     	}

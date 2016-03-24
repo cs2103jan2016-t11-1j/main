@@ -7,10 +7,12 @@ public class TodoSearcher {
 	
 	public void searchDate(List<TodoItem> todos, Date toFind) {
     	try{
+    		int i = 1;
     		for (TodoItem tdi: todos) {
     			if (tdi.getDueDate().equals(toFind)) {
-    				System.out.println(tdi.getContents());
+    				System.out.println("Date " + toFind + "found in line " + i);
     			}
+    			i++;
     		}
     	}catch (Exception e){
     		e.printStackTrace();
@@ -19,10 +21,12 @@ public class TodoSearcher {
     }
     public void searchString(List<TodoItem> todos, String toFind) {
     	try{
+    		int i = 1;
     		for (TodoItem tdi: todos) {
     			if (tdi.getContents().equals(toFind)){
-    				System.out.println(tdi.getContents());
+    				System.out.println(toFind + " found in line " + i + ". " + tdi.getContents());
     			}
+    			i++;
     		}
     	}catch (Exception e){
     		e.printStackTrace();
@@ -31,6 +35,7 @@ public class TodoSearcher {
     }
     public void searchTime(List<TodoItem> todos, Date toFind){
     	try{
+    		int i = 1;
     		for (TodoItem tdi: todos) {
     			Date currDateTime = tdi.getDueDate();
     			boolean sameHour = currDateTime.getHours()==toFind.getHours();
@@ -40,8 +45,9 @@ public class TodoSearcher {
             		assert(sameHour);
             		assert(sameMinute);
             		assert(sameSecond);
-            		System.out.println(tdi.getContents());
+            		System.out.println(currDateTime.getHours()+ ":" + currDateTime.getMinutes() + ":" + currDateTime.getSeconds() + " found in line " + i + ". " + tdi.getContents());
             	}
+            	i++;
             }
         }catch (Exception e){
     		e.printStackTrace();

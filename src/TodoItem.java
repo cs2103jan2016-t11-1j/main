@@ -30,6 +30,10 @@ public class TodoItem {
     public String getContents() {
         return contents;
     }
+    
+    /*
+     * Convert TodoItem to String
+     */
     public String toString() {
         return
             (this.stat == Status.TODO ? "TODO|": "DONE|") +
@@ -37,6 +41,10 @@ public class TodoItem {
             (dueDate != null ? dueDate.toString() : "") + "|" +
             contents;
     }
+    
+    /*
+     * Comparators for sorting
+    */
     public static Comparator<TodoItem> getDateComparator () {
         return new Comparator<TodoItem> () {
             public int compare (TodoItem i, TodoItem j) {
