@@ -90,9 +90,9 @@ public class Tests {
     public void testDateParser() {
     	DateParser natty = new DateParser();
     	try{
-    		System.out.println("Date = " + natty.parse("gibberish"));
+    		System.out.println("Date = " + natty.parse(" party at 23/02/2017 0000h"));
     	}catch (Exception e){
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	}
     }
     
