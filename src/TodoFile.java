@@ -13,7 +13,7 @@ public class TodoFile {
     private static final DateFormat FORMATTER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
     private String fileName;
     private List<TodoItem> todos;
-    int lines; //line is indexed at 1
+    private int lines; //line is indexed at 1
     private PrintWriter writer = null;
 
     public TodoFile (String fileName) {

@@ -57,6 +57,24 @@ public class TodoSearcher {
     	}
     }
     
+    public void searchHour(List<TodoItem> todos, Date toFind){
+    	try{
+    		int i = 1;
+    		for (TodoItem tdi: todos) {
+    			Date currDateTime = tdi.getDueDate();
+    			boolean sameHour = currDateTime.getHours()==toFind.getHours();
+            	if (sameHour){// same hour
+            		assert(sameHour);
+            		System.out.println(currDateTime.getHours()+ ":" + currDateTime.getMinutes() + ":" + currDateTime.getSeconds() + " found in line " + i + ". " + tdi.getContents());
+            	}
+            	i++;
+            }
+        }catch (Exception e){
+    		e.printStackTrace();
+    		LOGGER.severe("Error searching by Time");
+    	}
+    }
+    
     public void searchAfterDate(List<TodoItem> todos, Date toFind){
     	try{
     		int i = 1;

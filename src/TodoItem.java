@@ -15,9 +15,9 @@ public class TodoItem {
         this.contents = contents;
     }
 
-    public void setPriority (int level){
-        this.priority = level;
-    }
+    /*
+     * GETTERS
+     */	
     public Status getStatus() {
         return stat;
     }
@@ -29,6 +29,41 @@ public class TodoItem {
     }
     public String getContents() {
         return contents;
+    }
+
+    /*
+     * SETTERS
+     */
+    public void setPriority (int level){
+        this.priority = level;
+    }
+    public void setDueDate(Date date){
+    	this.dueDate = date;
+    }
+    public void setContents(String newContents){
+    	this.contents = newContents;
+    }
+    protected void setStatus(Status stat){
+    	this.stat=stat;
+    }
+    public void markDone(){
+    	switch(stat){
+    	case TODO:
+    		stat = Status.DONE;
+    		break;
+   		default:
+   			break;
+    	}
+    }
+    
+    public void markUndone(){
+    	switch(stat){
+    	case DONE:
+    		stat = Status.TODO;
+    		break;
+   		default:
+   			break;
+    	}
     }
     
     /*
