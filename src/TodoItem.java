@@ -2,7 +2,7 @@ import java.util.Date;
 import java.util.Comparator;
 
 public class TodoItem {
-    public enum Status { TODO, DONE };
+    public enum Status { TODO, DONE }; //need to handle floating
     private Status stat;
     private int priority; //-1 if not set
     private Date dueDate; //possibly null
