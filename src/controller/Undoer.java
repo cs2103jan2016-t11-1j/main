@@ -1,6 +1,10 @@
 package controller;
 
-
+/**
+ * implements a fixed size stack that holds the operations and their inverses.
+ * @author gabe
+ *
+ */
 public class Undoer {
 	public static final int MAX_UNDO = 50;
 	private FixedSizeStack<Operation> operations;

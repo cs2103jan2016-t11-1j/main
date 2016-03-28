@@ -15,7 +15,7 @@ public class CommandInterpreter {
     	this.lastCommand = null;
     	this.flexiView = flexiView;
     	undos = new Undoer();
-    	updateFlexiView();
+    	flexiView.setState(FlexiArea.FlexiState.SORT_CONTENTS);
 	}
 
 	public void nextCommand(String text) {
@@ -35,6 +35,8 @@ public class CommandInterpreter {
         	op.execute();
             break;
         case "add":
+        	//TODO parser class needs a operation that returns the todoitem
+        	//op = new AddOperation(todos, rest);
         	//TODO update with new formalism to match display
             //assuming the whitespace between the command and what is to be added is not significant
             String rest = lastCommand.substring(command.length()).replaceAll("^\\s+", "");
@@ -42,6 +44,7 @@ public class CommandInterpreter {
             todos.add(rest);
             break;
         case "delete":
+        	//TODO parser class needs an operation that returns the todoitem to be deleted.
         	//TODO update with new formalism to match display
             if (todos.isEmpty()) {
                 System.out.printf("No todos\n");
@@ -90,13 +93,10 @@ public class CommandInterpreter {
             break;
         }
         undos.add(op);
-        updateFlexiView();
+        flexiView.setState(FlexiArea.FlexiState.SORT_CONTENTS);
     }
 
-    private void updateFlexiView() {
-    	this.flexiView.clear();
-    	this.flexiView.println(todos);
-	}
+
     public void undo() {
     	undos.undo();
     }

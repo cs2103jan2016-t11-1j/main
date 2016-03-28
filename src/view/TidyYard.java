@@ -14,19 +14,12 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.TodoFile;
 
-/*
- * Assume: that you want to clobber already created files. If not, APPENDTOFILE = true.
- * Assume: we're using option (c) for when to write to files, i.e. when the user exits the program.
- * Assume: a "write" method is also provided to force a write before exit.
- * Assume: calling 'delete' with no number arguments deletes the first element.
- * Assume: the delete method checks for problems and prints the problems to stderr
- *
- */
 public class TidyYard extends Application {
     private static final String DEFAULT_FILE = "main.todo";
     private static final int HWIDTH = 60;
     private static final int VWIDTH = 60;
     private CommandInterpreter controller;
+    private TodoFile todos;
     private TextField inputField;
     private TextArea commandResult;
     private FlexiArea flexiView;
@@ -38,8 +31,6 @@ public class TidyYard extends Application {
     private void addTopInput() {
     	this.inputField = new TextField();
     	this.grid.add(this.inputField, 0, 0, HWIDTH, 1);
-
-
     }
     private void addCommandResult() {
     	this.commandResult = new TextArea();
@@ -48,7 +39,7 @@ public class TidyYard extends Application {
     	this.grid.add(this.commandResult, 0, 1, 1, VWIDTH - 1);
     }
     private void addFlexiView() {
-    	this.flexiView = new FlexiArea();
+    	this.flexiView = new FlexiArea(todos);
     	this.flexiView.setEditable(false);
     	this.grid.add(this.flexiView, 1, 1, 1, VWIDTH - 1);
     }
@@ -67,10 +58,12 @@ public class TidyYard extends Application {
         //grid.setPadding(new Insets(25, 25, 25, 25));
         addTopInput();
         addCommandResult();
+        todos = new TodoFile(DEFAULT_FILE);
         addFlexiView();
-
-        TodoFile todos = new TodoFile(DEFAULT_FILE);
         controller = new CommandInterpreter(todos, flexiView);
+
+
+
 
         //     commander.nextCommand();
         //     commander.executeCommand();

@@ -15,6 +15,12 @@ public class TodoItem {
         this.dueDate = dueDate;
         this.contents = contents;
     }
+    public TodoItem (Status stat, String contents) {
+    	this.stat = stat;
+    	this.contents = contents;
+    	this.priority = -1;
+    	this.dueDate = new Date();
+    }
 
     public void setPriority (int level){
         this.priority = level;

@@ -13,7 +13,7 @@ public class AddOperation extends Operation {
 
 	@Override
 	public void execute() {
-		super.todos.add(this.addedItem);;
+		super.todos.add(this.addedItem);
 	}
 
 	@Override
