@@ -294,4 +294,20 @@ public class TodoFile {
     		done.add(tdi);
     	}
     }
+    
+    public void updateDueDate(TodoItem tdi, Date newDate){
+    	tdi.setDueDate(newDate);
+    }
+    public void updateStartDate(TodoItem tdi, Date newDate){
+    	tdi.setStartDate(newDate);
+    }
+    public void updatePriority(TodoItem tdi, int newPriority){
+    	tdi.setPriority(newPriority);
+    }
+    public void updateFrequency(TodoItem tdi, Frequency newFreq){
+    	tdi.setFreq(newFreq);
+    }
+    public void updateContents(TodoItem tdi, String newContents){
+    	tdi.setContents(newContents);
+    }
 }
