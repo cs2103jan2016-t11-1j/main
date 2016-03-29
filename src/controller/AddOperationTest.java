@@ -1,24 +1,44 @@
 package controller;
 
-import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import model.TodoFile;
-import model.TodoItem;
+public class DeleteOperationTest extends OperationTest {
+    DeleteOperation op;
+    AddOperation invOp;
 
-public class AddOperationTest extends OperationTest {
-	AddOperation op;
+    @Before
+    public void setUp() {
+        super.setUp();
+        op = new DeleteOperation(this.todos, this.item);
+        invOp = new AddOperation(this.todos, this.item);
+    }
 
-	@Before
-	public void setUp() {
-		super.setUp();
-		op = new AddOperation(this.todos, this.item);
-	}
-	@Test
-	public void testAdd() {
-		fail("Not yet implemented");
-	}
+    @Test
+    public void testAddInverse() {
+        invOp.execute();
+        hasAsFirstElement();
+        op.execute();
+        isEmptyTodos();
+    }
+
+    @Test
+    @Override
+    public void testExecute() {
+        this.todos.add(this.item);
+        hasAsFirstElement();
+        op.execute();
+        isEmptyTodos();
+    }
+
+    @Test
+    @Override
+    public void testInverse() {
+        op.inverse();
+        hasAsFirstElement();
+        op.execute();
+        isEmptyTodos();
+    }
 
 }

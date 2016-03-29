@@ -1,19 +1,44 @@
 package controller;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
-public class UndoerTest {
+public class UndoerTest extends OperationTest {
+    Undoer u;
+    @Before
+    public void setUp() {
+        super.setUp();
+        u = new Undoer();
+    }
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Test
+    public void testUndoAdd() {
+        AddOperation op = new AddOperation(this.todos, this.item);
+        op.execute();
+        hasAsFirstElement();
+        u.undo();
+        isEmptyTodos();
+    }
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");
-	}
+
+    @Test
+    public void testUndoDelete() {
+        this.todos.add(this.item);
+        DeleteOperation op = new DeleteOperation(this.todos, this.item);
+        op.execute();
+        u.add(op);
+        isEmptyTodos();
+        u.undo();
+        hasAsFirstElement();
+    }
+
+
+    @Override
+    public void testExecute() {
+    }
+
+    @Override
+    public void testInverse() {
+    }
 
 }
