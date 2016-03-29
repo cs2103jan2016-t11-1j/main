@@ -8,6 +8,9 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.List;
 
+import model.TodoItem.Frequency;
+import model.TodoItem.Status;
+
 public class TodoFile {
     private static final String SPLITTER = "\\|";
     private static final DateFormat FORMATTER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
@@ -120,19 +123,75 @@ public class TodoFile {
         printFile();
     }
 
-    public void add (String rest){
-        todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), rest));
-        System.out.printf("added to %s: \"%s\"\n", fileName, rest);
-    }
-
-    public void add(int priority, Date date, String message) {
-        //TODO make parser
-        todos.add(new TodoItem(TodoItem.Status.TODO, priority, date, message));
-
+    /**
+     * Adds a TodoItem to the <tt>todos</tt> List with
+     * the parameter, <tt>message</tt>, as the content.
+     * @param message that the user wants to store
+     */
+    public void add (String message){
+        todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), message));
         System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
+
+    /**
+     * Adds a TodoItem to the <tt>todos</tt> List with 
+     * the parameters, <tt>priority</tt> as the priority of the Todo,
+     *  <tt>dueDate</tt> as the date when Todo is due
+     * and <tt>message</tt> as the content
+     * @param priority level of importance of the Todo
+     * @param dueDate date when the Todo is due
+     * @param message that the user wants to store
+     */
+    public void add(int priority, Date dueDate, String message) {
+        //TODO make parser
+        todos.add(new TodoItem(TodoItem.Status.TODO, priority, dueDate, message));
+        System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+    
+    public void add (Status stat, int priority, Date startDate, Date dueDate, String message) {
+        todos.add(new TodoItem(stat,priority,startDate,dueDate,message));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+	
+    public void add (Status stat, int priority, Date startDate, String message) {
+        todos.add(new TodoItem(stat,priority, startDate, message));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+    
+    public void add (Status stat, int priority, String message, Date dueDate) {
+        todos.add(new TodoItem(stat,priority,message,dueDate));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+    
+    public void add (Status stat, String message) {
+        todos.add(new TodoItem(stat,message));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+    
+    public void add (Status stat, int priority, Date startDate, Date dueDate, String message, Frequency freq) {
+    	todos.add(new TodoItem(stat,priority,startDate,dueDate,message,freq));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+    
+    public void add (Status stat, int priority, Date startDate, String message, Frequency freq) {	
+    	todos.add(new TodoItem(stat,priority,startDate,message,freq));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+    	
+    
+    public void add (Status stat, int priority, String message, Date dueDate, Frequency freq) {
+    	todos.add(new TodoItem(stat,priority,message,dueDate,freq));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+    
+    public void add (Status stat, String message, Frequency freq) {
+    	todos.add(new TodoItem(stat,message,freq));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
+    
     public void add (TodoItem t) {
         todos.add(t);
+        System.out.printf("added to %s: \"%s\"\n", fileName, t.getContents());
     }
     public void printFile() {
         for (int i = 1; i < todos.size() + 1; i++) {
@@ -213,9 +272,9 @@ public class TodoFile {
             tdi.getDueDate().setYear(tdi.getDueDate().getYear()+1);
             break;
 		default:
-				tdi.markDone();
-	            todos.remove(tdi);
-				break;
+			tdi.markDone();
+	        todos.remove(tdi);
+			break;
         }
     	done.add(replacement);
     }
