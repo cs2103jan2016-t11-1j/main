@@ -112,21 +112,16 @@ public class TodoFile {
         }
         printFile();
     }
-<<<<<<< HEAD
-    public void add (int priority, Date date, String message) {
-        //TODO make parser
-        todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), message));
-=======
     
     public void add (String rest){
     	todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), rest));
     	System.out.printf("added to %s: \"%s\"\n", fileName, rest);
     }
     
-    public void add (int priority, Date date, String message) {
+    public void add(int priority, Date date, String message) {
         //TODO make parser
         todos.add(new TodoItem(TodoItem.Status.TODO, priority, date, message));
->>>>>>> 6bbb23ee12b178e40d2b6f371c31a06224a397b3
+
         System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
     
@@ -181,9 +176,7 @@ public class TodoFile {
     public void sortByContents() {
         Collections.sort(todos, TodoItem.getContentsComparator());
     }
-<<<<<<< HEAD
-}
-=======
+
     
     public void markDone(TodoItem tdi){
     	TodoItem test = new TodoItem(null, -1, null, "");
@@ -213,4 +206,3 @@ public class TodoFile {
     }
     
 }
->>>>>>> 6bbb23ee12b178e40d2b6f371c31a06224a397b3
