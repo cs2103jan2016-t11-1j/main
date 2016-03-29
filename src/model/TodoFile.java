@@ -278,4 +278,20 @@ public class TodoFile {
         }
     	done.add(replacement);
     }
+    public void markUndone(TodoItem tdi){
+    	tdi.markUndone();
+    	todos.add(tdi);
+		done.remove(tdi);
+    }
+    public void toggle(TodoItem tdi){
+    	if (tdi.getStatus()==Status.DONE){
+    		tdi.markUndone();
+    		todos.add(tdi);
+    		done.remove(tdi);
+    	}else{
+    		tdi.markDone();
+    		todos.remove(tdi);
+    		done.add(tdi);
+    	}
+    }
 }
