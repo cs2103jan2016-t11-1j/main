@@ -13,7 +13,8 @@ public class TodoFile {
     private static final DateFormat FORMATTER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
     private String fileName;
     private List<TodoItem> todos;
-    int lines; //line is indexed at 1
+    private List<TodoItem> done;
+    private int lines; //line is indexed at 1
     private PrintWriter writer = null;
 
     public TodoFile (String fileName) {
@@ -111,11 +112,24 @@ public class TodoFile {
         }
         printFile();
     }
+<<<<<<< HEAD
     public void add (int priority, Date date, String message) {
         //TODO make parser
         todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), message));
+=======
+    
+    public void add (String rest){
+    	todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), rest));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, rest);
+    }
+    
+    public void add (int priority, Date date, String message) {
+        //TODO make parser
+        todos.add(new TodoItem(TodoItem.Status.TODO, priority, date, message));
+>>>>>>> 6bbb23ee12b178e40d2b6f371c31a06224a397b3
         System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
+    
     public void printFile() {
         for (int i = 1; i < todos.size() + 1; i++) {
             printLine(i);
@@ -167,4 +181,36 @@ public class TodoFile {
     public void sortByContents() {
         Collections.sort(todos, TodoItem.getContentsComparator());
     }
+<<<<<<< HEAD
 }
+=======
+    
+    public void markDone(TodoItem tdi){
+    	TodoItem test = new TodoItem(null, -1, null, "");
+    	if (tdi.getClass().equals(test.getClass())){
+    		tdi.markDone();
+    		done.add(tdi);
+    		todos.remove(tdi);
+    	}else{
+    		RecurItem ri = (RecurItem) tdi;
+    		TodoItem replacement = new TodoItem(tdi.getStatus(),tdi.getPriority(),tdi.getDueDate(),tdi.getContents());
+    		switch(ri.getFreq()){
+    		case DAILY:
+    			ri.getDueDate().setDate(ri.getDueDate().getDate()+1);
+    			break;
+    		case WEEKLY:
+    			ri.getDueDate().setDate(ri.getDueDate().getDate()+7);
+    			break;
+    		case MONTHLY:
+    			ri.getDueDate().setMonth(ri.getDueDate().getMonth()+1);
+    			break;
+    		case YEARLY:
+    			ri.getDueDate().setYear(ri.getDueDate().getYear()+1);
+    			break;
+    		}
+    		done.add(replacement);
+    	}
+    }
+    
+}
+>>>>>>> 6bbb23ee12b178e40d2b6f371c31a06224a397b3
