@@ -112,10 +112,16 @@ public class TodoFile {
         }
         printFile();
     }
-    public void add (String rest) {
+    
+    public void add (String rest){
+    	todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), rest));
+    	System.out.printf("added to %s: \"%s\"\n", fileName, rest);
+    }
+    
+    public void add (int priority, Date date, String message) {
         //TODO make parser
-        todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), rest));
-        System.out.printf("added to %s: \"%s\"\n", fileName, rest);
+        todos.add(new TodoItem(TodoItem.Status.TODO, priority, date, message));
+        System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
     
     public void printFile() {
