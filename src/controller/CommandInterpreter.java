@@ -18,20 +18,20 @@ public class CommandInterpreter {
 	private String lastCommand;
 	private BufferedReader in;
 	private TodoFile todos;
-  private FlexiArea flexiView;
-  private Undoer undos;
+	private FlexiArea flexiView;
+	private Undoer undos;
 
-  public CommandInterpreter(TodoFile todos, FlexiArea flexiView) {
-      this.todos = todos;
-      this.lastCommand = null;
-      this.flexiView = flexiView;
-      undos = new Undoer();
-      flexiView.setState(FlexiArea.FlexiState.SORT_CONTENTS);
-  }
+	public CommandInterpreter(TodoFile todos, FlexiArea flexiView) {
+		this.todos = todos;
+		this.lastCommand = null;
+		this.flexiView = flexiView;
+		undos = new Undoer();
+		flexiView.setState(FlexiArea.FlexiState.SORT_CONTENTS);
+	}
 
-  public void nextCommand(String text) {
-      lastCommand = text;
-  }
+	public void nextCommand(String text) {
+		lastCommand = text;
+	}
 
 	public void executeCommand() {
 		/*
@@ -39,7 +39,7 @@ public class CommandInterpreter {
 		 * priority and date and stored in splitString[]
 		 *
 		 */
-    Operation op = null;
+		Operation op = null;
 		String[] splitString = lastCommand.split(WHITESPACE);
 		String command = splitString[0];
 
@@ -73,14 +73,14 @@ public class CommandInterpreter {
 
 		switch (command) {
 		case "display":
-      op = new DisplayOperation(todos);
-      op.execute();
+			op = new DisplayOperation(todos);
+			op.execute();
 			break;
 		case "add":
 			//assuming the whitespace between the command and what is to be added is not significant
 			//
-      op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, parsedDate, toDoMessage));
-      op.execute();
+			op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, parsedDate, toDoMessage));
+			op.execute();
 			break;
 		case "delete":
 			if (todos.isEmpty()) {
@@ -99,11 +99,11 @@ public class CommandInterpreter {
 					return;
 				}
 			}
-      op = new DeleteOperation(todos, todos.getItem(index));
-      op.execute();
+			op = new DeleteOperation(todos, todos.getItem(index));
+			op.execute();
 			break;
 		case "clear":
-        //TODO Change to OP
+			//TODO Change to OP
 			todos.clear();
 			System.out.println("all todos deleted");
 			break;
@@ -111,24 +111,24 @@ public class CommandInterpreter {
 			exit();
 			break;
 		case "write":
-        //TODO Change to OP
+			//TODO Change to OP
 			todos.write();
 			break;
 		case "sort":
-      todos.sortByContents();
-      System.out.println("sorted by Contents");
+			todos.sortByContents();
+			System.out.println("sorted by Contents");
 			break;
 		case "search":
 			//
-			rest = lastCommand.substring(command.length()).replaceAll("^\\s+", "");
+			String rest = lastCommand.substring(command.length()).replaceAll("^\\s+", "");
 			todos.searchString(rest);
 			break;
 		default:
 			System.out.print("Command not recognized.\n");
 			break;
 		}
-    undos.add(op);
-    flexiView.setState(FlexiArea.FlexiState.SORT_CONTENTS);
+		undos.add(op);
+		flexiView.setState(FlexiArea.FlexiState.SORT_CONTENTS);
 	}
 
 	public String getLastCommand() {
@@ -138,9 +138,9 @@ public class CommandInterpreter {
 		todos.exit();
 		System.exit(0);
 	}
-  public void undo() {
-      undos.undo();
-  }
+	public void undo() {
+		undos.undo();
+	}
 	/*
 	public Integer getStuff() {
 		return intPriority;
