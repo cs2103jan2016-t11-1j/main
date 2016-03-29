@@ -1,6 +1,7 @@
 import org.junit.Test;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import static org.junit.Assert.assertEquals;
@@ -13,11 +14,12 @@ public class Tests {
     protected static CommandInterpreter cmdInt = null;
     protected static TodoFile todos = null;
 
-
+    
     private void execString (String s) {
         cmdInt.setLastCommand(s);
         cmdInt.executeCommand();
     }
+    
     @Before
     public void setUp() {
         todos = new TodoFile("test.txt");
@@ -28,7 +30,13 @@ public class Tests {
         todos.clear();
         todos.exit();
     }
-
+    
+    @Test
+    public void testAdd1(){
+    	execString("add go to party #1 tomorrow night at 10");
+    	execString("display");
+    }
+    /*
     @Test
     public void testAdd() {
         execString("add arst");
@@ -85,14 +93,13 @@ public class Tests {
         assertEquals(cmdInt.getEntry(4).getContents(), "z");
     }
     
-
     @Test
     public void testDateParser() {
     	DateParser natty = new DateParser();
     	try{
-    		System.out.println("Date = " + natty.parse("gibberish"));
+    		System.out.println("Date = " + natty.parse("tomorrow"));
     	}catch (Exception e){
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	}
     }
     
@@ -109,4 +116,12 @@ public class Tests {
         execString("search y");
     }
     
+   
+    @Test
+    public void testGetStuff() {
+    	cmdInt.executeCommand("add go to party #1 tomorrow night at 10");
+    	//assertEquals(cmdInt.getStuff(), "1");
+        System.out.println(cmdInt.getStuff());
+    }
+    */
 }

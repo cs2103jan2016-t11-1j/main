@@ -36,10 +36,10 @@ public class TodoItem {
      */
     public String toString() {
         return
-            (this.stat == Status.TODO ? "TODO|": "DONE|") +
-            (priority == -1 ? "" : Integer.toString(priority)) + "|" +
-            (dueDate != null ? dueDate.toString() : "") + "|" +
-            contents;
+            ((this.stat == Status.TODO ? "TODO|": "DONE|") +
+            (priority) + "|" +
+            (dueDate) + "|" +
+            (contents));
     }
     
     /*

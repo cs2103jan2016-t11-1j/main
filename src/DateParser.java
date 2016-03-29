@@ -28,9 +28,7 @@ public class DateParser {
 		if (dateList == null) {
 			return null;
 		} else {
-			Date date1 = dateList.get(0);
-			System.out.println(date1);
-			return date1;
+			return dateList.get(0);
 		}
 	}
 	
