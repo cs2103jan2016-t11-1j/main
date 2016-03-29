@@ -97,11 +97,8 @@ public class Tests {
     public void testDateParser() {
     	DateParser natty = new DateParser();
     	try{
-<<<<<<< HEAD
     		System.out.println("Date = " + natty.parse("tomorrow"));
-=======
     		System.out.println("Date = " + natty.parse(" party at 23/02/2017 0000h"));
->>>>>>> 6bbb23ee12b178e40d2b6f371c31a06224a397b3
     	}catch (Exception e){
     		//e.printStackTrace();
     	}
