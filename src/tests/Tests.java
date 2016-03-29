@@ -2,6 +2,7 @@ package tests;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import static org.junit.Assert.assertEquals;
@@ -16,11 +17,12 @@ public class Tests {
     protected static CommandInterpreter cmdInt = null;
     protected static TodoFile todos = null;
 
-
+    
     private void execString (String s) {
         cmdInt.setLastCommand(s);
         cmdInt.executeCommand();
     }
+    
     @Before
     public void setUp() {
         todos = new TodoFile("test.txt");
@@ -31,7 +33,13 @@ public class Tests {
         todos.clear();
         todos.exit();
     }
-
+    
+    @Test
+    public void testAdd1(){
+    	execString("add go to party #1 tomorrow night at 10");
+    	execString("display");
+    }
+    /*
     @Test
     public void testAdd() {
         execString("add arst");
@@ -87,5 +95,37 @@ public class Tests {
         assertEquals(cmdInt.getEntry(3).getContents(), "z");
         assertEquals(cmdInt.getEntry(4).getContents(), "z");
     }
-
+    
+    @Test
+    public void testDateParser() {
+    	DateParser natty = new DateParser();
+    	try{
+    		System.out.println("Date = " + natty.parse("tomorrow"));
+    		System.out.println("Date = " + natty.parse(" party at 23/02/2017 0000h"));
+    	}catch (Exception e){
+    		//e.printStackTrace();
+    	}
+    }
+    
+    @Test
+    public void testSearch() {
+    	execString("add z");
+        execString("add a");
+        execString("add z");
+        execString("add y");
+        execString("add b");
+        execString("search a");
+        execString("search z");
+        execString("search b");
+        execString("search y");
+    }
+    
+   
+    @Test
+    public void testGetStuff() {
+    	cmdInt.executeCommand("add go to party #1 tomorrow night at 10");
+    	//assertEquals(cmdInt.getStuff(), "1");
+        System.out.println(cmdInt.getStuff());
+    }
+    */
 }

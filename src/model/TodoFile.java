@@ -13,7 +13,8 @@ public class TodoFile {
     private static final DateFormat FORMATTER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
     private String fileName;
     private List<TodoItem> todos;
-    int lines; //line is indexed at 1
+    private List<TodoItem> done;
+    private int lines; //line is indexed at 1
     private PrintWriter writer = null;
 
     public TodoFile (String fileName) {
@@ -43,9 +44,9 @@ public class TodoFile {
     private TodoItem parseTodo (String todo) {
         String[] parts = todo.split(SPLITTER);
         if (parts.length != 4) {
-        	System.err.println(todo);
-        	System.err.println(parts[2]);
-        	System.err.println(parts.length);
+            System.err.println(todo);
+            System.err.println(parts[2]);
+            System.err.println(parts.length);
             error("Wrong number of sections", lines);
         }
 
@@ -94,33 +95,20 @@ public class TodoFile {
         }
     }
     public void delete (TodoItem t) {
-    	todos.remove(t);
+        todos.remove(t);
     }
 
     public void searchDate(Date toFind) {
-        for (TodoItem tdi: todos) {
-            if (tdi.getDueDate().equals(toFind)) {
-                System.out.println(tdi.getContents());
-            }
-        }
+        TodoSearcher tds = new TodoSearcher();
+        tds.searchDate(todos, toFind);
     }
     public void searchString(String toFind) {
-        for (TodoItem tdi: todos) {
-            if (tdi.getContents().equals(toFind)){
-                System.out.println(tdi.getContents());
-            }
-        }
+        TodoSearcher tds = new TodoSearcher();
+        tds.searchString(todos, toFind);
     }
     public void searchTime(Date toFind){
-        for (TodoItem tdi: todos) {
-            Date currDateTime = tdi.getDueDate();
-            boolean sameHour = currDateTime.getHours()==toFind.getHours();
-            boolean sameMinute = currDateTime.getMinutes()==toFind.getMinutes();
-            boolean sameSecond = currDateTime.getSeconds()==toFind.getSeconds();
-            if (sameHour && sameMinute && sameSecond){
-                System.out.println(tdi.getContents());
-            }
-        }
+        TodoSearcher tds = new TodoSearcher();
+        tds.searchTime(todos, toFind);
     }
 
     public void display() {
@@ -130,13 +118,20 @@ public class TodoFile {
         }
         printFile();
     }
-    public void add (String rest) {
-        //TODO make parser
+
+    public void add (String rest){
         todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), rest));
         System.out.printf("added to %s: \"%s\"\n", fileName, rest);
     }
+
+    public void add(int priority, Date date, String message) {
+        //TODO make parser
+        todos.add(new TodoItem(TodoItem.Status.TODO, priority, date, message));
+
+        System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    }
     public void add (TodoItem t) {
-    	todos.add(t);
+        todos.add(t);
     }
     public void printFile() {
         for (int i = 1; i < todos.size() + 1; i++) {
@@ -190,11 +185,38 @@ public class TodoFile {
         Collections.sort(todos, TodoItem.getContentsComparator());
     }
     public String toString() {
-    	StringBuilder ret = new StringBuilder();
-    	for (TodoItem item : todos) {
-    		ret.append(item.toString());
-    		ret.append("\n");
-    	}
-    	return ret.toString();
+        StringBuilder ret = new StringBuilder();
+        for (TodoItem item : todos) {
+            ret.append(item.toString());
+            ret.append("\n");
+        }
+        return ret.toString();
+    }
+
+    public void markDone(TodoItem tdi){
+        TodoItem test = new TodoItem(null, -1, null, "");
+        if (tdi.getClass().equals(test.getClass())){
+            tdi.markDone();
+            done.add(tdi);
+            todos.remove(tdi);
+        }else{
+            RecurItem ri = (RecurItem) tdi;
+            TodoItem replacement = new TodoItem(tdi.getStatus(),tdi.getPriority(),tdi.getDueDate(),tdi.getContents());
+            switch(ri.getFreq()){
+            case DAILY:
+                ri.getDueDate().setDate(ri.getDueDate().getDate()+1);
+                break;
+            case WEEKLY:
+                ri.getDueDate().setDate(ri.getDueDate().getDate()+7);
+                break;
+            case MONTHLY:
+                ri.getDueDate().setMonth(ri.getDueDate().getMonth()+1);
+                break;
+            case YEARLY:
+                ri.getDueDate().setYear(ri.getDueDate().getYear()+1);
+                break;
+            }
+            done.add(replacement);
+        }
     }
 }

@@ -3,7 +3,7 @@ import java.util.Date;
 import java.util.Comparator;
 
 public class TodoItem {
-    public enum Status { TODO, DONE };
+    public enum Status { TODO, DONE }; //need to handle floating
     private Status stat;
     private int priority; //-1 if not set
     private Date dueDate; //possibly null
@@ -16,15 +16,15 @@ public class TodoItem {
         this.contents = contents;
     }
     public TodoItem (Status stat, String contents) {
-    	this.stat = stat;
-    	this.contents = contents;
-    	this.priority = -1;
-    	this.dueDate = new Date();
+        this.stat = stat;
+        this.contents = contents;
+        this.priority = -1;
+        this.dueDate = new Date();
     }
 
-    public void setPriority (int level){
-        this.priority = level;
-    }
+    /*
+     * GETTERS
+     */	
     public Status getStatus() {
         return stat;
     }
@@ -37,6 +37,45 @@ public class TodoItem {
     public String getContents() {
         return contents;
     }
+
+    /*
+     * SETTERS
+     */
+    public void setPriority (int level){
+        this.priority = level;
+    }
+    public void setDueDate(Date date){
+        this.dueDate = date;
+    }
+    public void setContents(String newContents){
+        this.contents = newContents;
+    }
+    protected void setStatus(Status stat){
+        this.stat=stat;
+    }
+    public void markDone(){
+        switch(stat){
+        case TODO:
+            stat = Status.DONE;
+            break;
+        default:
+            break;
+        }
+    }
+
+    public void markUndone(){
+        switch(stat){
+        case DONE:
+            stat = Status.TODO;
+            break;
+        default:
+            break;
+        }
+    }
+
+    /*
+     * Convert TodoItem to String
+     */
     public String toString() {
         return
             (this.stat == Status.TODO ? "TODO|": "DONE|") +
@@ -44,6 +83,9 @@ public class TodoItem {
             (dueDate != null ? dueDate.toString() : "") + "|" +
             contents + " |";
     }
+    /*
+     * Comparators for sorting
+     */
     public static Comparator<TodoItem> getDateComparator () {
         return new Comparator<TodoItem> () {
             public int compare (TodoItem i, TodoItem j) {
