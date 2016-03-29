@@ -94,6 +94,7 @@ public class TodoFile {
             System.out.printf("deleted from %s: \"%s\"\n", fileName, todos.remove(index - 1).toString());
         }
     }
+    
     public void delete (TodoItem t) {
         todos.remove(t);
     }
