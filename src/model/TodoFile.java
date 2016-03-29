@@ -171,10 +171,13 @@ public class TodoFile {
     }
     
     public void sort() {
-        Collections.sort(todos, TodoItem.getDateComparator());
+        Collections.sort(todos, TodoItem.getDueDateComparator());
     }
-    public void sortByDate() {
-        Collections.sort(todos, TodoItem.getDateComparator());
+    public void sortByDueDate() {
+        Collections.sort(todos, TodoItem.getDueDateComparator());
+    }
+    public void sortByStartDate() {
+        Collections.sort(todos, TodoItem.getStartDateComparator());
     }
     public void sortByPriority() {
         Collections.sort(todos, TodoItem.getPriorityComparator());
@@ -195,29 +198,25 @@ public class TodoFile {
     }
 
     public void markDone(TodoItem tdi){
-        TodoItem test = new TodoItem(null, -1, null, "");
-        if (tdi.getClass().equals(test.getClass())){
-            tdi.markDone();
-            done.add(tdi);
-            todos.remove(tdi);
-        }else{
-            RecurItem ri = (RecurItem) tdi;
-            TodoItem replacement = new TodoItem(tdi.getStatus(),tdi.getPriority(),tdi.getDueDate(),tdi.getContents());
-            switch(ri.getFreq()){
-            case DAILY:
-                ri.getDueDate().setDate(ri.getDueDate().getDate()+1);
-                break;
-            case WEEKLY:
-                ri.getDueDate().setDate(ri.getDueDate().getDate()+7);
-                break;
-            case MONTHLY:
-                ri.getDueDate().setMonth(ri.getDueDate().getMonth()+1);
-                break;
-            case YEARLY:
-                ri.getDueDate().setYear(ri.getDueDate().getYear()+1);
-                break;
-            }
-            done.add(replacement);
+    	TodoItem replacement = new TodoItem(tdi.getStatus(),tdi.getPriority(),tdi.getDueDate(),tdi.getContents());
+    	switch(tdi.getFreq()){
+        case DAILY:
+        	tdi.getDueDate().setDate(tdi.getDueDate().getDate()+1);
+            break;
+        case WEEKLY:
+            tdi.getDueDate().setDate(tdi.getDueDate().getDate()+7);
+            break;
+        case MONTHLY:
+            tdi.getDueDate().setMonth(tdi.getDueDate().getMonth()+1);
+            break;
+        case YEARLY:
+            tdi.getDueDate().setYear(tdi.getDueDate().getYear()+1);
+            break;
+		default:
+				tdi.markDone();
+	            todos.remove(tdi);
+				break;
         }
+    	done.add(replacement);
     }
 }

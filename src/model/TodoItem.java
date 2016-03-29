@@ -1,8 +1,6 @@
 package model;
 import java.util.Date;
 
-import model.TodoItem.Status;
-
 import java.util.Comparator;
 
 public class TodoItem {
@@ -150,7 +148,7 @@ public class TodoItem {
 
     /*
      * Convert TodoItem to String
-     */
+     
     public String toString() {
         return
             (this.stat == Status.TODO ? "TODO|": "DONE|") +
@@ -158,6 +156,18 @@ public class TodoItem {
             (dueDate != null ? dueDate.toString() : "") + "|" +
             contents + " |";
     }
+    */
+    public String toString(){
+    	String todo = "";
+    	todo += getStatus() + "|";
+    	todo += (getPriority() == -1 ? "" : getPriority()) + "|";
+    	todo += (getStartDate() != null ? getStartDate().toString() : "") + "|";
+    	todo += (getDueDate() != null ? getDueDate().toString() : "") + "|";
+    	todo += getFreq() == Frequency.NONE ? "" : getFreq() + "|";
+    	todo += getContents();
+    	return todo;
+    }
+    
     /*
      * Comparators for sorting
      */
