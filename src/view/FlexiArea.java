@@ -2,35 +2,50 @@ package view;
 import javafx.scene.control.TextArea;
 import model.TodoFile;
 
+//TODO make this just a box, not a text area
 public class FlexiArea extends TextArea {
 	private TodoFile info;
-	public enum FlexiState {
+	private Mode mode;
+	private TimeState timeState;
+	public enum Mode {
 		/*
-		 * SORT_DATE: Sort by date
-		 * SORT_TIME: Sort by time
+		 * SORT_DATE: Show the due dates
 		 * SORT_PRIORITY: Sort by priority
 		 * SORT_STATUS: Sort by status
 		 * SORT_CONTENTS: Sort by contents
 		 * HEAT_MAP: show the heat map
 		 */
-		SORT_DATE, SORT_TIME, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS
+		SORT_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS, HEAT_MAP
 	};
-	private FlexiState currentState;
+	public enum TimeState {
+		/* This is the chunk of time shown.
+		 * DAY: view each day
+		 * WEEK: view each week
+		 * MONTH: view each month
+		 * ALL: everything, in a big bag
+		 * FUTURE: everything in the future, in a big bag
+		 */
+		DAY, WEEK, MONTH, ALL, FUTURE
+	}
 	public FlexiArea (TodoFile info) {
 		this.info = info;
-		currentState = FlexiState.SORT_CONTENTS;
+		setMode(Mode.SORT_CONTENTS);
+		setTimeState(TimeState.WEEK);
 	}
-	public FlexiState getState() {
-		return currentState;
+
+	public TimeState getTimeState() {
+		return timeState;
 	}
-	public void setState(FlexiState newState) {
-		currentState = newState;
-		//TODO make the place affect the changes
+
+	public void setTimeState(TimeState timeState) {
+		this.timeState = timeState;
+		//TODO make it actually affect the view, should just append new view to children.
 	}
-	public void print(Object in) {
-		this.appendText(in.toString());
+	public void setMode(Mode newState) {
+		this.mode = newState;
+		//TODO make it actually affect the view, should just append new view to children.
 	}
-	public void println(Object in) {
-		this.appendText(in.toString() + "\n");
+	public Mode getMode() {
+		return mode;
 	}
 }

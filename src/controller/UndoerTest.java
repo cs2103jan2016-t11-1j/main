@@ -15,6 +15,7 @@ public class UndoerTest extends OperationTest {
     public void testUndoAdd() {
         AddOperation op = new AddOperation(this.todos, this.item);
         op.execute();
+        u.add(op);
         hasAsFirstElement();
         u.undo();
         isEmptyTodos();
