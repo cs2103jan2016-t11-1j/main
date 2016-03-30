@@ -32,15 +32,15 @@ public class CommandInterpreter {
 
 	public void executeCommand() {
 		/*
-		 * String is split into command, message,
-		 * priority and date and stored in splitString[]
+		 * String is split into command, message, priority and date and stored
+		 * in splitString[]
 		 *
 		 */
 		Operation op = null;
 		String[] splitString = lastCommand.split(WHITESPACE);
 		String command = splitString[0];
 
-		//TODO make the command ignore case
+		// TODO make the command ignore case
 		switch (command) {
 
 		case "display":
@@ -55,40 +55,40 @@ public class CommandInterpreter {
 		case "ad":
 		case "addd":
 		case "asd":
-		case "ads":	
+		case "ads":
 			int hexIndex = -1;
-			for (int j = 1; j < splitString.length ; j++) {
+			for (int j = 1; j < splitString.length; j++) {
 				if (splitString[j].charAt(0) == SEPERATOR) {
 					hexIndex = j;
 					break;
-				}else{
+				} else {
 					toDoMessage = toDoMessage + " " + splitString[j];
 				}
 			}
 			toDoMessage = toDoMessage.trim();
 
 			String hexedPriority = splitString[hexIndex];
-			if (!hexedPriority.substring(1).equals("")){
+			if (!hexedPriority.substring(1).equals("")) {
 				intPriority = Integer.parseInt(hexedPriority.substring(1));
-			}else{
+			} else {
 				intPriority = -1;
 			}
 			/*
-            for (int j = 1; j < hexIndex; j++){
-                toDoMessage = toDoMessage + " " + splitString[j];
-            }
-            toDoMessage = toDoMessage.trim();
+			 * for (int j = 1; j < hexIndex; j++){ toDoMessage = toDoMessage +
+			 * " " + splitString[j]; } toDoMessage = toDoMessage.trim();
 			 */
-			for (int j = hexIndex+1; j < splitString.length; j++){
-				dateForNatty = dateForNatty + " " + splitString [j];
+			for (int j = hexIndex + 1; j < splitString.length; j++) {
+				dateForNatty = dateForNatty + " " + splitString[j];
 			}
 			dateForNatty = dateForNatty.trim();
 
 			DateParser dp = new DateParser();
 			parsedDate = dp.parse(dateForNatty);
 
-			op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
+			op = new AddOperation(todos,
+					new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
 			op.execute();
+			toDoMessage = "";
 			break;
 
 		case "delete":
@@ -120,7 +120,7 @@ public class CommandInterpreter {
 		case "clr":
 		case "cl":
 		case "cle":
-			//TODO Change to OP
+			// TODO Change to OP
 			todos.clear();
 			System.out.println("all todos deleted");
 			break;
@@ -135,7 +135,7 @@ public class CommandInterpreter {
 		case "wrt":
 		case "writ":
 		case "rit":
-			//TODO Change to OP
+			// TODO Change to OP
 			todos.write();
 			break;
 
@@ -219,7 +219,6 @@ public class CommandInterpreter {
 		flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
 	}
 
-
 	public String getLastCommand() {
 		return lastCommand;
 	}
@@ -232,8 +231,6 @@ public class CommandInterpreter {
 		undos.undo();
 	}
 	/*
-      public Integer getStuff() {
-      return intPriority;
-      }
+	 * public Integer getStuff() { return intPriority; }
 	 */
 }
