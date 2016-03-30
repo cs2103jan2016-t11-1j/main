@@ -2,6 +2,7 @@ package view;
 
 /**
  * Testing for ConsoleArea
+ * 
  * @author gabe
  *
  */

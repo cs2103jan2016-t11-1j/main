@@ -17,7 +17,9 @@ import model.TodoItem;
 public class ChangeStatusOperationTest extends OperationTest {
 	ChangeStatusOperation op;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see controller.OperationTest#setUp()
 	 */
 	@Before
