@@ -47,7 +47,7 @@ public class TodoFile {
     private TodoItem parseTodo (String todo) {
         String[] parts = todo.split(SPLITTER);
         if (parts.length<6){
-        	System.err.println(todo);
+            System.err.println(todo);
             System.err.println(parts[2]);
             System.err.println(parts.length);
             error("Wrong number of sections", lines);
