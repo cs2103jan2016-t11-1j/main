@@ -13,7 +13,6 @@ public class CommandInterpreter {
     private static String dateForNatty = "";
     private static Date parsedDate;
     private String lastCommand;
-    private BufferedReader in;
     private TodoFile todos;
     private FlexiArea flexiView;
     private Undoer undos;
@@ -23,7 +22,7 @@ public class CommandInterpreter {
         this.lastCommand = null;
         this.flexiView = flexiView;
         undos = new Undoer();
-        flexiView.setState(FlexiArea.FlexiState.SORT_CONTENTS);
+        flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
     }
 
     public void nextCommand(String text) {
@@ -178,7 +177,7 @@ public class CommandInterpreter {
     public String getLastCommand() {
         return lastCommand;
     }
-    private void exit() {
+    public void exit() {
     todos.exit();
     }
     public void undo() {
