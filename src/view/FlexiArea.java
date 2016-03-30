@@ -1,6 +1,7 @@
 package view;
 import javafx.scene.control.TextArea;
 import model.TodoFile;
+//import java.time;
 
 //TODO make this just a box, not a text area
 public class FlexiArea extends TextArea {
@@ -33,19 +34,30 @@ public class FlexiArea extends TextArea {
 		setTimeState(TimeState.WEEK);
 	}
 
-	public TimeState getTimeState() {
-		return timeState;
-	}
-
 	public void setTimeState(TimeState timeState) {
 		this.timeState = timeState;
 		//TODO make it actually affect the view, should just append new view to children.
 	}
 	public void setMode(Mode newState) {
+		switch (newState) {
+		case SORT_PRIORITY:
+			break;
+		case SORT_CONTENTS:
+			break;
+		case SORT_DATE:
+			break;
+		case SORT_STATUS:
+			break;
+		case HEAT_MAP:
+			break;
+		}
 		this.mode = newState;
 		//TODO make it actually affect the view, should just append new view to children.
 	}
 	public Mode getMode() {
 		return mode;
+	}	
+	public TimeState getTimeState() {
+		return timeState;
 	}
 }

@@ -13,7 +13,6 @@ public class CommandInterpreter {
     private static String dateForNatty = "";
     private static Date parsedDate;
     private String lastCommand;
-    private BufferedReader in;
     private TodoFile todos;
     private FlexiArea flexiView;
     private Undoer undos;
@@ -23,7 +22,7 @@ public class CommandInterpreter {
         this.lastCommand = null;
         this.flexiView = flexiView;
         undos = new Undoer();
-        flexiView.setState(FlexiArea.FlexiState.SORT_CONTENTS);
+        flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
     }
 
     public void nextCommand(String text) {
@@ -41,7 +40,7 @@ public class CommandInterpreter {
         String command = splitString[0];
 
         //TODO make the command ignore case
-        switch (command) {
+        switch (command.toLowerCase()) {
         case "display":
             op = new DisplayOperation(todos);
             op.execute();
@@ -54,7 +53,6 @@ public class CommandInterpreter {
                     break;
                 }
             }
-
             String hexedPriority = splitString[hexIndex];
             if (!hexedPriority.substring(1).equals("")){
                 intPriority = Integer.parseInt(hexedPriority.substring(1));
@@ -122,7 +120,10 @@ public class CommandInterpreter {
             break;
         case "mode":
             String newMode = lastCommand.substring(command.length()).trim();
-            switch (newMode) {
+            switch (newMode.toLowerCase()) {
+            case "help":
+            	System.out.println("The possible modes are date, priority, status, contents, and heat.");
+            	break;
             case "date":
                 flexiView.setMode(FlexiArea.Mode.SORT_DATE);
                 break;
@@ -145,21 +146,29 @@ public class CommandInterpreter {
             break;
         case "time":
             String newTime = lastCommand.substring(command.length()).trim();
-            switch (newTime) {
+            switch (newTime.toLowerCase()) {
+            case "help":
+            	System.out.println("Possible intervals are day, week, month, all, future");
+            	break;
             case "day":
                 flexiView.setTimeState(FlexiArea.TimeState.DAY);
+                System.out.println("Set time interval to day");
                 break;
             case "week":
                 flexiView.setTimeState(FlexiArea.TimeState.WEEK);
+                System.out.println("Set time interval to week");
                 break;
             case "month":
                 flexiView.setTimeState(FlexiArea.TimeState.MONTH);
+                System.out.println("Set time interval to month");
                 break;
             case "all":
                 flexiView.setTimeState(FlexiArea.TimeState.ALL);
+                System.out.println("Set time interval to all");
                 break;
             case "future":
                 flexiView.setTimeState(FlexiArea.TimeState.FUTURE);
+                System.out.println("Set time interval to future");
                 break;
             default:
                 System.out.println("Time chunk not recognized not recognized.");
@@ -174,12 +183,12 @@ public class CommandInterpreter {
         flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
     }
 
-
     public String getLastCommand() {
         return lastCommand;
     }
-    private void exit() {
-    todos.exit();
+    public void exit() {
+    	todos.exit();
+    	System.exit(0);
     }
     public void undo() {
         undos.undo();

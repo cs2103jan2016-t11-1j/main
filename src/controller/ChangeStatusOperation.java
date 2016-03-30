@@ -13,12 +13,13 @@ public class ChangeStatusOperation extends Operation {
 
 	@Override
 	public void execute() {
-		todos.changeStatus(item);
+		System.out.println("hi");
+		this.todos.changeStatus(item);
 	}
 
 	@Override
 	public void inverse() {
-		todos.changeStatus(item);
+		this.todos.changeStatus(item);
 	}
 
 }

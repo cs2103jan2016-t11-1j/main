@@ -46,7 +46,7 @@ public class TodoFile {
 
     private TodoItem parseTodo (String todo) {
         String[] parts = todo.split(SPLITTER);
-        if (parts.length != 4) {
+        if (parts.length != 5) {
             System.err.println(todo);
             System.err.println(parts[2]);
             System.err.println(parts.length);
@@ -208,14 +208,14 @@ public class TodoFile {
     public boolean isEmpty() {
         return this.todos.isEmpty();
     }
-    public void write () {
+    public void write() {
         try {
             this.writer = new PrintWriter(new FileWriter(fileName, false));
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        for (int i = todos.size(); i > 0; i--) {
-            writer.println(todos.remove(0));
+        for (int i = 0; i < todos.size(); i++) {
+            writer.println(todos.get(i));
         }
         writer.flush();
         System.out.printf("Wrote to %s.\n", this.fileName);
@@ -310,4 +310,8 @@ public class TodoFile {
     public void updateContents(TodoItem tdi, String newContents){
     	tdi.setContents(newContents);
     }
+
+	public void changeStatus(TodoItem item) {
+		item.toggleStatus();
+	}
 }

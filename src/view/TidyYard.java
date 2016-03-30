@@ -16,8 +16,8 @@ import model.TodoFile;
 
 public class TidyYard extends Application {
     private static final String DEFAULT_FILE = "main.todo";
-    private static final int HWIDTH = 60;
-    private static final int VWIDTH = 60;
+    private static final int HWIDTH = 10;
+    private static final int VWIDTH = 10;
     private CommandInterpreter controller;
     private TodoFile todos;
     private TextField inputField;
@@ -36,17 +36,17 @@ public class TidyYard extends Application {
     	this.commandResult = new TextArea();
     	this.commandResult.setEditable(false);
 
-    	this.grid.add(this.commandResult, 0, 1, 1, VWIDTH - 1);
+    	this.grid.add(this.commandResult, 0, VWIDTH + 2, HWIDTH, 1);
     }
     private void addFlexiView() {
     	this.flexiView = new FlexiArea(todos);
     	this.flexiView.setEditable(false);
-    	this.grid.add(this.flexiView, 1, 1, 1, VWIDTH - 1);
+    	this.grid.add(this.flexiView, 0, 1, HWIDTH, VWIDTH);
     }
     private void redirect() {
     	PrintStream stream = new PrintStream(new ConsoleArea(this.commandResult), true);
     	System.setOut(stream);
-    	System.setErr(stream);
+    	//System.setErr(stream);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class TidyYard extends Application {
         grid = new GridPane();
         grid.setAlignment(Pos.TOP_CENTER);
         grid.setHgap(0);
-        grid.setVgap(10);
+        grid.setVgap(3);
         //grid.setPadding(new Insets(25, 25, 25, 25));
         addTopInput();
         addCommandResult();

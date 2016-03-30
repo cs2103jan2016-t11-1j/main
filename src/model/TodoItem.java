@@ -1,6 +1,5 @@
 package model;
 import java.util.Date;
-
 import java.util.Comparator;
 
 public class TodoItem {
@@ -112,7 +111,7 @@ public class TodoItem {
     public void setFreq(Frequency freq){
     	this.freq = freq;
     }
-    
+
     public void toggleStatus(){
     	switch(stat){
         case TODO:
@@ -125,7 +124,7 @@ public class TodoItem {
             break;
         }
     }
-    
+
     public void markDone(){
         switch(stat){
         case TODO:
