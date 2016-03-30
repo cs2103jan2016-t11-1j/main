@@ -225,8 +225,8 @@ public class TodoFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for (int i = todos.size(); i > 0; i--) {
-            writer.println(todos.remove(0));
+        for (int i = 0; i<todos.size(); i++) {
+            writer.println(todos.get(i));
         }
         writer.flush();
         System.out.printf("Wrote to %s.\n", this.fileName);

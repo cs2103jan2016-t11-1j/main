@@ -30,4 +30,16 @@ public class TodoFileTests {
 		todos.display();
 	}
 
+	@Test
+	public void TestExit(){
+		todos.add("something");
+		todos.add("something else");
+		todos.add("something else entirely");
+		todos.display();
+		todos.exit();
+		todos = new TodoFile("TodoFileTests.txt");
+		todos.display();
+		assert(!todos.isEmpty());
+	}
+	
 }
