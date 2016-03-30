@@ -41,11 +41,20 @@ public class CommandInterpreter {
 
         //TODO make the command ignore case
         switch (command) {
+        
         case "display":
+        case "dis":
+        case "disp":
+        case "dsp":
             op = new DisplayOperation(todos);
             op.execute();
             break;
+        
         case "add":
+        case "ad":
+        case "addd":
+        case "asd":
+        case "ads":	
             int hexIndex = -1;
             for (int j = 1; j < splitString.length ; j++) {
                 if (splitString[j].charAt(0) == SEPERATOR) {
@@ -73,12 +82,16 @@ public class CommandInterpreter {
 
             DateParser dp = new DateParser();
             parsedDate = dp.parse(dateForNatty);
-            //assuming the whitespace between the command and what is to be added is not significant
-            //
+
             op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, parsedDate, toDoMessage));
             op.execute();
             break;
+        
         case "delete":
+        case "del":
+        case "det":
+        case "dlt":
+        case "delet":
             if (todos.isEmpty()) {
                 System.out.printf("No todos\n");
                 return;
@@ -98,28 +111,51 @@ public class CommandInterpreter {
             op = new DeleteOperation(todos, todos.getItem(index));
             op.execute();
             break;
+        
         case "clear":
+        case "clr":
+        case "cl":
+        case "cle":
             //TODO Change to OP
             todos.clear();
             System.out.println("all todos deleted");
             break;
+        
         case "exit":
+        case "ext":
+        case "ex":
             exit();
             break;
+        
         case "write":
+        case "wrt":
+        case "writ":
+        case "rit":
             //TODO Change to OP
             todos.write();
             break;
+       
         case "sort":
+        case "srt":
+        case "sor":
             todos.sortByContents();
             System.out.println("sorted by Contents");
             break;
+        
         case "search":
-            //
+        case "seach":
+        case "sch":
+        case "srch":
+        case "serch":
+        case "src":
             String rest = lastCommand.substring(command.length()).replaceAll(WHITESPACE, "");
             todos.searchString(rest);
             break;
+        
         case "mode":
+        case "mod":
+        case "moe":
+        case "modd":
             String newMode = lastCommand.substring(command.length()).trim();
             switch (newMode) {
             case "date":
@@ -142,7 +178,11 @@ public class CommandInterpreter {
                 break;
             }
             break;
+        
         case "time":
+        case "tim":
+        case "tme":
+        case "tie":
             String newTime = lastCommand.substring(command.length()).trim();
             switch (newTime) {
             case "day":
@@ -165,10 +205,12 @@ public class CommandInterpreter {
                 break;
             }
             break;
+       
         default:
             System.out.println("Command not recognized.");
             break;
         }
+       
         undos.add(op);
         flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
     }
@@ -177,9 +219,11 @@ public class CommandInterpreter {
     public String getLastCommand() {
         return lastCommand;
     }
+    
     public void exit() {
     todos.exit();
     }
+    
     public void undo() {
         undos.undo();
     }
