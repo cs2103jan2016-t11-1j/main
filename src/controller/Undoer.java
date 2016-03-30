@@ -2,6 +2,7 @@ package controller;
 
 /**
  * implements a fixed size stack that holds the operations and their inverses.
+ * 
  * @author gabe
  *
  */
@@ -12,10 +13,11 @@ public class Undoer {
 	public Undoer() {
 		operations = new FixedSizeStack<Operation>(MAX_UNDO);
 	}
-	
+
 	public void add(Operation op) {
 		operations.push(op);
 	}
+
 	public void undo() {
 		operations.pop().inverse();
 	}

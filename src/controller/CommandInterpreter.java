@@ -79,23 +79,33 @@ public class CommandInterpreter {
 			 */
 			for (int j = hexIndex + 1; j < splitString.length; j++) {
 				dateForNatty = dateForNatty + " " + splitString[j];
+<<<<<<< HEAD
+=======
+			}
+			dateForNatty = dateForNatty.trim();
+
+			for (int j = hexIndex + 1; j < splitString.length; j++) {
+				dateForNatty = dateForNatty + " " + splitString[j];
+>>>>>>> a58aaa7f068189847b6b633741dab64dbd576119
 			}
 			dateForNatty = dateForNatty.trim();
 
 			DateParser dp = new DateParser();
 			parsedDate = dp.parse(dateForNatty);
+<<<<<<< HEAD
 
 			op = new AddOperation(todos,
 					new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
+=======
+			// assuming the whitespace between the command and what is to be
+			// added is not significant
+			//+            
+			op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
+>>>>>>> a58aaa7f068189847b6b633741dab64dbd576119
 			op.execute();
 			toDoMessage = "";
 			break;
-
 		case "delete":
-		case "del":
-		case "det":
-		case "dlt":
-		case "delet":
 			if (todos.isEmpty()) {
 				System.out.printf("No todos\n");
 				return;
@@ -115,22 +125,22 @@ public class CommandInterpreter {
 			op = new DeleteOperation(todos, todos.getItem(index));
 			op.execute();
 			break;
-
-		case "clear":
 		case "clr":
 		case "cl":
 		case "cle":
+<<<<<<< HEAD
+=======
+		case "clear":
+>>>>>>> a58aaa7f068189847b6b633741dab64dbd576119
 			// TODO Change to OP
 			todos.clear();
 			System.out.println("all todos deleted");
 			break;
-
 		case "exit":
 		case "ext":
 		case "ex":
 			exit();
 			break;
-
 		case "write":
 		case "wrt":
 		case "writ":
@@ -138,30 +148,31 @@ public class CommandInterpreter {
 			// TODO Change to OP
 			todos.write();
 			break;
-
 		case "sort":
 		case "srt":
 		case "sor":
 			todos.sortByContents();
 			System.out.println("sorted by Contents");
 			break;
-
 		case "search":
 		case "seach":
 		case "sch":
 		case "srch":
 		case "serch":
 		case "src":
+			//
 			String rest = lastCommand.substring(command.length()).replaceAll(WHITESPACE, "");
 			todos.searchString(rest);
 			break;
-
 		case "mode":
 		case "mod":
 		case "moe":
 		case "modd":
 			String newMode = lastCommand.substring(command.length()).trim();
-			switch (newMode) {
+			switch (newMode.toLowerCase()) {
+			case "help":
+				System.out.println("The possible modes are date, priority, status, contents, and heat.");
+				break;
 			case "date":
 				flexiView.setMode(FlexiArea.Mode.SORT_DATE);
 				break;
@@ -182,39 +193,44 @@ public class CommandInterpreter {
 				break;
 			}
 			break;
-
 		case "time":
 		case "tim":
 		case "tme":
 		case "tie":
 			String newTime = lastCommand.substring(command.length()).trim();
-			switch (newTime) {
+			switch (newTime.toLowerCase()) {
+			case "help":
+				System.out.println("Possible intervals are day, week, month, all, future");
+				break;
 			case "day":
 				flexiView.setTimeState(FlexiArea.TimeState.DAY);
+				System.out.println("Set time interval to day");
 				break;
 			case "week":
 				flexiView.setTimeState(FlexiArea.TimeState.WEEK);
+				System.out.println("Set time interval to week");
 				break;
 			case "month":
 				flexiView.setTimeState(FlexiArea.TimeState.MONTH);
+				System.out.println("Set time interval to month");
 				break;
 			case "all":
 				flexiView.setTimeState(FlexiArea.TimeState.ALL);
+				System.out.println("Set time interval to all");
 				break;
 			case "future":
 				flexiView.setTimeState(FlexiArea.TimeState.FUTURE);
+				System.out.println("Set time interval to future");
 				break;
 			default:
 				System.out.println("Time chunk not recognized not recognized.");
 				break;
 			}
 			break;
-
 		default:
 			System.out.println("Command not recognized.");
 			break;
 		}
-
 		undos.add(op);
 		flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
 	}
@@ -225,12 +241,16 @@ public class CommandInterpreter {
 
 	public void exit() {
 		todos.exit();
+		System.exit(0);
 	}
 
 	public void undo() {
 		undos.undo();
 	}
+<<<<<<< HEAD
 	/*
 	 * public Integer getStuff() { return intPriority; }
 	 */
+=======
+>>>>>>> a58aaa7f068189847b6b633741dab64dbd576119
 }

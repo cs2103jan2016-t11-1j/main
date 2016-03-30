@@ -138,6 +138,7 @@ public class TodoFile {
 		} catch (Exception e) {
 			System.out.printf(t.toString() + " is not found in todos.");
 		}
+		todos.remove(t);
 	}
 
 	public void searchDate(Date toFind) {
@@ -348,5 +349,4 @@ public class TodoFile {
 	public void updateContents(TodoItem tdi, String newContents) {
 		tdi.setContents(newContents);
 	}
-
 }
