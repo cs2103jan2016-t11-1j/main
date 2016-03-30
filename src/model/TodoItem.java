@@ -116,7 +116,7 @@ public class TodoItem {
     	todo += (getPriority() == -1 ? "" : getPriority()) + "|";
     	todo += (getStartDate() != null ? getStartDate().toString() : "") + "|";
     	todo += (getDueDate() != null ? getDueDate().toString() : "") + "|";
-    	todo += getFreq() == Frequency.NONE ? "" : getFreq() + "|";
+    	todo += (getFreq() == Frequency.NONE ? "" : getFreq()) + "|";
     	todo += getContents();
     	return todo;
     }

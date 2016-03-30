@@ -46,13 +46,13 @@ public class TodoFile {
 
     private TodoItem parseTodo (String todo) {
         String[] parts = todo.split(SPLITTER);
-        if (parts.length != 4) {
-            System.err.println(todo);
+        if (parts.length<6){
+        	System.err.println(todo);
             System.err.println(parts[2]);
             System.err.println(parts.length);
             error("Wrong number of sections", lines);
         }
-
+        //status,prior,start,due,freq,content
         TodoItem.Status s = null;
         if (parts[0].equals("TODO")) {
             s = TodoItem.Status.TODO;
@@ -61,24 +61,55 @@ public class TodoFile {
         } else {
             error("Status: " + parts[0] + " is incorrect format", lines);
         }
-
+        
         int p = -1;
         try {
             p = parts[1].isEmpty() ? -1 : Integer.parseInt(parts[1]);
         } catch (Exception e) {
             error("Priority is not a valid int", lines);
         }
-
-        Date d = null;
-
+        
+        Date sD = null;
         try {
-            d = parts[2].isEmpty() ? null : (Date)FORMATTER.parse(parts[2]);
+            sD = parts[2].isEmpty() ? null : (Date)FORMATTER.parse(parts[2]);
         } catch (ParseException e) {
             e.printStackTrace();
-            error("Error parsing date", lines);
+            error("Error parsing start date", lines);
         }
-
-        return new TodoItem(s, p, d, null, parts[3], null);
+        
+        Date dD = null;
+        try {
+            dD = parts[3].isEmpty() ? null : (Date)FORMATTER.parse(parts[3]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            error("Error parsing due date", lines);
+        }
+        
+        Frequency f=null;
+        if (parts[4].equals("")){
+        	f = Frequency.NONE;
+        }else if (parts[4].equals("DAILY")){
+        	f = Frequency.DAILY;
+        }else if (parts[4].equals("WEEKLY")){
+        	f = Frequency.WEEKLY;
+        }else if (parts[4].equals("MONTHLY")){
+        	f = Frequency.MONTHLY;
+        }else if (parts[4].equals("YEARLY")){
+        	f = Frequency.YEARLY;
+        }else{
+        	System.out.println(parts[4]);
+        	error("Error parsing frequency", lines);
+        }
+        
+        String c = "";
+        for (int i=5; i<parts.length; i++){
+        	if (i==5){
+        		c += parts[i];
+        	}else{
+        		c += ("|" + parts[i]);
+        	}
+        }
+        return new TodoItem(s,p,sD,dD,c,f);
     }
 
     private void error (String msg) {
