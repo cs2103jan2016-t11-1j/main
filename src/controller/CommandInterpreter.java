@@ -3,6 +3,7 @@ package controller;
 import java.util.Date;
 import model.TodoFile;
 import model.TodoItem;
+import model.TodoItem.Frequency;
 import view.FlexiArea;
 
 public class CommandInterpreter {
@@ -83,7 +84,7 @@ public class CommandInterpreter {
             DateParser dp = new DateParser();
             parsedDate = dp.parse(dateForNatty);
 
-            op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, parsedDate, toDoMessage));
+            op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
             op.execute();
             break;
         

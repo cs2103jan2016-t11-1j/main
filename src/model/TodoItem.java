@@ -13,62 +13,15 @@ public class TodoItem {
     public enum Frequency{ NONE, DAILY, WEEKLY, MONTHLY, YEARLY };
 	private Frequency freq; //for recurring tasks
 	
-	public TodoItem (Status stat, int priority, Date startDate, Date dueDate, String contents) {
+	public TodoItem (Status stat, int priority, Date startDate, Date dueDate, String contents, Frequency freq) {
         this.stat = stat;
         this.priority = priority;
         this.startDate = startDate;
         this.dueDate = dueDate;
         this.contents = contents;
-        this.freq = Frequency.NONE;
+        this.freq = freq;
     }
 	
-    public TodoItem (Status stat, int priority, Date startDate, String contents) {
-        this.stat = stat;
-        this.priority = priority;
-        this.startDate = startDate;
-        this.contents = contents;
-        this.freq = Frequency.NONE;
-        this.dueDate = null;
-    }
-    
-    public TodoItem (Status stat, int priority, String contents, Date dueDate) {
-        this.stat = stat;
-        this.priority = priority;
-        this.contents = contents;
-        this.dueDate = dueDate;
-        this.freq = Frequency.NONE;
-        this.startDate = null;
-    }
-    
-    public TodoItem (Status stat, String contents) {
-        this.stat = stat;
-        this.contents = contents;
-        this.priority = -1;
-        this.startDate = null;
-        this.dueDate = new Date();
-    }
-    
-    public TodoItem (Status stat, int priority, Date startDate, Date dueDate, String contents, Frequency freq) {
-    	this(stat,priority,startDate,dueDate,contents);
-    	this.freq = freq;
-    }
-    
-    public TodoItem (Status stat, int priority, Date startDate, String contents, Frequency freq) {	
-    	this(stat,priority,startDate,contents);
-    	this.freq = freq;
-    }
-    	
-    
-    public TodoItem (Status stat, int priority, String contents, Date dueDate, Frequency freq) {
-    	this(stat,priority,contents,dueDate);
-    	this.freq = freq;
-    }
-    
-    public TodoItem (Status stat, String contents, Frequency freq) {
-    	this(stat,contents);
-    	this.freq = freq;
-    }
-
     /*
      * GETTERS
      */	

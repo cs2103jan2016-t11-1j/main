@@ -78,7 +78,7 @@ public class TodoFile {
             error("Error parsing date", lines);
         }
 
-        return new TodoItem(s, p, d, parts[3]);
+        return new TodoItem(s, p, d, null, parts[3], null);
     }
 
     private void error (String msg) {
@@ -122,6 +122,14 @@ public class TodoFile {
         }
         printFile();
     }
+    
+    public void displayDone() {
+        if (done.isEmpty()) {
+            System.out.println(fileName + " has no done items");
+            return;
+        }
+        printDoneItems();
+    }
 
     /**
      * Adds a TodoItem to the <tt>todos</tt> List with
@@ -129,75 +137,47 @@ public class TodoFile {
      * @param message that the user wants to store
      */
     public void add (String message){
-        todos.add(new TodoItem(TodoItem.Status.TODO, -1, new Date(), message));
-        System.out.printf("added to %s: \"%s\"\n", fileName, message);
-    }
-
-    /**
-     * Adds a TodoItem to the <tt>todos</tt> List with 
-     * the parameters, <tt>priority</tt> as the priority of the Todo,
-     *  <tt>dueDate</tt> as the date when Todo is due
-     * and <tt>message</tt> as the content
-     * @param priority level of importance of the Todo
-     * @param dueDate date when the Todo is due
-     * @param message that the user wants to store
-     */
-    public void add(int priority, Date dueDate, String message) {
-        //TODO make parser
-        todos.add(new TodoItem(TodoItem.Status.TODO, priority, dueDate, message));
+        todos.add(new TodoItem(TodoItem.Status.TODO, -1, null, null, message, Frequency.NONE));
         System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
     
-    public void add (Status stat, int priority, Date startDate, Date dueDate, String message) {
-        todos.add(new TodoItem(stat,priority,startDate,dueDate,message));
-    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
-    }
-	
-    public void add (Status stat, int priority, Date startDate, String message) {
-        todos.add(new TodoItem(stat,priority, startDate, message));
-    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    public void add (int priority, String message){
+        todos.add(new TodoItem(TodoItem.Status.TODO, priority, null, null, message, Frequency.NONE));
+        System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
     
-    public void add (Status stat, int priority, String message, Date dueDate) {
-        todos.add(new TodoItem(stat,priority,message,dueDate));
-    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    public void add (int priority, Date startDate, String message){
+        todos.add(new TodoItem(TodoItem.Status.TODO, priority, startDate, null, message, Frequency.NONE));
+        System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
     
-    public void add (Status stat, String message) {
-        todos.add(new TodoItem(stat,message));
-    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    public void add (int priority, String message, Date dueDate){
+        todos.add(new TodoItem(TodoItem.Status.TODO, priority, null, dueDate, message, Frequency.NONE));
+        System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
     
-    public void add (Status stat, int priority, Date startDate, Date dueDate, String message, Frequency freq) {
-    	todos.add(new TodoItem(stat,priority,startDate,dueDate,message,freq));
-    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
+    public void add (int priority, Date startDate, Date dueDate, String message){
+        todos.add(new TodoItem(TodoItem.Status.TODO, priority, startDate, dueDate, message, Frequency.NONE));
+        System.out.printf("added to %s: \"%s\"\n", fileName, message);
     }
     
-    public void add (Status stat, int priority, Date startDate, String message, Frequency freq) {	
-    	todos.add(new TodoItem(stat,priority,startDate,message,freq));
-    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
-    }
-    	
+    public void add(TodoItem addedItem) {
+    	todos.add(addedItem);
+    	System.out.printf("added to %s: \"%s\"\n", fileName, addedItem.getContents());
+	}
     
-    public void add (Status stat, int priority, String message, Date dueDate, Frequency freq) {
-    	todos.add(new TodoItem(stat,priority,message,dueDate,freq));
-    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
-    }
-    
-    public void add (Status stat, String message, Frequency freq) {
-    	todos.add(new TodoItem(stat,message,freq));
-    	System.out.printf("added to %s: \"%s\"\n", fileName, message);
-    }
-    
-    public void add (TodoItem t) {
-        todos.add(t);
-        System.out.printf("added to %s: \"%s\"\n", fileName, t.getContents());
-    }
     public void printFile() {
         for (int i = 1; i < todos.size() + 1; i++) {
             printLine(i);
         }
     }
+    
+    public void printDoneItems() {
+        for (int i = 1; i < done.size() + 1; i++) {
+            printLine(i);
+        }
+    }
+    
     public TodoItem getItem(int i) {
         return this.todos.get(i);
     }
@@ -257,7 +237,7 @@ public class TodoFile {
     }
 
     public void markDone(TodoItem tdi){
-    	TodoItem replacement = new TodoItem(tdi.getStatus(),tdi.getPriority(),tdi.getDueDate(),tdi.getContents());
+    	TodoItem replacement = new TodoItem(tdi.getStatus(),tdi.getPriority(),tdi.getStartDate(),tdi.getDueDate(),tdi.getContents(),Frequency.NONE);
     	switch(tdi.getFreq()){
         case DAILY:
         	tdi.getDueDate().setDate(tdi.getDueDate().getDate()+1);
@@ -310,4 +290,6 @@ public class TodoFile {
     public void updateContents(TodoItem tdi, String newContents){
     	tdi.setContents(newContents);
     }
+
+	
 }
