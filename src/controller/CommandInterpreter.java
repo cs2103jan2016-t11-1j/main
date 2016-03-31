@@ -83,19 +83,13 @@ public class CommandInterpreter {
 			}
 			dateForNatty = dateForNatty.trim();
 
-			for (int j = hexIndex + 1; j < splitString.length; j++) {
-				dateForNatty = dateForNatty + " " + splitString[j];
-			}
-			dateForNatty = dateForNatty.trim();
-
 			DateParser dp = new DateParser();
 			parsedDate = dp.parse(dateForNatty);
-			// assuming the whitespace between the command and what is to be
-			// added is not significant
-			// +
+
 			op = new AddOperation(todos,
 					new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
 			op.execute();
+			toDoMessage = "";
 			break;
 		case "delete":
 			if (todos.isEmpty()) {

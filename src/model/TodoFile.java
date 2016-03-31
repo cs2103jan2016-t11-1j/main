@@ -129,6 +129,12 @@ public class TodoFile {
 	}
 
 	public void delete(TodoItem t) {
+		try {
+			todos.remove(t);
+			System.out.printf("deleted from %s: \"%s\"\n", fileName, t.toString());
+		} catch (Exception e) {
+			System.out.printf(t.toString() + " is not found in todos.");
+		}
 		todos.remove(t);
 	}
 
