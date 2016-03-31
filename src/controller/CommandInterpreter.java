@@ -56,6 +56,7 @@ public class CommandInterpreter {
 		case "addd":
 		case "asd":
 		case "ads":
+			// TODO parser still doesn't switch properly.
 			int hexIndex = -1;
 			for (int j = 1; j < splitString.length; j++) {
 				if (splitString[j].charAt(0) == SEPERATOR) {
@@ -91,8 +92,9 @@ public class CommandInterpreter {
 			parsedDate = dp.parse(dateForNatty);
 			// assuming the whitespace between the command and what is to be
 			// added is not significant
-			//+            
-			op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
+			// +
+			op = new AddOperation(todos,
+					new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
 			op.execute();
 			break;
 		case "delete":
@@ -151,6 +153,27 @@ public class CommandInterpreter {
 			String rest = lastCommand.substring(command.length()).replaceAll(WHITESPACE, "");
 			todos.searchString(rest);
 			break;
+		case "whatmode":
+			switch (flexiView.getMode()) {
+			case HEAT_MAP:
+				System.out.println("The current mode is Heat map.");
+				break;
+			case SORT_CONTENTS:
+				System.out.println("The current mode is Sort Contents.");
+				break;
+			case SORT_DATE:
+				System.out.println("The current mode is Sort Date.");
+				break;
+			case SORT_PRIORITY:
+				System.out.println("The current mode is Sort Priority.");
+				break;
+			case SORT_STATUS:
+				System.out.println("The current mode is Sort Status.");
+				break;
+			default:
+				break;
+			}
+			break;
 		case "mode":
 		case "mod":
 		case "moe":
@@ -177,6 +200,28 @@ public class CommandInterpreter {
 				break;
 			default:
 				System.out.println("Mode not recognized.");
+				break;
+			}
+			break;
+		case "whattime":
+			switch (flexiView.getTimeState()) {
+			case ALL:
+				System.out.println("The current time mode is all from " + flexiView.start() + " to " + flexiView.end());
+				break;
+			case DAY:
+				System.out.println("The current time mode is day from " + flexiView.start() + " to " + flexiView.end());
+				break;
+			case FUTURE:
+				System.out.println(
+						"The current time mode is future from " + flexiView.start() + " to " + flexiView.end());
+				break;
+			case MONTH:
+				System.out
+						.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
+				break;
+			case WEEK:
+				System.out
+						.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			}
 			break;
@@ -213,6 +258,23 @@ public class CommandInterpreter {
 				System.out.println("Time chunk not recognized not recognized.");
 				break;
 			}
+			break;
+		case "todo":
+		case "done":
+			rest = lastCommand.substring(command.length()).replaceAll(WHITESPACE, "");
+			try {
+				todos.toggle(todos.getItem(Integer.parseInt(rest)));
+			} catch (NumberFormatException e) {
+				System.out.println("Bad int format");
+			}
+			break;
+		case "prev":
+		case "previous":
+			flexiView.previousTimeChunk();
+			break;
+		case "next":
+		case "nxt":
+			flexiView.nextTimeChunk();
 			break;
 		default:
 			System.out.println("Command not recognized.");

@@ -8,7 +8,7 @@ public class TodoItem {
 		TODO, DONE
 	}; // need to handle floating
 
-	private Status stat;
+	private Status status;
 	private int priority; // -1 if not set
 	private Date startDate;
 	private Date dueDate; // possibly null
@@ -21,7 +21,7 @@ public class TodoItem {
 	private Frequency freq; // for recurring tasks
 
 	public TodoItem(Status stat, int priority, Date startDate, Date dueDate, String contents, Frequency freq) {
-		this.stat = stat;
+		this.status = stat;
 		this.priority = priority;
 		this.startDate = startDate;
 		this.dueDate = dueDate;
@@ -33,7 +33,7 @@ public class TodoItem {
 	 * GETTERS
 	 */
 	public Status getStatus() {
-		return stat;
+		return status;
 	}
 
 	public int getPriority() {
@@ -76,7 +76,7 @@ public class TodoItem {
 	}
 
 	private void setStatus(Status stat) {
-		this.stat = stat;
+		this.status = stat;
 	}
 
 	public void setFreq(Frequency freq) {
@@ -84,7 +84,7 @@ public class TodoItem {
 	}
 
 	public void toggleStatus() {
-		switch (stat) {
+		switch (status) {
 		case TODO:
 			setStatus(Status.DONE);
 			break;
@@ -97,7 +97,7 @@ public class TodoItem {
 	}
 
 	public void markDone() {
-		switch (stat) {
+		switch (status) {
 		case TODO:
 			setStatus(Status.DONE);
 			break;
@@ -107,7 +107,7 @@ public class TodoItem {
 	}
 
 	public void markUndone() {
-		switch (stat) {
+		switch (status) {
 		case DONE:
 			setStatus(Status.TODO);
 			break;
@@ -185,5 +185,13 @@ public class TodoItem {
 				return i.getContents().compareTo(j.getContents());
 			}
 		};
+	}
+
+	public boolean isDone() {
+		return status == Status.DONE;
+	}
+
+	public boolean isTodo() {
+		return status == Status.TODO;
 	}
 }

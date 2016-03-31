@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.text.ParseException;
 import java.util.List;
 
@@ -17,7 +20,6 @@ public class TodoFile {
 	private static final DateFormat FORMATTER = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 	private String fileName;
 	private List<TodoItem> todos;
-	private List<TodoItem> done;
 	private int lines; // line is indexed at 1
 	private PrintWriter writer = null;
 
@@ -113,11 +115,6 @@ public class TodoFile {
 		return new TodoItem(s, p, sD, dD, c, f);
 	}
 
-	private void error(String msg) {
-		System.err.print(msg);
-		System.exit(1);
-	}
-
 	private void error(String msg, int l) {
 		System.err.print(msg + " at line " + l);
 		System.exit(1);
@@ -159,10 +156,6 @@ public class TodoFile {
 	}
 
 	public void displayDone() {
-		if (done.isEmpty()) {
-			System.out.println(fileName + " has no done items");
-			return;
-		}
 		printDoneItems();
 	}
 
@@ -210,8 +203,17 @@ public class TodoFile {
 	}
 
 	public void printDoneItems() {
-		for (int i = 1; i < done.size() + 1; i++) {
-			printLine(i);
+		boolean hasDone = false;
+		int i = 1;
+		for (TodoItem t : todos) {
+			if (t.isDone()) {
+				System.out.printf("%d. %s\n", i, t);
+				hasDone = true;
+			}
+			i++;
+		}
+		if (!hasDone) {
+			System.out.println(fileName + " has no done items");
 		}
 	}
 
@@ -273,6 +275,44 @@ public class TodoFile {
 		Collections.sort(todos, TodoItem.getContentsComparator());
 	}
 
+	/**
+	 * returns a list of todo items with due dates between begin and end
+	 */
+	public List<TodoItem> filterDueDates(LocalDateTime begin, LocalDateTime end) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
+		for (TodoItem todo : todos) {
+			// TODO the type stored in the TodoItem class to LocalDateTime
+			// TODO remove jada, as java8.time is supersedes it.
+			if (todo.getDueDate() == null)
+				continue;
+			Instant i = Instant.ofEpochMilli(todo.getDueDate().getTime());
+			LocalDateTime comp = LocalDateTime.ofInstant(i, ZoneOffset.UTC);
+			if ((begin.isBefore(comp) || begin.isEqual(comp)) && (end.isAfter(comp) || end.isEqual(comp))) {
+				ret.add(todo);
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * returns a list of todo items with start dates between begin and end
+	 */
+	public List<TodoItem> filterStartDates(LocalDateTime begin, LocalDateTime end) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
+		for (TodoItem todo : todos) {
+			// TODO the type stored in the TodoItem class to LocalDateTime
+			// TODO remove jada, as java8.time is supersedes it.
+			if (todo.getStartDate() == null)
+				continue;
+			Instant i = Instant.ofEpochMilli(todo.getStartDate().getTime());
+			LocalDateTime comp = LocalDateTime.ofInstant(i, ZoneOffset.UTC);
+			if ((begin.isBefore(comp) || begin.isEqual(comp)) && (end.isAfter(comp) || end.isEqual(comp))) {
+				ret.add(todo);
+			}
+		}
+		return ret;
+	}
+
 	public String toString() {
 		StringBuilder ret = new StringBuilder();
 		for (TodoItem item : todos) {
@@ -283,44 +323,40 @@ public class TodoFile {
 	}
 
 	public void markDone(TodoItem tdi) {
-		TodoItem replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
-				tdi.getContents(), Frequency.NONE);
-		switch (tdi.getFreq()) {
-		case DAILY:
-			tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 1);
-			break;
-		case WEEKLY:
-			tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 7);
-			break;
-		case MONTHLY:
-			tdi.getDueDate().setMonth(tdi.getDueDate().getMonth() + 1);
-			break;
-		case YEARLY:
-			tdi.getDueDate().setYear(tdi.getDueDate().getYear() + 1);
-			break;
-		default:
-			tdi.markDone();
-			todos.remove(tdi);
-			break;
+		tdi.markDone();
+		if (tdi.getFreq() != TodoItem.Frequency.NONE) {
+			TodoItem replacement = new TodoItem(TodoItem.Status.TODO, tdi.getPriority(), tdi.getStartDate(),
+					tdi.getDueDate(), tdi.getContents(), Frequency.NONE);
+			switch (tdi.getFreq()) {
+			case DAILY:
+				// TODO Refactor these using java8 time stuff
+				// TODO this is not going to work, because it only adds the next
+				// one if you finish the last one.
+				replacement.getDueDate().setDate(tdi.getDueDate().getDate() + 1);
+				break;
+			case WEEKLY:
+				replacement.getDueDate().setDate(tdi.getDueDate().getDate() + 7);
+				break;
+			case MONTHLY:
+				replacement.getDueDate().setMonth(tdi.getDueDate().getMonth() + 1);
+				break;
+			case YEARLY:
+				replacement.getDueDate().setYear(tdi.getDueDate().getYear() + 1);
+				break;
+			}
+			todos.add(replacement);
 		}
-		done.add(replacement);
 	}
 
 	public void markUndone(TodoItem tdi) {
 		tdi.markUndone();
-		todos.add(tdi);
-		done.remove(tdi);
 	}
 
 	public void toggle(TodoItem tdi) {
 		if (tdi.getStatus() == Status.DONE) {
 			tdi.markUndone();
-			todos.add(tdi);
-			done.remove(tdi);
 		} else {
 			tdi.markDone();
-			todos.remove(tdi);
-			done.add(tdi);
 		}
 	}
 

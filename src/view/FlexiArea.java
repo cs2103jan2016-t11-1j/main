@@ -1,14 +1,29 @@
 package view;
 
-import javafx.scene.control.TextArea;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import model.TodoFile;
+import model.TodoItem;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.time.Duration;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
+
+import edu.emory.mathcs.backport.java.util.Collections;
+
 //import java.time;
 
 //TODO make this just a box, not a text area
-public class FlexiArea extends TextArea {
-	private TodoFile info;
-	private Mode mode;
+public class FlexiArea extends TextFlow {
+	private TodoFile todos;
+	private Mode mode = Mode.SORT_CONTENTS;
 	private TimeState timeState;
+	private LocalDateTime start, end;
 
 	public enum Mode {
 		/*
@@ -29,37 +44,166 @@ public class FlexiArea extends TextArea {
 	}
 
 	public FlexiArea(TodoFile info) {
-		this.info = info;
-		setMode(Mode.SORT_CONTENTS);
-		setTimeState(TimeState.WEEK);
+		this.todos = info;
+		setTimeState(TimeState.ALL);
+	}
+
+	/*
+	 * updates the dates one more time chunk
+	 */
+	public void nextTimeChunk() {
+		switch (timeState) {
+		case DAY:
+			start = end;
+			end = start.plus(Duration.ofDays(1));
+			break;
+		case WEEK:
+			start = end;
+			end = start.plus(Duration.ofDays(7));
+			break;
+		case MONTH:
+			start = end;
+			end = start.with(TemporalAdjusters.firstDayOfNextMonth());
+			break;
+		case FUTURE:
+			start = LocalDate.now().atStartOfDay();
+		default:
+			break;
+		}
+	}
+
+	public void previousTimeChunk() {
+		switch (timeState) {
+		case DAY:
+			end = start;
+			start = end.minus(Duration.ofDays(1));
+			break;
+		case WEEK:
+			end = start;
+			start = end.minus(Duration.ofDays(7));
+			break;
+		case MONTH:
+			end = start;
+			start = end.minus(Duration.ofDays(1)).with(TemporalAdjusters.firstDayOfMonth());
+			break;
+		case FUTURE:
+			start = LocalDate.now().atStartOfDay();
+		default:
+			break;
+		}
 	}
 
 	public void setTimeState(TimeState timeState) {
+		if (start == null) {
+			start = LocalDate.now().atStartOfDay();
+		}
+		if (end == null) {
+			end = LocalDate.now().atStartOfDay();
+		}
+		if (start.getYear() == -999999999) {
+			start = LocalDate.now().atStartOfDay();
+		}
+		switch (timeState) {
+		case DAY:
+			end = start.plus(Duration.ofDays(1));
+			break;
+		case WEEK:
+			start = start.with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1);
+			end = start.plus(Duration.ofDays(7));
+			break;
+		case MONTH:
+			start = start.with(TemporalAdjusters.firstDayOfMonth());
+			end = start.with(TemporalAdjusters.firstDayOfNextMonth());
+			break;
+		case ALL:
+			start = LocalDateTime.MIN;
+			end = LocalDateTime.MAX;
+			break;
+		case FUTURE:
+			start = LocalDate.now().atStartOfDay();
+			end = LocalDateTime.MAX;
+			break;
+		}
+
 		this.timeState = timeState;
-		// TODO make it actually affect the view, should just append new view to
-		// children.
+		refresh();
+	}
+
+	public void refresh() {
+		setMode(mode);
 	}
 
 	public void setMode(Mode newState) {
+		this.getChildren().clear();
+
+		List<TodoItem> startTodos = todos.filterStartDates(start, end);
+		List<TodoItem> dueTodos = todos.filterDueDates(start, end);
 		switch (newState) {
 		case SORT_PRIORITY:
+			Collections.sort(startTodos, TodoItem.getPriorityComparator());
+			Collections.sort(dueTodos, TodoItem.getPriorityComparator());
 			break;
 		case SORT_CONTENTS:
+			Collections.sort(startTodos, TodoItem.getContentsComparator());
+			Collections.sort(dueTodos, TodoItem.getContentsComparator());
 			break;
 		case SORT_DATE:
+		case HEAT_MAP:
+			Collections.sort(startTodos, TodoItem.getStartDateComparator());
+			Collections.sort(dueTodos, TodoItem.getDueDateComparator());
 			break;
 		case SORT_STATUS:
+			Collections.sort(startTodos, TodoItem.getStatusComparator());
+			Collections.sort(dueTodos, TodoItem.getStatusComparator());
 			break;
-		case HEAT_MAP:
-			break;
+
 		}
+		printDueTodos(dueTodos);
+		printStartTodos(startTodos);
+
 		this.mode = newState;
-		// TODO make it actually affect the view, should just append new view to
-		// children.
+	}
+
+	public void printStartTodos(List<TodoItem> startTodos) {
+		List<Node> children = this.getChildren();
+		for (TodoItem t : startTodos) {
+			Text txt;
+			if (t.isDone()) {
+				txt = new Text("DONE, Start date at " + t.getStartDate() + " || " + t.getContents() + "\n");
+				txt.setFill(Color.BLUE);
+			} else {
+				txt = new Text("TODO, Start date at " + t.getStartDate() + " || " + t.getContents() + "\n");
+				txt.setFill(Color.ORANGE);
+			}
+			children.add(txt);
+		}
+	}
+
+	public void printDueTodos(List<TodoItem> dueTodos) {
+		List<Node> children = this.getChildren();
+		for (TodoItem t : dueTodos) {
+			Text txt;
+			if (t.isDone()) {
+				txt = new Text("DONE, Start date at " + t.getDueDate() + " || " + t.getContents() + "\n");
+				txt.setFill(Color.BLUE);
+			} else {
+				txt = new Text("TODO, Start date at " + t.getDueDate() + " || " + t.getContents() + "\n");
+				txt.setFill(Color.ORANGE);
+			}
+			children.add(txt);
+		}
 	}
 
 	public Mode getMode() {
 		return mode;
+	}
+
+	public String start() {
+		return start.toString();
+	}
+
+	public String end() {
+		return end.toString();
 	}
 
 	public TimeState getTimeState() {

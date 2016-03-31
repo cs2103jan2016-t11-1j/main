@@ -5,13 +5,14 @@ import java.io.PrintStream;
 import controller.CommandInterpreter;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.TodoFile;
 
@@ -24,7 +25,7 @@ public class TidyYard extends Application {
 	private TextField inputField;
 	private TextArea commandResult;
 	private FlexiArea flexiView;
-	private GridPane grid;
+	private BorderPane border;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -32,34 +33,32 @@ public class TidyYard extends Application {
 
 	private void addTopInput() {
 		this.inputField = new TextField();
-		this.grid.add(this.inputField, 0, 0, HWIDTH, 1);
+		this.border.setTop(this.inputField);
 	}
 
 	private void addCommandResult() {
 		this.commandResult = new TextArea();
 		this.commandResult.setEditable(false);
-
-		this.grid.add(this.commandResult, 0, VWIDTH + 2, HWIDTH, 1);
+		this.border.setBottom(this.commandResult);
 	}
 
 	private void addFlexiView() {
 		this.flexiView = new FlexiArea(todos);
-		this.flexiView.setEditable(false);
-		this.grid.add(this.flexiView, 0, 1, HWIDTH, VWIDTH);
+		this.flexiView.setVisible(true);
+		this.border.setBottom(this.flexiView);
 	}
 
 	private void redirect() {
 		PrintStream stream = new PrintStream(new ConsoleArea(this.commandResult), true);
-		System.setOut(stream);
+		// System.setOut(stream);
 		// System.setErr(stream);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		grid = new GridPane();
-		grid.setAlignment(Pos.TOP_CENTER);
-		grid.setHgap(0);
-		grid.setVgap(3);
+		border = new BorderPane();
+		// border.setHgap(0);
+		// border.setVgap(3);
 		// grid.setPadding(new Insets(25, 25, 25, 25));
 		addTopInput();
 		addCommandResult();
@@ -67,12 +66,7 @@ public class TidyYard extends Application {
 		addFlexiView();
 		controller = new CommandInterpreter(todos, flexiView);
 
-		// commander.nextCommand();
-		// commander.executeCommand();
-		// System.out.print(PROMPT);
-		// }
-
-		Scene scene = new Scene(grid);
+		Scene scene = new Scene(border, 1000, 800, Color.WHITE);
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
