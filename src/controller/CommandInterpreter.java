@@ -218,11 +218,11 @@ public class CommandInterpreter {
 				break;
 			case MONTH:
 				System.out
-						.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
+				.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			case WEEK:
 				System.out
-						.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
+				.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			}
 			break;
@@ -326,6 +326,24 @@ public class CommandInterpreter {
 			newDate = newDate.trim();
 			op = new UpdateDueDateOperation(todos, todos.getItem(index - 1), newDate);
 			op.execute();
+			break;
+		case "help":
+			System.out.println("Commands");
+			System.out.println("display: show the current state of the todo file.");
+			System.out.println("add: add a todo item.");
+			System.out.println("delete: delete a todo item, specified by the number shown in the display command.");
+			System.out.println("clear: delete all the todos in this file.");
+			System.out.println("exit: exit the todo file");
+			System.out.println("write: force a write to the file");
+			System.out.println("sort: sort the todo file by contents.");
+			System.out.println("search: search for the contents of a todo item.");
+			System.out.println("mode: change the mode, for more info, type 'mode help'");
+			System.out.println("whatmode: prints the current display mode");
+			System.out.println("time: change the time, for more info, type 'time help'");
+			System.out.println("whattime: prints the time setting.");
+			System.out.println("previous: change to the previous time chunk.");
+			System.out.println("next: change to the next time chunk.");
+			System.out.println("todo/done: toggle the status of an item item as todo/done");
 			break;
 		default:
 			System.out.println("Command not recognized.");
