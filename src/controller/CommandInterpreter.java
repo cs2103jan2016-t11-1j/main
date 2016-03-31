@@ -115,14 +115,14 @@ public class CommandInterpreter {
 					return;
 				}
 			}
-			op = new DeleteOperation(todos, todos.getItem(index-1));
+			op = new DeleteOperation(todos, todos.getItem(index - 1));
 			op.execute();
 			break;
 		case "clear":
 		case "clr":
 		case "cl":
 		case "cle":
-		// TODO Change to OP
+			// TODO Change to OP
 			todos.clear();
 			System.out.println("all todos deleted");
 			break;
@@ -264,7 +264,7 @@ public class CommandInterpreter {
 		case "done":
 			rest = lastCommand.substring(command.length()).replaceAll(WHITESPACE, "");
 			try {
-				todos.toggle(todos.getItem((Integer.parseInt(rest))-1));
+				todos.toggle(todos.getItem((Integer.parseInt(rest)) - 1));
 			} catch (NumberFormatException e) {
 				System.out.println("Bad int format");
 			}
@@ -276,6 +276,56 @@ public class CommandInterpreter {
 		case "next":
 		case "nxt":
 			flexiView.nextTimeChunk();
+			break;
+		case "updatem":
+		case "upm":
+			if (todos.isEmpty()) {
+				System.out.printf("No todos\n");
+				return;
+			}
+			if (splitString.length < 2) {
+				System.out.println("No number supplied, update not possible");
+				index = -1;
+			} else {
+				try {
+					index = Integer.parseInt(splitString[1]);
+				} catch (NumberFormatException e) {
+					System.out.print("Parameter must be a number\n");
+					return;
+				}
+			}
+			String newMsg = "";
+			for (int i = 2; i < splitString.length; i++) {
+				newMsg = newMsg + " " + splitString[i];
+			}
+			newMsg = newMsg.trim();
+			op = new UpdateMessageOperation(todos, todos.getItem(index - 1), newMsg);
+			op.execute();
+			break;
+		case "updated":
+		case "upd":
+			if (todos.isEmpty()) {
+				System.out.printf("No todos to update\n");
+				return;
+			}
+			if (splitString.length < 2) {
+				System.out.println("No number supplied, update not possible.");
+				index = -1;
+			} else {
+				try {
+					index = Integer.parseInt(splitString[1]);
+				} catch (NumberFormatException e) {
+					System.out.print("Parameter must be a number\n");
+					return;
+				}
+			}
+			String newDate = "";
+			for (int i = 2; i < splitString.length; i++) {
+				newDate += " " + splitString[i];
+			}
+			newDate = newDate.trim();
+			op = new UpdateDueDateOperation(todos, todos.getItem(index - 1), newDate);
+			op.execute();
 			break;
 		default:
 			System.out.println("Command not recognized.");
