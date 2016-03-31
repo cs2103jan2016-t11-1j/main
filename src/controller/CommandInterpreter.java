@@ -94,6 +94,11 @@ public class CommandInterpreter {
 			toDoMessage = "";
 			break;
 		case "delete":
+		case "del":
+		case "de":
+		case "dlt":
+		case "delt":
+		case "delet":
 			if (todos.isEmpty()) {
 				System.out.printf("No todos\n");
 				return;
@@ -113,11 +118,11 @@ public class CommandInterpreter {
 			op = new DeleteOperation(todos, todos.getItem(index-1));
 			op.execute();
 			break;
+		case "clear":
 		case "clr":
 		case "cl":
 		case "cle":
-		case "clear":
-			// TODO Change to OP
+		// TODO Change to OP
 			todos.clear();
 			System.out.println("all todos deleted");
 			break;
@@ -264,8 +269,8 @@ public class CommandInterpreter {
 				System.out.println("Bad int format");
 			}
 			break;
-		case "prev":
 		case "previous":
+		case "prev":
 			flexiView.previousTimeChunk();
 			break;
 		case "next":
