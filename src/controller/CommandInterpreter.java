@@ -110,7 +110,7 @@ public class CommandInterpreter {
 					return;
 				}
 			}
-			op = new DeleteOperation(todos, todos.getItem(index));
+			op = new DeleteOperation(todos, todos.getItem(index-1));
 			op.execute();
 			break;
 		case "clr":
@@ -259,7 +259,7 @@ public class CommandInterpreter {
 		case "done":
 			rest = lastCommand.substring(command.length()).replaceAll(WHITESPACE, "");
 			try {
-				todos.toggle(todos.getItem(Integer.parseInt(rest)));
+				todos.toggle(todos.getItem((Integer.parseInt(rest))-1));
 			} catch (NumberFormatException e) {
 				System.out.println("Bad int format");
 			}
