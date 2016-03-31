@@ -86,6 +86,8 @@ public class CommandInterpreter {
 			DateParser dp = new DateParser();
 			parsedDate = dp.parse(dateForNatty);
 
+			dateForNatty = "";
+
 			op = new AddOperation(todos,
 					new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
 			op.execute();
