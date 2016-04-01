@@ -12,7 +12,11 @@ public class CommandInterpreter {
 	private static String toDoMessage = "";
 	public static Integer intPriority;
 	private static String dateForNatty = "";
-	private static Date parsedDate;
+	private static String startDateForNatty = "";
+	private static String endDateForNatty = "";
+	private static Date parsedDueDate;
+	private static Date parsedStartDate;
+	private static Date parsedEndDate;
 	private String lastCommand;
 	private TodoFile todos;
 	private FlexiArea flexiView;
@@ -32,9 +36,7 @@ public class CommandInterpreter {
 
 	public void executeCommand() {
 		/*
-		 * String is split into command, message, priority and date and stored
-		 * in splitString[]
-		 *
+		 * String is split into command, message, priority and date
 		 */
 		Operation op = null;
 		String[] splitString = lastCommand.split(WHITESPACE);
@@ -56,7 +58,6 @@ public class CommandInterpreter {
 		case "addd":
 		case "asd":
 		case "ads":
-			// TODO parser still doesn't switch properly.
 			int hexIndex = -1;
 			for (int j = 1; j < splitString.length; j++) {
 				if (splitString[j].charAt(0) == SEPERATOR) {
@@ -74,25 +75,92 @@ public class CommandInterpreter {
 			} else {
 				intPriority = -1;
 			}
-			/*
-			 * for (int j = 1; j < hexIndex; j++){ toDoMessage = toDoMessage +
-			 * " " + splitString[j]; } toDoMessage = toDoMessage.trim();
-			 */
-			for (int j = hexIndex + 1; j < splitString.length; j++) {
-				dateForNatty = dateForNatty + " " + splitString[j];
-			}
-			dateForNatty = dateForNatty.trim();
 
+			/*
+			 * Date parsing starts here Walkthrough for the code below using
+			 * example Eg. tomorrow from 5 to 6 1. Search for 'from' and 'to'
+			 * equivalents. 2. If found then: a. startdate = tomorrow + at + 5
+			 * b. enddate = tomorrow + at + 6 (Note how 'from' and 'to' is
+			 * changed to 'at' for natty to recognize) 3. If not found then send
+			 * entire string as duedate (like before). Eg. day after tomorrow
+			 * (no 'from' or 'to' found, so can parse entire string with natty)
+			 * 4. For adding, if start and end date exist, then add accordingly.
+			 * 5. Have to use this implementation as natty doesn't return 2
+			 * values and doesn't recognize the from...to... format.
+			 */
+
+			String dateParsingString = "";
 			DateParser dp = new DateParser();
-			parsedDate = dp.parse(dateForNatty);
+			int fromIdx = -1;
+			int toIdx = -1;
+			String[] fromConstants = { "from", "start", "starting", "begin", "beginning" };
+			String[] toConstants = { "to", "end", "ending", "till" };
+			String beforeFrom = "";
+			String afterFrom = "";
+			String afterTo = "";
+
+			for (int j = hexIndex + 1; j < splitString.length; j++) {
+				dateParsingString = dateParsingString + " " + splitString[j];
+			}
+			dateParsingString = dateParsingString.trim();
+			String[] dateStringArray = dateParsingString.split(WHITESPACE);
+
+			for (int i = 0; i < dateStringArray.length; i++) {
+				for (int j = 0; j < fromConstants.length; j++) {
+					String temp1 = dateStringArray[i];
+					String temp2 = fromConstants[j];
+					if (temp1.equals(temp2)) {
+						fromIdx = i;
+					}
+				}
+				for (int k = 0; k < toConstants.length; k++) {
+					String temp1 = dateStringArray[i];
+					String temp2 = toConstants[k];
+					if (temp1.equals(temp2)) {
+						toIdx = i;
+					}
+				}
+			}
+
+			if (fromIdx > 0 && toIdx > 0) {
+				for (int j = 0; j < fromIdx; j++) {
+					beforeFrom = beforeFrom + " " + dateStringArray[j];
+				}
+				for (int j = fromIdx + 1; j < toIdx; j++) {
+					afterFrom = afterFrom + " " + dateStringArray[j];
+				}
+				for (int j = toIdx + 1; j < dateStringArray.length; j++) {
+					afterTo = afterTo + " " + dateStringArray[j];
+				}
+				beforeFrom = beforeFrom.trim();
+				afterFrom = afterFrom.trim();
+				afterTo = afterTo.trim();
+				startDateForNatty = startDateForNatty + " " + beforeFrom + " " + "at" + " " + afterFrom;
+				endDateForNatty = endDateForNatty + " " + beforeFrom + " " + "at" + " " + afterTo;
+				startDateForNatty = startDateForNatty.trim();
+				endDateForNatty = endDateForNatty.trim();
+				parsedStartDate = dp.parse(startDateForNatty);
+				parsedEndDate = dp.parse(endDateForNatty);
+			} else {
+				dateForNatty = dateParsingString;
+				parsedDueDate = dp.parse(dateForNatty);
+			}
 
 			dateForNatty = "";
+			startDateForNatty = "";
+			endDateForNatty = "";
 
-			op = new AddOperation(todos,
-					new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDate, toDoMessage, Frequency.NONE));
+			if (parsedStartDate != null && parsedEndDate != null) {
+				op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, parsedStartDate,
+						parsedEndDate, toDoMessage, Frequency.NONE));
+			} else if (parsedDueDate != null) {
+				op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDueDate,
+						toDoMessage, Frequency.NONE));
+			}
 			op.execute();
 			toDoMessage = "";
 			break;
+
 		case "delete":
 		case "del":
 		case "de":
@@ -134,7 +202,9 @@ public class CommandInterpreter {
 		case "write":
 		case "wrt":
 		case "writ":
-		case "rit":
+		case "save":
+		case "sav":
+		case "sv":
 			// TODO Change to OP
 			todos.write();
 			break;
@@ -218,11 +288,11 @@ public class CommandInterpreter {
 				break;
 			case MONTH:
 				System.out
-				.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
+						.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			case WEEK:
 				System.out
-				.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
+						.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			}
 			break;

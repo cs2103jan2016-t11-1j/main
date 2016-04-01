@@ -17,7 +17,7 @@ public class DateParser {
 	protected Parser natty = null;
 
 	protected DateParser() {
-		// BasicConfigurator.configure();
+		//BasicConfigurator.configure();
 		natty = new Parser();
 
 	}
@@ -53,7 +53,7 @@ public class DateParser {
 	}
 
 	public List<Date> parseAndGetDateList(String input, Date defaultTime) {
-		//assert (input != null); // input should always be checked to be not null
+		assert (input != null); // input should always be checked to be not null
 
 		CalendarSource.setBaseDate(defaultTime);
 		List<DateGroup> baseDateGroupList = natty.parse(input);
