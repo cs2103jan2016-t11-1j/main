@@ -136,6 +136,7 @@ public class TodoFile {
 			System.out.printf(t.toString() + " is not found in todos.");
 		}
 		todos.remove(t);
+		write();
 	}
 
 	public void searchDate(Date toFind) {
@@ -180,26 +181,31 @@ public class TodoFile {
 	public void add(int priority, String message) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, priority, null, null, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
+		write();
 	}
 
 	public void add(int priority, Date startDate, String message) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, priority, startDate, null, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
+		write();
 	}
 
 	public void add(int priority, String message, Date dueDate) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, priority, null, dueDate, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
+		write();
 	}
 
 	public void add(int priority, Date startDate, Date dueDate, String message) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, priority, startDate, dueDate, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
+		write();
 	}
 
 	public void add(TodoItem addedItem) {
 		todos.add(addedItem);
 		System.out.printf("added to %s: \"%s\"\n", fileName, addedItem.getContents());
+		write();
 	}
 
 	public void printFile() {
@@ -259,26 +265,32 @@ public class TodoFile {
 
 	public void sort() {
 		Collections.sort(todos, TodoItem.getDueDateComparator());
+		write();
 	}
 
 	public void sortByDueDate() {
 		Collections.sort(todos, TodoItem.getDueDateComparator());
+		write();
 	}
 
 	public void sortByStartDate() {
 		Collections.sort(todos, TodoItem.getStartDateComparator());
+		write();
 	}
 
 	public void sortByPriority() {
 		Collections.sort(todos, TodoItem.getPriorityComparator());
+		write();
 	}
 
 	public void sortByStatus() {
 		Collections.sort(todos, TodoItem.getStatusComparator());
+		write();
 	}
 
 	public void sortByContents() {
 		Collections.sort(todos, TodoItem.getContentsComparator());
+		write();
 	}
 
 	/**
@@ -364,25 +376,31 @@ public class TodoFile {
 		} else {
 			tdi.markDone();
 		}
+		write();
 	}
 
 	public void updateDueDate(TodoItem tdi, Date newDate) {
 		tdi.setDueDate(newDate);
+		write();
 	}
 
 	public void updateStartDate(TodoItem tdi, Date newDate) {
 		tdi.setStartDate(newDate);
+		write();
 	}
 
 	public void updatePriority(TodoItem tdi, int newPriority) {
 		tdi.setPriority(newPriority);
+		write();
 	}
 
 	public void updateFrequency(TodoItem tdi, Frequency newFreq) {
 		tdi.setFreq(newFreq);
+		write();
 	}
 
 	public void updateContents(TodoItem tdi, String newContents) {
 		tdi.setContents(newContents);
+		write();
 	}
 }

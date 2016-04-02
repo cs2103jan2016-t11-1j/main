@@ -78,15 +78,17 @@ public class CommandInterpreter {
 
 			/*
 			 * Date parsing starts here Walkthrough for the code below using
-			 * example Eg. tomorrow from 5 to 6 1. Search for 'from' and 'to'
-			 * equivalents. 2. If found then: a. startdate = tomorrow + at + 5
-			 * b. enddate = tomorrow + at + 6 (Note how 'from' and 'to' is
-			 * changed to 'at' for natty to recognize) 3. If not found then send
-			 * entire string as duedate (like before). Eg. day after tomorrow
-			 * (no 'from' or 'to' found, so can parse entire string with natty)
+			 * example: 'tomorrow from 5 to 6' 
+			 * 1. Search for 'from' and 'to'equivalents. 
+			 * 2. If found then: 
+			 *   a. startdate = tomorrow + at + 5
+			 *   b. enddate = tomorrow + at + 6 
+			 *   (Note how 'from' and 'to' is changed to 'at' for natty to recognize) 
+			 * 3. If not found then send entire string as duedate (like before). 
+			 * Eg. day after tomorrow(no 'from' or 'to' found, so can parse entire string with natty)
 			 * 4. For adding, if start and end date exist, then add accordingly.
 			 * 5. Have to use this implementation as natty doesn't return 2
-			 * values and doesn't recognize the from...to... format.
+			 *    values and doesn't recognize the from...to... format.
 			 */
 
 			String dateParsingString = "";
