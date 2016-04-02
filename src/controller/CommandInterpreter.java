@@ -435,6 +435,7 @@ public class CommandInterpreter {
 			System.out.println("add: add a todo item.");
 			System.out.println("delete: delete a todo item, specified by the number shown in the display command.");
 			System.out.println("clear: delete all the todos in this file.");
+			System.out.println("uped/upsd/upm: update the endDate/startDate/message respectively");
 			System.out.println("exit: exit the todo file");
 			System.out.println("write: force a write to the file");
 			System.out.println("sort: sort the todo file by contents.");
