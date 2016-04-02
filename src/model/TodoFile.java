@@ -256,6 +256,7 @@ public class TodoFile {
 
 	public void clear() {
 		todos.clear();
+		write();
 	}
 
 	public void exit() {
