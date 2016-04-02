@@ -375,7 +375,10 @@ public class CommandInterpreter {
 			op.execute();
 			break;
 		case "updated":
-		case "upd":
+		case "uped":
+		case "updd":
+		case "updued":
+		case "upendd":
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to update\n");
 				return;
@@ -396,7 +399,34 @@ public class CommandInterpreter {
 				newDate += " " + splitString[i];
 			}
 			newDate = newDate.trim();
-			op = new UpdateDueDateOperation(todos, todos.getItem(index - 1), newDate);
+			op = new UpdateEndDateOperation(todos, todos.getItem(index - 1), newDate);
+			op.execute();
+			break;
+		case "updatesd":
+		case "upsd":
+		case "upstartd":
+		case "upstd":
+			if (todos.isEmpty()) {
+				System.out.printf("No todos to update\n");
+				return;
+			}
+			if (splitString.length < 2) {
+				System.out.println("No number supplied, update not possible.");
+				index = -1;
+			} else {
+				try {
+					index = Integer.parseInt(splitString[1]);
+				} catch (NumberFormatException e) {
+					System.out.print("Parameter must be a number\n");
+					return;
+				}
+			}
+			String newDate2 = "";
+			for (int i = 2; i < splitString.length; i++) {
+				newDate2 += " " + splitString[i];
+			}
+			newDate2 = newDate2.trim();
+			op = new UpdateStartDateOperation(todos, todos.getItem(index - 1), newDate2);
 			op.execute();
 			break;
 		case "help":

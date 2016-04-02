@@ -380,7 +380,7 @@ public class TodoFile {
 		write();
 	}
 
-	public void updateDueDate(TodoItem tdi, Date newDate) {
+	public void updateEndDate(TodoItem tdi, Date newDate) {
 		tdi.setDueDate(newDate);
 		write();
 	}

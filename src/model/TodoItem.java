@@ -10,7 +10,7 @@ public class TodoItem {
 
 	private Status status;
 	private int priority; // -1 if not set
-	private Date startDate;
+	private Date startDate; // possibly null
 	private Date dueDate; // possibly null
 	private String contents;
 
@@ -68,7 +68,7 @@ public class TodoItem {
 	}
 
 	public void setStartDate(Date date) {
-		this.dueDate = date;
+		this.startDate = date;
 	}
 
 	public void setContents(String newContents) {
