@@ -139,18 +139,18 @@ public class TodoFile {
 	}
 
 	public void searchDate(Date toFind) {
-		TodoSearcher tds = new TodoSearcher();
-		tds.searchDate(todos, toFind);
+		TodoDateSearcher tdds = new TodoDateSearcher();
+		tdds.searchDate(todos, toFind);
 	}
 
 	public void searchString(String toFind) {
-		TodoSearcher tds = new TodoSearcher();
-		tds.searchString(todos, toFind);
+		TodoStringSearcher tdss = new TodoStringSearcher();
+		tdss.searchString(todos, toFind);
 	}
 
 	public void searchTime(Date toFind) {
-		TodoSearcher tds = new TodoSearcher();
-		tds.searchTime(todos, toFind);
+		TodoTimeSearcher tdts = new TodoTimeSearcher();
+		tdts.searchTime(todos, toFind);
 	}
 
 	public void display() {
@@ -332,7 +332,7 @@ public class TodoFile {
 		tdi.markDone();
 		if (tdi.getFreq() != TodoItem.Frequency.NONE) {
 			TodoItem replacement = new TodoItem(TodoItem.Status.TODO, tdi.getPriority(), tdi.getStartDate(),
-					tdi.getDueDate(), tdi.getContents(), Frequency.NONE);
+					tdi.getDueDate(), tdi.getContents(), tdi.getFreq());
 			switch (tdi.getFreq()) {
 			case DAILY:
 				// TODO Refactor these using java8 time stuff
