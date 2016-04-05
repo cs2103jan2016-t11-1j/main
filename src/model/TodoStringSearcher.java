@@ -9,12 +9,17 @@ public class TodoStringSearcher {
 
 	public void searchString(List<TodoItem> todos, String toFind) {
 		try {
+			boolean stringFound = false;
 			int i = 1;
 			for (TodoItem tdi : todos) {
 				if (tdi.getContents().contains(toFind)) {
 					System.out.println(toFind + " found in line " + i + ". " + tdi.getContents());
+					stringFound = true;
 				}
 				i++;
+			}
+			if (!stringFound){
+				System.out.println(toFind + " was not found in todos");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -79,7 +79,6 @@ public class PowerSearcher {
 			for (String s: remainingPermutations){
 				permutated.add(current +" "+ s);
 			}
-			System.out.println();
 			permutated.add(current);
 			return permutated;
 		}
@@ -92,7 +91,7 @@ public class PowerSearcher {
 				if (cmp==0){
 					return i.compareTo(j);
 				}else{
-					return cmp;
+					return -(cmp);
 				}
 			}
 		};
