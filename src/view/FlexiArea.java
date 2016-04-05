@@ -173,7 +173,7 @@ public class FlexiArea extends TextFlow {
 				txt.setFill(Color.BLUE);
 			} else {
 				txt = new Text("TODO, Start date at " + t.getStartDate() + " || " + t.getContents() + "\n");
-				txt.setFill(Color.ORANGE);
+				txt.setFill(Color.RED);
 			}
 			children.add(txt);
 		}
@@ -188,7 +188,7 @@ public class FlexiArea extends TextFlow {
 				txt.setFill(Color.BLUE);
 			} else {
 				txt = new Text("TODO, Start date at " + t.getDueDate() + " || " + t.getContents() + "\n");
-				txt.setFill(Color.ORANGE);
+				txt.setFill(Color.RED);
 			}
 			children.add(txt);
 		}

@@ -157,10 +157,7 @@ public class TodoFile {
 
 	public void powerSearch(){
 		PowerSearcher ps = new PowerSearcher();
-		ArrayList<Date[]> freeTimeSlots = ps.findFreeTime(todos);
-		for (Date[] freeTimeSlot: freeTimeSlots){
-			System.out.println("Free Time located from " + freeTimeSlot[0] + " to " + freeTimeSlot[1]);
-		}
+		ps.findFreeTime(todos);
 	}
 	
 	public void display() {
