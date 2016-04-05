@@ -469,5 +469,10 @@ public class TodoFile {
 			}
 		}
 	}
+	
+	public void powerSearchString(String toFind){
+		PowerSearcher ps = new PowerSearcher();
+		ps.powerSearchString(todos, toFind);
+	}
 }
 

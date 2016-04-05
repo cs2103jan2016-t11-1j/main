@@ -55,5 +55,6 @@ public class TodoFileTests {
 		todos.add(3, new Date(20000000), new Date(50000000), "SANPAI NOTICE ME!");
 		todos.add(2, new Date(70000000), new Date(8000000), "YOUR WAIFU IS TRASH!");
 		todos.powerSearch();
+		todos.powerSearchString("SAN YO");
 	}
 }
