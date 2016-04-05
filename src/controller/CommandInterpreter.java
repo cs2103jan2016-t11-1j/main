@@ -68,7 +68,7 @@ public class CommandInterpreter {
 				}
 			}
 			toDoMessage = toDoMessage.trim();
-
+			
 			String hexedPriority = splitString[hexIndex];
 			if (!hexedPriority.substring(1).equals("")) {
 				intPriority = Integer.parseInt(hexedPriority.substring(1));
@@ -96,10 +96,11 @@ public class CommandInterpreter {
 			int fromIdx = -1;
 			int toIdx = -1;
 			String[] fromConstants = { "from", "start", "starting", "begin", "beginning" };
-			String[] toConstants = { "to", "end", "ending", "till" };
+			String[] toConstants = { "to", "end", "ending", "till", "by" };
 			String beforeFrom = "";
 			String afterFrom = "";
 			String afterTo = "";
+			String beforeTo = "";
 
 			for (int j = hexIndex + 1; j < splitString.length; j++) {
 				dateParsingString = dateParsingString + " " + splitString[j];
@@ -143,16 +144,42 @@ public class CommandInterpreter {
 				endDateForNatty = endDateForNatty.trim();
 				parsedStartDate = dp.parse(startDateForNatty);
 				parsedEndDate = dp.parse(endDateForNatty);
-			} else {
+			} else if (fromIdx > 0 && toIdx < 0){
+				for (int j = 0; j < fromIdx; j++) {
+					beforeFrom = beforeFrom + " " + dateStringArray[j];
+				}
+				for (int j = fromIdx + 1; j < dateStringArray.length; j++) {
+					afterFrom = afterFrom + " " + dateStringArray[j];
+				}
+				beforeFrom = beforeFrom.trim();
+				afterFrom = afterFrom.trim();
+				startDateForNatty = startDateForNatty + " " + beforeFrom + " " + "at" + " " + afterFrom;
+				endDateForNatty = "";
+				startDateForNatty = startDateForNatty.trim();
+				endDateForNatty = endDateForNatty.trim();
+				parsedStartDate = dp.parse(startDateForNatty);
+				parsedEndDate = dp.parse(endDateForNatty);
+			} else if(fromIdx < 0 && toIdx > 0){
+				for (int j = 0; j < toIdx; j++) {
+					beforeTo = beforeTo + " " + dateStringArray[j];
+				}
+				for (int j = toIdx + 1; j < dateStringArray.length; j++) {
+					afterTo = afterTo + " " + dateStringArray[j];
+				}
+				beforeTo = beforeTo.trim();
+				afterTo = afterTo.trim();
+				startDateForNatty = "";
+				endDateForNatty = endDateForNatty + " " + beforeTo + " " + "at" + " " + afterTo;
+				startDateForNatty = startDateForNatty.trim();
+				endDateForNatty = endDateForNatty.trim();
+				parsedStartDate = dp.parse(startDateForNatty);
+				parsedEndDate = dp.parse(endDateForNatty);
+			} else if (fromIdx < 0 && toIdx < 0){
 				dateForNatty = dateParsingString;
 				parsedDueDate = dp.parse(dateForNatty);
 			}
 
-			dateForNatty = "";
-			startDateForNatty = "";
-			endDateForNatty = "";
-
-			if (parsedStartDate != null && parsedEndDate != null) {
+			if (parsedStartDate != null || parsedEndDate != null) {
 				op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, parsedStartDate,
 						parsedEndDate, toDoMessage, Frequency.NONE));
 			} else if (parsedDueDate != null) {
@@ -161,6 +188,12 @@ public class CommandInterpreter {
 			}
 			op.execute();
 			toDoMessage = "";
+			dateForNatty = "";
+			startDateForNatty = "";
+			endDateForNatty = "";
+			parsedDueDate = null;
+			parsedStartDate = null;
+			parsedEndDate = null;
 			break;
 
 		case "delete":
