@@ -462,6 +462,35 @@ public class CommandInterpreter {
 			op = new UpdateStartDateOperation(todos, todos.getItem(index - 1), newDate2);
 			op.execute();
 			break;
+		case "updatep":
+		case "updp":
+		case "upp":
+		case "updatepriority":
+			if (todos.isEmpty()) {
+				System.out.printf("No todos\n");
+				return;
+			}
+			if (splitString.length < 2) {
+				System.out.println("No number supplied, update not possible");
+				index = -1;
+			} else {
+				try {
+					index = Integer.parseInt(splitString[1]);
+				} catch (NumberFormatException e) {
+					System.out.print("Parameter must be a number\n");
+					return;
+				}
+			}
+			int newP;
+			if (Integer.parseInt(splitString[2]) > 0){
+			newP = Integer.parseInt(splitString[2]);
+			} else {
+				newP = -1;
+			}
+				
+			op = new UpdatePriorityOperation(todos, todos.getItem(index - 1), newP);
+			op.execute();
+			break;
 		case "help":
 			System.out.println("Commands");
 			System.out.println("display: show the current state of the todo file.");
