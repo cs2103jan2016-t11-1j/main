@@ -9,6 +9,7 @@ import model.TodoItem;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.sql.Time;
 import java.time.Duration;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
@@ -16,16 +17,13 @@ import java.util.Locale;
 import java.util.ArrayList;
 import java.util.Collections;
 
-//import java.time;
-
-//TODO make this just a box, not a text area
 public class FlexiArea extends TextFlow {
 	public static final Mode DEFAULT_MODE = Mode.SORT_DATE;
 	public static final TimeState DEFAULT_TIME = TimeState.ALL;
 	private TodoFile todos;
 	private Mode mode = DEFAULT_MODE;
 	private TimeState timeState;
-	private LocalDateTime start, end;
+	private LocalDateTime start, end; // null when floating
 	private List<TodoItem> currTodos;
 
 	public enum Mode {
@@ -34,7 +32,8 @@ public class FlexiArea extends TextFlow {
 		 * SORT_STATUS: Sort by status SORT_CONTENTS: Sort by contents HEAT_MAP:
 		 * show the heat map
 		 */
-		SORT_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS, HEAT_MAP
+		SORT_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS, HEAT_MAP, 
+		SEARCH_RESULTS
 	};
 
 	public enum TimeState {
@@ -43,7 +42,7 @@ public class FlexiArea extends TextFlow {
 		 * week MONTH: view each month ALL: everything, in a big bag FUTURE:
 		 * everything in the future, in a big bag
 		 */
-		DAY, WEEK, MONTH, ALL, FUTURE
+		DAY, WEEK, MONTH, ALL, FUTURE, FLOATING
 	}
 
 	public FlexiArea(TodoFile info) {
@@ -71,7 +70,10 @@ public class FlexiArea extends TextFlow {
 			break;
 		case FUTURE:
 			start = LocalDate.now().atStartOfDay();
-		default:
+			break;
+		case FLOATING:
+			break;
+		case ALL:
 			break;
 		}
 	}
@@ -92,7 +94,10 @@ public class FlexiArea extends TextFlow {
 			break;
 		case FUTURE:
 			start = LocalDate.now().atStartOfDay();
-		default:
+			break;
+		case FLOATING:
+			break;
+		case ALL:
 			break;
 		}
 	}
@@ -127,8 +132,9 @@ public class FlexiArea extends TextFlow {
 			start = LocalDate.now().atStartOfDay();
 			end = LocalDateTime.MAX;
 			break;
+		case FLOATING:
+			break;
 		}
-
 		this.timeState = timeState;
 		refresh();
 	}
@@ -139,6 +145,37 @@ public class FlexiArea extends TextFlow {
 
 	public void setMode(Mode newState) {
 		this.getChildren().clear();
+		if (timeState == TimeState.FLOATING) {
+			List<TodoItem> floatingTodos = todos.filterFloatingTodos();
+			switch (newState) {
+			case SORT_PRIORITY:
+				Collections.sort(floatingTodos, TodoItem.getPriorityComparator());
+				break;
+			case SORT_CONTENTS:
+				Collections.sort(floatingTodos, TodoItem.getContentsComparator());
+				break;
+			case SORT_DATE:
+			case HEAT_MAP:
+				Collections.sort(floatingTodos, TodoItem.getStartDateComparator());
+				break;
+			case SORT_STATUS:
+				Collections.sort(floatingTodos, TodoItem.getStatusComparator());
+				break;
+			case SEARCH_RESULTS:
+				System.err.println("invalid state");
+				assert false;
+				//TODO idk what to put here
+				break;
+			}
+			currTodos = floatingTodos;
+			printFloatingTodos(floatingTodos);
+			this.mode = newState;
+			return;
+		}
+		if (timeState == TimeState.DAY || timeState == TimeState.WEEK 
+				|| timeState == TimeState.MONTH || timeState == TimeState.FUTURE) {
+			println("Starting " + start + "\n");
+		}
 		List<TodoItem> startTodos = todos.filterStartDates(start, end);
 		List<TodoItem> dueTodos = todos.filterDueDates(start, end);
 		switch (newState) {
@@ -159,14 +196,19 @@ public class FlexiArea extends TextFlow {
 			Collections.sort(startTodos, TodoItem.getStatusComparator());
 			Collections.sort(dueTodos, TodoItem.getStatusComparator());
 			break;
-
+		case SEARCH_RESULTS:
+			//TODO
+			break;
 		}
 		currTodos = new ArrayList<TodoItem>();
 		currTodos.addAll(dueTodos);
 		currTodos.addAll(startTodos);
 		printDueTodos(dueTodos);
 		printStartTodos(startTodos);
-
+		if (timeState == TimeState.DAY || timeState == TimeState.WEEK 
+				|| timeState == TimeState.MONTH) {
+			println("Ending " + start + "\n");
+		}
 		this.mode = newState;
 	}
 
@@ -183,6 +225,20 @@ public class FlexiArea extends TextFlow {
 				txt.setFill(Color.BLUE);
 			} else {
 				txt = new Text("TODO, Start date at " + t.getStartDate() + " || " + t.getContents() + "\n");
+				txt.setFill(Color.RED);
+			}
+			children.add(txt);
+		}
+	}	
+	public void printFloatingTodos(List<TodoItem> startTodos) {
+		List<Node> children = this.getChildren();
+		for (TodoItem t : startTodos) {
+			Text txt;
+			if (t.isDone()) {
+				txt = new Text("DONE || " + t.getContents() + "\n");
+				txt.setFill(Color.BLUE);
+			} else {
+				txt = new Text("TODO || " + t.getContents() + "\n");
 				txt.setFill(Color.RED);
 			}
 			children.add(txt);

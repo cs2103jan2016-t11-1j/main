@@ -10,7 +10,7 @@ public class TodoDateSearcher {
 	private final String[] Month = {"January", "February", "March", "April",
 			"May", "June", "July", "September", "October", "November", "December"};
 
-	public void searchDueDate(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchDueDate(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -25,7 +25,7 @@ public class TodoDateSearcher {
 		}
 	}
 	
-	public void searchStartDate(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchStartDate(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -40,7 +40,7 @@ public class TodoDateSearcher {
 		}
 	}
 
-	public void searchDate(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchDate(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -60,7 +60,7 @@ public class TodoDateSearcher {
 		}
 	}
 	
-	public void searchByMonth(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchByMonth(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -81,7 +81,7 @@ public class TodoDateSearcher {
 		}
 	}
 
-	public void searchByYear(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchByYear(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -102,7 +102,7 @@ public class TodoDateSearcher {
 		}
 	}
 	
-	public void searchTimeBlock(List<TodoItem> todos, Date blockStart, Date blockEnd){
+	public List<TodoItem> searchTimeBlock(List<TodoItem> todos, Date blockStart, Date blockEnd){
 		ArrayList<TodoItem> insideTimeBlock = new ArrayList<TodoItem>();
 		for (int i=0; i<todos.size(); i++){
 			TodoItem tdi = todos.get(i);

@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class TodoTimeSearcher {
 	private final static Logger LOGGER = Logger.getLogger(TodoTimeSearcher.class.getName());
 
-	public void searchTime(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchTime(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -30,7 +30,7 @@ public class TodoTimeSearcher {
 		}
 	}
 
-	public void searchHour(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchHour(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -49,7 +49,7 @@ public class TodoTimeSearcher {
 		}
 	}
 
-	public void searchAfterTime(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchAfterTime(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {

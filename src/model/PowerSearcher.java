@@ -15,7 +15,7 @@ public class PowerSearcher {
 	/*
 	 * Free Time Power Search
 	 */
-	
+	//TODO this shit needs to output something that can be used by the model.
 	public void findFreeTime(List<TodoItem> todos){
 		Timeline events = new Timeline();
 		for (TodoItem tdi: todos){

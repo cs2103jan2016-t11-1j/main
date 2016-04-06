@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class TodoStringSearcher {
 	private final static Logger LOGGER = Logger.getLogger(TodoStringSearcher.class.getName());
 
-	public void searchString(List<TodoItem> todos, String toFind) {
+	public List<TodoItem> searchString(List<TodoItem> todos, String toFind) {
 		try {
 			boolean stringFound = false;
 			int i = 1;
@@ -27,7 +27,7 @@ public class TodoStringSearcher {
 		}
 	}
 	
-	public void searchExactString(List<TodoItem> todos, String toFind) {
+	public List<TodoItem> searchExactString(List<TodoItem> todos, String toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {

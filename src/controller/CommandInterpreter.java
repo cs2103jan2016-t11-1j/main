@@ -46,12 +46,14 @@ public class CommandInterpreter {
 		// TODO make the command ignore case
 		switch (command) {
 
+		case "back":
 		case "display":
 		case "dis":
 		case "disp":
 		case "dsp":
 			op = new DisplayOperation(todos);
 			op.execute();
+			undos.add(op);
 			break;
 
 		case "add":
@@ -191,6 +193,7 @@ public class CommandInterpreter {
 						toDoMessage, Frequency.NONE));
 			}
 			op.execute();
+			undos.add(op);
 			toDoMessage = "";
 			dateForNatty = "";
 			startDateForNatty = "";
@@ -224,6 +227,7 @@ public class CommandInterpreter {
 			}
 			op = new DeleteOperation(todos, todos.getItem(index - 1));
 			op.execute();
+			undos.add(op);
 			break;
 		case "clear":
 		case "clr":
@@ -288,7 +292,7 @@ public class CommandInterpreter {
 					searchString = searchString + " " + splitString[i];
 				}
 			}
-			todos.powerSearchString(searchString.trim());
+			flexiView.powerSearchString(searchString.trim());
 			break;
 		case "searchdate":
 		case "searchd":
@@ -308,6 +312,7 @@ public class CommandInterpreter {
 			}
 			Date parsedSearchDate = dp.parse(searchDate.trim());
 			todos.searchDate(parsedSearchDate);
+			flexiView.searchDate(parsedSearchDate);
 			break;
 		case "searchp":
 		case "searchpriority":
@@ -334,14 +339,14 @@ public class CommandInterpreter {
 					return;
 				}
 			}
-			todos.searchPriority(prty);
+			flexiView.searchPriority(prty);
 			break;
 		case "searchfree":
 		case "searchf":
 		case "srchf":
 		case "schfree":
 		case "search free":
-			todos.findFreeTime();
+			flexiView.findFreeTime();
 			break;
 		case "searchclash":
 		case "searchc":
@@ -349,7 +354,7 @@ public class CommandInterpreter {
 		case "schclash":
 		case "searchoverlap":
 		case "searcho":
-			todos.findOverlap();
+			flexiView.findOverlap();
 			break;
 		case "searchnext":
 		case "searchn":
@@ -373,7 +378,7 @@ public class CommandInterpreter {
 				searchBlkEndDateString = splitString[1] + " days from now";
 				searchBlkEndDate = dp.parse(searchBlkEndDateString);
 			}
-			todos.searchInTimeBlock(searchBlkStartDate, searchBlkEndDate);
+			flexiView.searchInTimeBlock(searchBlkStartDate, searchBlkEndDate);
 			searchBlkEndDate = null;
 			break;
 		case "whatmode":
@@ -477,6 +482,11 @@ public class CommandInterpreter {
 				flexiView.setTimeState(FlexiArea.TimeState.FUTURE);
 				System.out.println("Set time interval to future");
 				break;
+			case "float":
+			case "floating":
+				flexiView.setTimeState(FlexiArea.TimeState.FLOATING);
+				System.out.println("Set time interval to floating");
+				break;
 			default:
 				System.out.println("Time chunk not recognized not recognized.");
 				break;
@@ -534,6 +544,7 @@ public class CommandInterpreter {
 			newMsg = newMsg.trim();
 			op = new UpdateMessageOperation(todos, todos.getItem(index - 1), newMsg);
 			op.execute();
+			undos.add(op);
 			break;
 		case "updated":
 		case "uped":
@@ -562,6 +573,7 @@ public class CommandInterpreter {
 			newDate = newDate.trim();
 			op = new UpdateEndDateOperation(todos, todos.getItem(index - 1), newDate);
 			op.execute();
+			undos.add(op);
 			break;
 		case "updatesd":
 		case "upsd":
@@ -589,6 +601,7 @@ public class CommandInterpreter {
 			newDate2 = newDate2.trim();
 			op = new UpdateStartDateOperation(todos, todos.getItem(index - 1), newDate2);
 			op.execute();
+			undos.add(op);
 			break;
 		case "updatep":
 		case "updp":
@@ -618,6 +631,7 @@ public class CommandInterpreter {
 
 			op = new UpdatePriorityOperation(todos, todos.getItem(index - 1), newP);
 			op.execute();
+			undos.add(op);
 			break;
 		case "help":
 		case "/":
@@ -654,16 +668,19 @@ public class CommandInterpreter {
 			break;
 		case "cd":
 			String rest = getRest(command).trim();
-			todos.exit();
-			todos = new TodoFile(rest);
-			flexiView.setTodos(todos);
+			op = new ChangeDirectoryOperation(todos, rest, this);
+			op.execute();
+			undos.add(op);
 			break;
 		default:
 			System.out.println("Command not recognized.");
 			break;
 		}
-		undos.add(op);
 		flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
+	}
+	public void setTodoFile(TodoFile t) {
+		todos = t;
+		flexiView.setTodos(t);
 	}
 
 	public String getLastCommand() {
