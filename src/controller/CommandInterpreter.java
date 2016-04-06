@@ -261,7 +261,7 @@ public class CommandInterpreter {
 			if (splitString.length < 2) {
 				System.out.println("Displaying all, please enter specific text to search");
 			} else {
-				
+
 				for (int i = 1; i < splitString.length; i++){
 					searchString = searchString + " " + splitString[i];
 				}
@@ -280,13 +280,13 @@ public class CommandInterpreter {
 			if (splitString.length < 2) {
 				System.out.println("Displaying all, please enter specific text to search");
 			} else {
-				
+
 				for (int i = 1; i < splitString.length; i++){
 					searchDate = searchDate + " " + splitString[i];
 				}
 			}
 			Date parsedSearchDate = dp.parse(searchDate.trim());
-			//todos.searchDate(parsedSearchDate);
+			todos.searchDate(parsedSearchDate);
 			break;
 		case "searchp":
 		case "searchpriority":
@@ -296,18 +296,24 @@ public class CommandInterpreter {
 				System.out.printf("No todos to search\n");
 				return;
 			}
-			int prty;
+			int prty = -1;
+			int pp = Integer.parseInt(splitString[1]);
 			if (splitString.length < 2) {
 				System.out.println("Displaying all, please enter specific text to search");
+				prty = -1;
 			} else {
 				try {
-					prty = Integer.parseInt(splitString[1]);
+					if (pp < 1){
+						prty = -1;
+					}else {
+						prty = pp;
+					}
 				} catch (NumberFormatException e) {
 					System.out.print("Parameter must be a number\n");
 					return;
 				}
 			}
-			// add priority search
+			todos.searchPriority(prty);
 			break;
 		case "searchfree":
 		case "searchf":
@@ -568,6 +574,7 @@ public class CommandInterpreter {
 			op.execute();
 			break;
 		case "help":
+		case "/":
 			System.out.println("Commands");
 			System.out.println("display: show the current state of the todo file.");
 			System.out.println("add: add a todo item.");
@@ -590,6 +597,10 @@ public class CommandInterpreter {
 			System.out.println("next: change to the next time chunk.");
 			System.out.println("todo/done: toggle the status of an item item as todo/done");
 			break;
+		case "undo":
+		case "un":
+		case "ud":
+			undos.undo();
 		default:
 			System.out.println("Command not recognized.");
 			break;
@@ -607,7 +618,4 @@ public class CommandInterpreter {
 		System.exit(0);
 	}
 
-	public void undo() {
-		undos.undo();
-	}
 }
