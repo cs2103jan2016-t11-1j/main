@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -97,6 +98,34 @@ public class TodoDateSearcher {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by Date");
+		}
+	}
+	
+	public void searchTimeBlock(List<TodoItem> todos, Date blockStart, Date blockEnd){
+		ArrayList<TodoItem> insideTimeBlock = new ArrayList<TodoItem>();
+		for (int i=0; i<todos.size(); i++){
+			TodoItem tdi = todos.get(i);
+			boolean startInsideBlock = false;
+			boolean dueInsideBlock = false;
+			if (tdi.getStartDate() != null){
+				startInsideBlock = tdi.getStartDate().getTime()>=blockStart.getTime();
+			}
+			if (tdi.getDueDate() != null){
+				dueInsideBlock = tdi.getDueDate().getTime()<=blockEnd.getTime();
+			}
+			if (startInsideBlock && dueInsideBlock){
+				insideTimeBlock.add(tdi);
+			}else if (tdi.getStartDate()==null && dueInsideBlock){
+				insideTimeBlock.add(tdi);
+			}
+		}
+		if (insideTimeBlock.size()==0){
+			System.out.println("No todos inside time block");
+		}else{
+			System.out.println("Todos found inside time block: ");
+			for (TodoItem tdi: insideTimeBlock){
+				System.out.println(todos.indexOf(tdi) + ". " + tdi);
+			}
 		}
 	}
 }

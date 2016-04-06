@@ -484,5 +484,10 @@ public class TodoFile {
 		PowerSearcher ps = new PowerSearcher();
 		ps.prioritySearch(todos, p);
 	}
+	
+	public void searchInTimeBlock(Date timeBlockStart, Date timeBlockEnd){
+		TodoDateSearcher tds = new TodoDateSearcher();
+		tds.searchTimeBlock(todos, timeBlockStart, timeBlockEnd);
+	}
 }
 

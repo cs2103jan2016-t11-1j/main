@@ -58,6 +58,9 @@ public class TodoFileTests {
 		todos.powerSearchString("SAN YO");
 		todos.powerSearchString("YO SAN");
 		todos.findOverlap();
+		todos.add(9, new Date(6000000), new Date(7000000), "Another test");
+		todos.add(19, new Date(6500000), new Date(7600000), "The test is a lie");
+		todos.searchInTimeBlock(new Date(4500000), new Date(8000000));
 		todos.clear();
 	}
 }
