@@ -22,29 +22,27 @@ public class PowerSearcher {
 			if (tdi.getDueDate() != null && tdi.getStartDate() != null){
 				events.add(new TimelineNode(tdi.getStartDate(),tdi.getContents()));
 				events.add(new TimelineNode(tdi.getContents(),tdi.getDueDate()));
+				//System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + " has been added to the timeline");
 			}
 		}
-		int counter = 0;
-		Date[] timeSlot = new Date[2];
-		System.out.print("Free time found ");
-		for (TimelineNode eventDate: events.getTimeline()){
-			if (eventDate.getDateType()==DateType.START){
-				if (counter == 0){
-					counter++;
-					timeSlot[0] = eventDate.getDate();
-				}else{
-					counter++;
+		Date freeTimeEnd = new Date();
+		ArrayList<TimelineNode> currOverlap = new ArrayList<TimelineNode>();
+		for (TimelineNode event: events.getTimeline()){
+			if (event.getDateType()==DateType.START){
+				if (currOverlap.size()==0){
+					freeTimeEnd = event.getDate();
 				}
+				currOverlap.add(event);
 			}else{
-				if (counter != 0){
-					counter--;
-				}else{
-					counter--;
-					timeSlot[1] = eventDate.getDate();
+				if (currOverlap.size()==1){
+					System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
 				}
-			}
-			if (counter == 0 && timeSlot[0] != null && timeSlot[1] != null){
-				System.out.println("before " + timeSlot[0] + " after " + timeSlot[1]);
+				for (TimelineNode tln: currOverlap){
+					if (tln.getContent().equals(event.getContent())){
+						currOverlap.remove(tln);
+						break;
+					}
+				}
 			}
 		}
 	}
