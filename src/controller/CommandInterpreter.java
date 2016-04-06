@@ -651,6 +651,13 @@ public class CommandInterpreter {
 		case "un":
 		case "ud":
 			undos.undo();
+			break;
+		case "cd":
+			String rest = getRest(command).trim();
+			todos.exit();
+			todos = new TodoFile(rest);
+			flexiView.setTodos(todos);
+			break;
 		default:
 			System.out.println("Command not recognized.");
 			break;
@@ -662,7 +669,10 @@ public class CommandInterpreter {
 	public String getLastCommand() {
 		return lastCommand;
 	}
-
+	
+	private String getRest(String command) {
+		return lastCommand.substring(command.length());
+	}
 	public void exit() {
 		todos.exit();
 		System.exit(0);

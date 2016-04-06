@@ -20,6 +20,13 @@ public class TodoItem {
 
 	private Frequency freq; // for recurring tasks
 
+	public TodoItem(String contents) {
+		this.status = Status.TODO;
+		this.priority = -1;
+		this.startDate = null;
+		this.dueDate = null;
+		this.contents = contents;
+	}
 	public TodoItem(Status stat, int priority, Date startDate, Date dueDate, String contents, Frequency freq) {
 		this.status = stat;
 		this.priority = priority;
