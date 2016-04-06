@@ -11,15 +11,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.TodoFile;
 
 public class TidyYard extends Application {
 	private static final String DEFAULT_FILE = "main.todo";
-	private static final int HWIDTH = 10;
-	private static final int VWIDTH = 10;
 	private CommandInterpreter controller;
 	private TodoFile todos;
 	private TextField inputField;
@@ -33,6 +30,7 @@ public class TidyYard extends Application {
 
 	private void addTopInput() {
 		this.inputField = new TextField();
+		this.inputField.setId("input-field");
 		this.border.setTop(this.inputField);
 	}
 
@@ -45,28 +43,26 @@ public class TidyYard extends Application {
 	private void addFlexiView() {
 		this.flexiView = new FlexiArea(todos);
 		this.flexiView.setVisible(true);
+		this.flexiView.setId("flexi-view");
 		this.border.setBottom(this.flexiView);
 	}
 
 	private void redirect() {
-		PrintStream stream = new PrintStream(new ConsoleArea(this.commandResult), true);
-		// System.setOut(stream);
-		// System.setErr(stream);
+		PrintStream stream = new PrintStream(new ConsoleArea(this.flexiView), true);
+		System.setOut(stream);
+		System.setErr(stream);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		border = new BorderPane();
-		// border.setHgap(0);
-		// border.setVgap(3);
-		// grid.setPadding(new Insets(25, 25, 25, 25));
 		addTopInput();
 		addCommandResult();
 		todos = new TodoFile(DEFAULT_FILE);
 		addFlexiView();
 		controller = new CommandInterpreter(todos, flexiView);
 
-		Scene scene = new Scene(border, 1000, 800, Color.WHITE);
+		Scene scene = new Scene(border, 1000, 800, Color.BLACK);
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
@@ -77,11 +73,11 @@ public class TidyYard extends Application {
 				}
 			}
 		});
-		// scene.getStylesheets().add(TidyYard.class.getResource("resources/styles/test.css").toExternalForm());
+		//scene.getStylesheets().add(TidyYard.class.getResource("resources/styles/test.css").toExternalForm());
 		primaryStage.setTitle("Tidy Yard");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		redirect();
+		//redirect();
 	}
 
 	@Override

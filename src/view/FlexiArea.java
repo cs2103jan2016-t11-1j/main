@@ -13,17 +13,20 @@ import java.time.Duration;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
-
+import java.util.ArrayList;
 import java.util.Collections;
 
 //import java.time;
 
 //TODO make this just a box, not a text area
 public class FlexiArea extends TextFlow {
+	public static final Mode DEFAULT_MODE = Mode.SORT_DATE;
+	public static final TimeState DEFAULT_TIME = TimeState.ALL;
 	private TodoFile todos;
-	private Mode mode = Mode.SORT_CONTENTS;
+	private Mode mode = DEFAULT_MODE;
 	private TimeState timeState;
 	private LocalDateTime start, end;
+	private List<TodoItem> currTodos;
 
 	public enum Mode {
 		/*
@@ -45,7 +48,8 @@ public class FlexiArea extends TextFlow {
 
 	public FlexiArea(TodoFile info) {
 		this.todos = info;
-		setTimeState(TimeState.ALL);
+		setTimeState(DEFAULT_TIME);
+		currTodos = new ArrayList<TodoItem>();
 	}
 
 	/*
@@ -135,7 +139,6 @@ public class FlexiArea extends TextFlow {
 
 	public void setMode(Mode newState) {
 		this.getChildren().clear();
-
 		List<TodoItem> startTodos = todos.filterStartDates(start, end);
 		List<TodoItem> dueTodos = todos.filterDueDates(start, end);
 		switch (newState) {
@@ -158,12 +161,19 @@ public class FlexiArea extends TextFlow {
 			break;
 
 		}
+		currTodos = new ArrayList<TodoItem>();
+		currTodos.addAll(dueTodos);
+		currTodos.addAll(startTodos);
 		printDueTodos(dueTodos);
 		printStartTodos(startTodos);
 
 		this.mode = newState;
 	}
 
+	public void setTodos(TodoFile todos) {
+		this.todos = todos;
+		refresh();
+	}
 	public void printStartTodos(List<TodoItem> startTodos) {
 		List<Node> children = this.getChildren();
 		for (TodoItem t : startTodos) {
@@ -193,11 +203,15 @@ public class FlexiArea extends TextFlow {
 			children.add(txt);
 		}
 	}
-
+	public void println(String s) {
+		this.getChildren().add(new Text(s));
+	}
 	public Mode getMode() {
 		return mode;
 	}
-
+	public TodoItem getNthTodo(int i) {
+		return currTodos.get(i);
+	}
 	public String start() {
 		return start.toString();
 	}
