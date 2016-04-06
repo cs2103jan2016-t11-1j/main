@@ -247,11 +247,29 @@ public class CommandInterpreter {
 			// TODO Change to OP
 			todos.write();
 			break;
-		case "sort":
-		case "srt":
-		case "sor":
+		case "sortcont":
+		case "sortc":
+		case "sortcontents":
 			todos.sortByContents();
-			System.out.println("sorted by Contents");
+			System.out.println("Sorted by Contents");
+			break;
+		case "sortpriority":
+		case "sortp":
+		case "sortprior":
+			todos.sortByPriority();
+			System.out.println("Sorted by Priority");
+			break;
+		case "sortdate":
+		case "sortdd":
+		case "sortduedd":
+			todos.sortByDueDate();
+			System.out.println("Sorted by Due Date");
+			break;
+		case "sortstartdate":
+		case "sortsd":
+		case "sortstartd":
+			todos.sortByStartDate();
+			System.out.println("Sorted by Start Date");
 			break;
 		case "searchstr":
 		case "searchs":
@@ -611,7 +629,10 @@ public class CommandInterpreter {
 			System.out.println("uped/upsd/upm: update the endDate/startDate/message respectively");
 			System.out.println("exit: exit the todo file");
 			System.out.println("write: force a write to the file");
-			System.out.println("sort: sort the todo file by contents.");
+			System.out.println("sortc: sort the todo file by contents.");
+			System.out.println("sortp: sort the todo file by priority.");
+			System.out.println("sortsd: sort the todo file by start date.");
+			System.out.println("sortdd: sort the todo file by due/end date.");
 			System.out.println("searchs: search by contents of a todo item.");
 			System.out.println("searchd: search by date of a todo item.");
 			System.out.println("searchp: search by priority of a todo item.");
