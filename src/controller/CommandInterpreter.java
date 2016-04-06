@@ -70,13 +70,14 @@ public class CommandInterpreter {
 			}
 			toDoMessage = toDoMessage.trim();
 
-			String hexedPriority = splitString[hexIndex];
-			if (!hexedPriority.substring(1).equals("")) {
-				intPriority = Integer.parseInt(hexedPriority.substring(1));
-			} else {
-				intPriority = -1;
+			if (hexIndex > 0){
+				String hexedPriority = splitString[hexIndex];
+				if (!hexedPriority.substring(1).equals("")) {
+					intPriority = Integer.parseInt(hexedPriority.substring(1));
+				} else {
+					intPriority = -1;
+				}
 			}
-
 			/*
 			 * Date parsing starts here Walkthrough for the code below using
 			 * example: 'tomorrow from 5 to 6' 
@@ -185,6 +186,9 @@ public class CommandInterpreter {
 			} else if (parsedDueDate != null) {
 				op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, null, parsedDueDate,
 						toDoMessage, Frequency.NONE));
+			} else {
+				op = new AddOperation(todos, new TodoItem(TodoItem.Status.TODO, intPriority, parsedStartDate, null,
+						toDoMessage, Frequency.NONE));
 			}
 			op.execute();
 			toDoMessage = "";
@@ -280,7 +284,6 @@ public class CommandInterpreter {
 			if (splitString.length < 2) {
 				System.out.println("Displaying all, please enter specific text to search");
 			} else {
-
 				for (int i = 1; i < splitString.length; i++){
 					searchDate = searchDate + " " + splitString[i];
 				}
@@ -329,6 +332,30 @@ public class CommandInterpreter {
 		case "searchoverlap":
 		case "searcho":
 			todos.findOverlap();
+			break;
+		case "searchnext":
+		case "searchn":
+		case "srchnxt":
+		case "searchnxt":
+			if (todos.isEmpty()) {
+				System.out.printf("No todos to search\n");
+				return;
+			}
+			String now = "now";
+			Date searchBlkStartDate = dp.parse(now);
+			Date searchBlkEndDate = null; 
+			String searchBlkEndDateString = "";
+			if (splitString.length < 2) {
+				System.out.println("Displaying all, please enter specific text to search");
+			}else if (splitString.length == 3){
+				searchBlkEndDateString = splitString[1] + " " + splitString[2] + "  from now";
+				searchBlkEndDate = dp.parse(searchBlkEndDateString);
+				}else {
+				// assume days if not specified
+				searchBlkEndDateString = splitString[1] + " days from now";
+				searchBlkEndDate = dp.parse(searchBlkEndDateString);
+			}
+			todos.searchInTimeBlock(searchBlkStartDate, searchBlkEndDate);
 			break;
 		case "whatmode":
 			switch (flexiView.getMode()) {
@@ -589,6 +616,7 @@ public class CommandInterpreter {
 			System.out.println("searchp: search by priority of a todo item.");
 			System.out.println("searchc: search for clashes/overlaps in the todo items.");
 			System.out.println("searchf: search for free time/empty slots");
+			System.out.println("searchn: search by next 'N hour(s)/day(s)/week(s)/month(s)'");
 			System.out.println("mode: change the mode, for more info, type 'mode help'");
 			System.out.println("whatmode: prints the current display mode");
 			System.out.println("time: change the time, for more info, type 'time help'");
