@@ -39,6 +39,7 @@ public class CommandInterpreter {
 		 * String is split into command, message, priority and date
 		 */
 		Operation op = null;
+		DateParser dp = new DateParser();
 		String[] splitString = lastCommand.split(WHITESPACE);
 		String command = splitString[0];
 
@@ -68,7 +69,7 @@ public class CommandInterpreter {
 				}
 			}
 			toDoMessage = toDoMessage.trim();
-			
+
 			String hexedPriority = splitString[hexIndex];
 			if (!hexedPriority.substring(1).equals("")) {
 				intPriority = Integer.parseInt(hexedPriority.substring(1));
@@ -92,7 +93,6 @@ public class CommandInterpreter {
 			 */
 
 			String dateParsingString = "";
-			DateParser dp = new DateParser();
 			int fromIdx = -1;
 			int toIdx = -1;
 			String[] fromConstants = { "from", "start", "starting", "begin", "beginning" };
@@ -249,15 +249,80 @@ public class CommandInterpreter {
 			todos.sortByContents();
 			System.out.println("sorted by Contents");
 			break;
-		case "search":
-		case "seach":
-		case "sch":
-		case "srch":
-		case "serch":
-		case "src":
-			//
-			String rest = lastCommand.substring(command.length()).replaceAll(WHITESPACE, "");
-			todos.searchString(rest);
+		case "searchstr":
+		case "searchs":
+		case "srchs":
+		case "schstr":
+			if (todos.isEmpty()) {
+				System.out.printf("No todos to search\n");
+				return;
+			}
+			String searchString = "";
+			if (splitString.length < 2) {
+				System.out.println("Displaying all, please enter specific text to search");
+			} else {
+				
+				for (int i = 1; i < splitString.length; i++){
+					searchString = searchString + " " + splitString[i];
+				}
+			}
+			todos.powerSearchString(searchString.trim());
+			break;
+		case "searchdate":
+		case "searchd":
+		case "srchd":
+		case "schdate":
+			if (todos.isEmpty()) {
+				System.out.printf("No todos to search\n");
+				return;
+			}
+			String searchDate = "";
+			if (splitString.length < 2) {
+				System.out.println("Displaying all, please enter specific text to search");
+			} else {
+				
+				for (int i = 1; i < splitString.length; i++){
+					searchDate = searchDate + " " + splitString[i];
+				}
+			}
+			Date parsedSearchDate = dp.parse(searchDate.trim());
+			//todos.searchDate(parsedSearchDate);
+			break;
+		case "searchp":
+		case "searchpriority":
+		case "srchp":
+		case "schp":
+			if (todos.isEmpty()) {
+				System.out.printf("No todos to search\n");
+				return;
+			}
+			int prty;
+			if (splitString.length < 2) {
+				System.out.println("Displaying all, please enter specific text to search");
+			} else {
+				try {
+					prty = Integer.parseInt(splitString[1]);
+				} catch (NumberFormatException e) {
+					System.out.print("Parameter must be a number\n");
+					return;
+				}
+			}
+			// add priority search
+			break;
+		case "searchfree":
+		case "searchf":
+		case "srchf":
+		case "schfree":
+		case "search free":
+			todos.findFreeTime();
+			break;
+		case "searchclash":
+		case "searchc":
+		case "srchcl":
+		case "schclash":
+		case "searchoverlap":
+		case "searcho":
+			todos.findOverlap();
 			break;
 		case "whatmode":
 			switch (flexiView.getMode()) {
@@ -323,11 +388,11 @@ public class CommandInterpreter {
 				break;
 			case MONTH:
 				System.out
-						.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
+				.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			case WEEK:
 				System.out
-						.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
+				.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			}
 			break;
@@ -367,12 +432,23 @@ public class CommandInterpreter {
 			break;
 		case "todo":
 		case "done":
-			rest = lastCommand.substring(command.length()).replaceAll(WHITESPACE, "");
-			try {
-				todos.toggle(todos.getItem((Integer.parseInt(rest)) - 1));
-			} catch (NumberFormatException e) {
-				System.out.println("Bad int format");
+			if (todos.isEmpty()) {
+				System.out.printf("No todos\n");
+				return;
 			}
+			Integer indx = null;
+			if (splitString.length < 2) {
+				System.out.println("No number supplied");
+				index = 1;
+			} else {
+				try {
+					indx = Integer.parseInt(splitString[1].trim());
+				} catch (NumberFormatException e) {
+					System.out.print("Parameter must be a number\n");
+					return;
+				}
+			}
+			todos.toggle(todos.getItem(indx - 1));
 			break;
 		case "previous":
 		case "prev":
@@ -483,11 +559,11 @@ public class CommandInterpreter {
 			}
 			int newP;
 			if (Integer.parseInt(splitString[2]) > 0){
-			newP = Integer.parseInt(splitString[2]);
+				newP = Integer.parseInt(splitString[2]);
 			} else {
 				newP = -1;
 			}
-				
+
 			op = new UpdatePriorityOperation(todos, todos.getItem(index - 1), newP);
 			op.execute();
 			break;
@@ -501,7 +577,11 @@ public class CommandInterpreter {
 			System.out.println("exit: exit the todo file");
 			System.out.println("write: force a write to the file");
 			System.out.println("sort: sort the todo file by contents.");
-			System.out.println("search: search for the contents of a todo item.");
+			System.out.println("searchs: search by contents of a todo item.");
+			System.out.println("searchd: search by date of a todo item.");
+			System.out.println("searchp: search by priority of a todo item.");
+			System.out.println("searchc: search for clashes/overlaps in the todo items.");
+			System.out.println("searchf: search for free time/empty slots");
 			System.out.println("mode: change the mode, for more info, type 'mode help'");
 			System.out.println("whatmode: prints the current display mode");
 			System.out.println("time: change the time, for more info, type 'time help'");
