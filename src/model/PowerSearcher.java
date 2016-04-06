@@ -22,29 +22,42 @@ public class PowerSearcher {
 			if (tdi.getDueDate() != null && tdi.getStartDate() != null){
 				events.add(new TimelineNode(tdi.getStartDate(),tdi.getContents()));
 				events.add(new TimelineNode(tdi.getContents(),tdi.getDueDate()));
+				//System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + " has been added to the timeline");
 			}
 		}
-		int counter = 0;
-		Date[] timeSlot = new Date[2];
-		System.out.print("Free time found ");
-		for (TimelineNode eventDate: events.getTimeline()){
-			if (eventDate.getDateType()==DateType.START){
-				if (counter == 0){
-					counter++;
-					timeSlot[0] = eventDate.getDate();
-				}else{
-					counter++;
+		Date freeTimeEnd = new Date();
+		ArrayList<TimelineNode> currOverlap = new ArrayList<TimelineNode>();
+		ArrayList<Date> freeTimeSlots = new ArrayList<Date>();
+		for (TimelineNode event: events.getTimeline()){
+			if (event.getDateType()==DateType.START){
+				if (currOverlap.size()==0){
+					freeTimeEnd = event.getDate();
 				}
+				currOverlap.add(event);
 			}else{
-				if (counter != 0){
-					counter--;
-				}else{
-					counter--;
-					timeSlot[1] = eventDate.getDate();
+				if (currOverlap.size()==1){
+					//System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
+					if (freeTimeSlots.contains(freeTimeEnd)){
+						freeTimeSlots.remove(freeTimeEnd);
+						freeTimeSlots.add(event.getDate());
+					}else{
+						freeTimeSlots.add(freeTimeEnd);
+						freeTimeSlots.add(event.getDate());
+					}
+				}
+				for (TimelineNode tln: currOverlap){
+					if (tln.getContent().equals(event.getContent())){
+						currOverlap.remove(tln);
+						break;
+					}
 				}
 			}
-			if (counter == 0 && timeSlot[0] != null && timeSlot[1] != null){
-				System.out.println("before " + timeSlot[0] + " after " + timeSlot[1]);
+		}
+		for (int i=0; i<freeTimeSlots.size();i++){
+			if (i%2==0){
+				System.out.println("Free Time found before: " + freeTimeSlots.get(i));
+			}else{
+				System.out.println("Free Time found after: " + freeTimeSlots.get(i));
 			}
 		}
 	}
@@ -159,9 +172,9 @@ public class PowerSearcher {
 	 */
 	
 	public void prioritySearch(List<TodoItem> todos, int p){
-		for (int i=0; i>todos.size(); i++){
+		for (int i=0; i<todos.size(); i++){
 			if (todos.get(i).getPriority()==p){
-				System.out.println("priority" + p + " found in line " + i + ". " + todos.get(i).getContents());
+				System.out.println("Priority " + p + " found in line " + (i+1) + ". " + todos.get(i).getContents());
 			}
 		}
 	}

@@ -44,11 +44,12 @@ public class TodoDateSearcher {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
-				if(tdi.getStartDate().equals(toFind) && tdi.getDueDate().equals(toFind)){
+				if (tdi.getStartDate().equals(toFind) && tdi.getStartDate().equals(toFind)) {
 					System.out.println("Start Date and End Date: " + toFind + "found in line " + i);
-				}else if (tdi.getStartDate().equals(toFind)) {
-					System.out.println("Start Date: " + toFind + "found in line " + i);
-				}else if (tdi.getDueDate().equals(toFind)) {
+				}else if(tdi.getStartDate().equals(toFind)){
+					System.out.println("Start Date: " + toFind + "found in line " + i);	
+				}
+				else if (tdi.getDueDate().equals(toFind)) {
 					System.out.println("Due Date: " + toFind + "found in line " + i);
 				}
 				i++;
@@ -122,7 +123,7 @@ public class TodoDateSearcher {
 		if (insideTimeBlock.size()==0){
 			System.out.println("No todos inside time block");
 		}else{
-			System.out.println("Todos found inside time block: ");
+			System.out.println("Todos found inside time block " + blockStart + " - " + blockEnd + ": ");
 			for (TodoItem tdi: insideTimeBlock){
 				System.out.println(todos.indexOf(tdi) + ". " + tdi);
 			}
