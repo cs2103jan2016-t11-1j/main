@@ -479,5 +479,10 @@ public class TodoFile {
 		PowerSearcher ps = new PowerSearcher();
 		ps.findOverlap(todos);
 	}
+	
+	public void searchPriority(int p){
+		PowerSearcher ps = new PowerSearcher();
+		ps.prioritySearch(todos, p);
+	}
 }
 

@@ -70,13 +70,15 @@ public class PowerSearcher {
 				}
 				currOverlap.add(event);
 			}else{
-				for (TimelineNode overlapTime: currOverlap){
-					if (overlapTime.getContent().equals(event.getContent()) && currOverlap.size()>1){
-						System.out.println("Overlap found from " + overlapStart + " to " + event.getDate());
-					}
-					currOverlap.remove(overlapTime);
-					break;
+				if (currOverlap.size()==2){
+					System.out.println("Overlap found from " + overlapStart + " to " + event.getDate());
 				}
+				for (TimelineNode tln: currOverlap){
+					if (tln.getContent().equals(event.getContent())){
+						currOverlap.remove(tln);
+						break;
+					}
+				}	
 			}
 		}
 	}
@@ -150,5 +152,17 @@ public class PowerSearcher {
 				}
 			}
 		};
+	}
+	
+	/*
+	 * Search by priority
+	 */
+	
+	public void prioritySearch(List<TodoItem> todos, int p){
+		for (int i=0; i>todos.size(); i++){
+			if (todos.get(i).getPriority()==p){
+				System.out.println("priority" + p + " found in line " + i + ". " + todos.get(i).getContents());
+			}
+		}
 	}
 }
