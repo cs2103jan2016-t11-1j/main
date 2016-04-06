@@ -50,6 +50,38 @@ public class PowerSearcher {
 	}
 	
 	/*
+	 * Find overlapping tasks
+	 */
+	
+	public void findOverlap(List<TodoItem> todos){
+		Timeline events = new Timeline();
+		for (TodoItem tdi: todos){
+			if (tdi.getDueDate() != null && tdi.getStartDate() != null){
+				events.add(new TimelineNode(tdi.getStartDate(),tdi.getContents()));
+				events.add(new TimelineNode(tdi.getContents(),tdi.getDueDate()));
+			}
+		}
+		ArrayList<TimelineNode> currOverlap = new ArrayList<TimelineNode>();
+		Date overlapStart = new Date(0);
+		for (TimelineNode event: events.getTimeline()){
+			if (event.getDateType()==DateType.START){
+				if (currOverlap.size()==1){
+					overlapStart = event.getDate();
+				}
+				currOverlap.add(event);
+			}else{
+				for (TimelineNode overlapTime: currOverlap){
+					if (overlapTime.getContent().equals(event.getContent()) && currOverlap.size()>1){
+						System.out.println("Overlap found from " + overlapStart + " to " + event.getDate());
+					}
+					currOverlap.remove(overlapTime);
+					break;
+				}
+			}
+		}
+	}
+	
+	/*
 	 * String Power Search
 	 */
 	
@@ -62,10 +94,33 @@ public class PowerSearcher {
 		}
 		List<String> permutated = permutate(toPermutate);
 		Collections.sort(permutated, CustomStringComparator());
-		TodoStringSearcher tds = new TodoStringSearcher();
-		for (String s: permutated){
-			tds.searchString(todos, s);
+		int[] hits = new int[todos.size()];
+		for (int i=0; i<todos.size(); i++){
+			for (String s: permutated){
+				if (todos.get(i).getContents().contains(s)){
+					hits[i] = hits[i] + 1;
+				}
+			}
 		}
+		int mostHits=0;
+		for (int i: hits){
+			if (i>mostHits){
+				mostHits = i;
+			}
+		}
+		if (mostHits>0){
+			System.out.println("User Power Search Results:");
+			for (int i=mostHits; i>0; i--){
+				for (int j=0; j<hits.length; j++){
+					if (hits[j]==i){
+						System.out.println(j + ". " + todos.get(j));
+					}
+				}
+			}
+		}else{
+			System.out.println(toFind + " was not found.");
+		}
+		
 	}
 
 	private List<String> permutate(List<String> toPermutate){

@@ -154,11 +154,6 @@ public class TodoFile {
 		TodoTimeSearcher tdts = new TodoTimeSearcher();
 		tdts.searchTime(todos, toFind);
 	}
-
-	public void powerSearch(){
-		PowerSearcher ps = new PowerSearcher();
-		ps.findFreeTime(todos);
-	}
 	
 	public void display() {
 		if (this.isEmpty()) {
@@ -473,6 +468,16 @@ public class TodoFile {
 	public void powerSearchString(String toFind){
 		PowerSearcher ps = new PowerSearcher();
 		ps.powerSearchString(todos, toFind);
+	}
+	
+	public void findFreeTime(){
+		PowerSearcher ps = new PowerSearcher();
+		ps.findFreeTime(todos);
+	}
+	
+	public void findOverlap(){
+		PowerSearcher ps = new PowerSearcher();
+		ps.findOverlap(todos);
 	}
 }
 

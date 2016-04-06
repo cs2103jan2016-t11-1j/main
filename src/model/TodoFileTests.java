@@ -48,13 +48,15 @@ public class TodoFileTests {
 	@Test
 	public void TestPowerSearch() {
 		System.out.println("////___NOW TESTING POWER SEARCH METHOD IN TODOFILE CLASS___\\\\");
-		todos.clear();
 		todos.add(3, new Date(2000000), new Date(5000000), "SAN CHEZ NO!");
 		todos.add(2, new Date(6000000), new Date(8000000), "SAN JOSE YES!");
 		todos.add(1, new Date(4500000), new Date(7500000), "SAN RICO YO!");
 		todos.add(3, new Date(20000000), new Date(50000000), "SANPAI NOTICE ME!");
 		todos.add(2, new Date(70000000), new Date(8000000), "YOUR WAIFU IS TRASH!");
-		todos.powerSearch();
+		todos.add("What is the topic?");
 		todos.powerSearchString("SAN YO");
+		todos.powerSearchString("YO SAN");
+		todos.findOverlap();
+		todos.clear();
 	}
 }
