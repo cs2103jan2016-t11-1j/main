@@ -356,6 +356,7 @@ public class CommandInterpreter {
 				searchBlkEndDate = dp.parse(searchBlkEndDateString);
 			}
 			todos.searchInTimeBlock(searchBlkStartDate, searchBlkEndDate);
+			searchBlkEndDate = null;
 			break;
 		case "whatmode":
 			switch (flexiView.getMode()) {

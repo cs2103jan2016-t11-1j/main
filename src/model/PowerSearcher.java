@@ -159,9 +159,9 @@ public class PowerSearcher {
 	 */
 	
 	public void prioritySearch(List<TodoItem> todos, int p){
-		for (int i=0; i>todos.size(); i++){
+		for (int i=0; i<todos.size(); i++){
 			if (todos.get(i).getPriority()==p){
-				System.out.println("priority" + p + " found in line " + i + ". " + todos.get(i).getContents());
+				System.out.println("Priority " + p + " found in line " + (i+1) + ". " + todos.get(i).getContents());
 			}
 		}
 	}

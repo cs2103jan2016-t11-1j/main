@@ -44,11 +44,12 @@ public class TodoDateSearcher {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
-				if(tdi.getStartDate().equals(toFind) && tdi.getDueDate().equals(toFind)){
+				if (tdi.getStartDate().equals(toFind) && tdi.getStartDate().equals(toFind)) {
 					System.out.println("Start Date and End Date: " + toFind + "found in line " + i);
-				}else if (tdi.getStartDate().equals(toFind)) {
-					System.out.println("Start Date: " + toFind + "found in line " + i);
-				}else if (tdi.getDueDate().equals(toFind)) {
+				}else if(tdi.getStartDate().equals(toFind)){
+					System.out.println("Start Date: " + toFind + "found in line " + i);	
+				}
+				else if (tdi.getDueDate().equals(toFind)) {
 					System.out.println("Due Date: " + toFind + "found in line " + i);
 				}
 				i++;
