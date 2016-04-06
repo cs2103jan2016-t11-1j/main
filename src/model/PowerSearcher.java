@@ -27,6 +27,7 @@ public class PowerSearcher {
 		}
 		Date freeTimeEnd = new Date();
 		ArrayList<TimelineNode> currOverlap = new ArrayList<TimelineNode>();
+		ArrayList<Date> freeTimeSlots = new ArrayList<Date>();
 		for (TimelineNode event: events.getTimeline()){
 			if (event.getDateType()==DateType.START){
 				if (currOverlap.size()==0){
@@ -35,7 +36,14 @@ public class PowerSearcher {
 				currOverlap.add(event);
 			}else{
 				if (currOverlap.size()==1){
-					System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
+					//System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
+					if (freeTimeSlots.contains(freeTimeEnd)){
+						freeTimeSlots.remove(freeTimeEnd);
+						freeTimeSlots.add(event.getDate());
+					}else{
+						freeTimeSlots.add(freeTimeEnd);
+						freeTimeSlots.add(event.getDate());
+					}
 				}
 				for (TimelineNode tln: currOverlap){
 					if (tln.getContent().equals(event.getContent())){
@@ -43,6 +51,13 @@ public class PowerSearcher {
 						break;
 					}
 				}
+			}
+		}
+		for (int i=0; i<freeTimeSlots.size();i++){
+			if (i%2==0){
+				System.out.println("Free Time found before: " + freeTimeSlots.get(i));
+			}else{
+				System.out.println("Free Time found after: " + freeTimeSlots.get(i));
 			}
 		}
 	}

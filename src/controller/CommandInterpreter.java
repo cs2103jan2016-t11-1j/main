@@ -368,7 +368,7 @@ public class CommandInterpreter {
 			}else if (splitString.length == 3){
 				searchBlkEndDateString = splitString[1] + " " + splitString[2] + "  from now";
 				searchBlkEndDate = dp.parse(searchBlkEndDateString);
-				}else {
+			}else {
 				// assume days if not specified
 				searchBlkEndDateString = splitString[1] + " days from now";
 				searchBlkEndDate = dp.parse(searchBlkEndDateString);

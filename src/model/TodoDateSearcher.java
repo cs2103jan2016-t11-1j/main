@@ -123,7 +123,7 @@ public class TodoDateSearcher {
 		if (insideTimeBlock.size()==0){
 			System.out.println("No todos inside time block");
 		}else{
-			System.out.println("Todos found inside time block: ");
+			System.out.println("Todos found inside time block " + blockStart + " - " + blockEnd + ": ");
 			for (TodoItem tdi: insideTimeBlock){
 				System.out.println(todos.indexOf(tdi) + ". " + tdi);
 			}
