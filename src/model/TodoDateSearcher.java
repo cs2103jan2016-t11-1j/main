@@ -167,7 +167,7 @@ public class TodoDateSearcher {
 				startInsideBlock = tdi.getStartDate().getTime()>=blockStart.getTime();
 			}
 			if (tdi.getDueDate() != null){
-				dueInsideBlock = tdi.getDueDate().getTime()<=blockEnd.getTime();
+				dueInsideBlock = tdi.getDueDate().getTime()>=blockStart.getTime() && tdi.getDueDate().getTime()<=blockEnd.getTime();
 			}
 			if (startInsideBlock && dueInsideBlock){
 				insideTimeBlock.add(tdi);

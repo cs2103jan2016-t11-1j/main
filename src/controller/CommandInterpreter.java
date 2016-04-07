@@ -377,7 +377,7 @@ public class CommandInterpreter {
 				searchBlkEndDateString = splitString[1] + " days from now";
 				searchBlkEndDate = dp.parse(searchBlkEndDateString);
 			}
-			System.out.println(searchBlkStartDate + "    " +  searchBlkEndDate);
+			//System.out.println(searchBlkStartDate + "    " +  searchBlkEndDate);
 			flexiView.searchInTimeBlock(searchBlkStartDate, searchBlkEndDate);
 			searchBlkEndDate = null;
 			break;
