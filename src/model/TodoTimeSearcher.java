@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -7,7 +8,8 @@ import java.util.logging.Logger;
 public class TodoTimeSearcher {
 	private final static Logger LOGGER = Logger.getLogger(TodoTimeSearcher.class.getName());
 
-	public void searchTime(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchTime(List<TodoItem> todos, Date toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -19,6 +21,7 @@ public class TodoTimeSearcher {
 					assert (sameHour);
 					assert (sameMinute);
 					assert (sameSecond);
+					ret.add(tdi);
 					System.out.println(currDateTime.getHours() + ":" + currDateTime.getMinutes() + ":"
 							+ currDateTime.getSeconds() + " found in line " + i + ". " + tdi.getContents());
 				}
@@ -28,9 +31,11 @@ public class TodoTimeSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by Time");
 		}
+		return ret;
 	}
 
-	public void searchHour(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchHour(List<TodoItem> todos, Date toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -40,6 +45,7 @@ public class TodoTimeSearcher {
 					assert (sameHour);
 					System.out.println(currDateTime.getHours() + ":" + currDateTime.getMinutes() + ":"
 							+ currDateTime.getSeconds() + " found in line " + i + ". " + tdi.getContents());
+					ret.add(tdi);
 				}
 				i++;
 			}
@@ -47,9 +53,11 @@ public class TodoTimeSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by Time");
 		}
+		return ret;
 	}
 
-	public void searchAfterTime(List<TodoItem> todos, Date toFind) {
+	public List<TodoItem> searchAfterTime(List<TodoItem> todos, Date toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -63,6 +71,7 @@ public class TodoTimeSearcher {
 					assert (sameSecond);
 					System.out.println(currDateTime.getHours() + ":" + currDateTime.getMinutes() + ":"
 							+ currDateTime.getSeconds() + " found in line " + i + ". " + tdi.getContents());
+					ret.add(tdi);
 				}
 				i++;
 			}
@@ -70,5 +79,6 @@ public class TodoTimeSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by Time");
 		}
+		return ret;
 	}
 }

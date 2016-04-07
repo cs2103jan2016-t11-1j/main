@@ -20,6 +20,13 @@ public class TodoItem {
 
 	private Frequency freq; // for recurring tasks
 
+	public TodoItem(String contents) {
+		this.status = Status.TODO;
+		this.priority = -1;
+		this.startDate = null;
+		this.dueDate = null;
+		this.contents = contents;
+	}
 	public TodoItem(Status stat, int priority, Date startDate, Date dueDate, String contents, Frequency freq) {
 		this.status = stat;
 		this.priority = priority;
@@ -140,6 +147,8 @@ public class TodoItem {
 	public static Comparator<TodoItem> getDueDateComparator() {
 		return new Comparator<TodoItem>() {
 			public int compare(TodoItem i, TodoItem j) {
+				if (i.getDueDate() == null || j.getDueDate() == null)
+					return 0;
 				return i.getDueDate().compareTo(j.getDueDate());
 			}
 		};
@@ -148,6 +157,8 @@ public class TodoItem {
 	public static Comparator<TodoItem> getStartDateComparator() {
 		return new Comparator<TodoItem>() {
 			public int compare(TodoItem i, TodoItem j) {
+				if (i.getStartDate() == null || j.getStartDate() == null)
+					return 0;
 				return i.getStartDate().compareTo(j.getStartDate());
 			}
 		};

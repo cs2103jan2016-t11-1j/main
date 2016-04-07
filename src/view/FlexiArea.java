@@ -13,17 +13,18 @@ import java.time.Duration;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
-
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
-//import java.time;
-
-//TODO make this just a box, not a text area
 public class FlexiArea extends TextFlow {
+	public static final Mode DEFAULT_MODE = Mode.SORT_START_DATE;
+	public static final TimeState DEFAULT_TIME = TimeState.ALL;
 	private TodoFile todos;
-	private Mode mode = Mode.SORT_CONTENTS;
+	private Mode mode = DEFAULT_MODE;
 	private TimeState timeState;
-	private LocalDateTime start, end;
+	private LocalDateTime start, end; // null when floating
+	private List<TodoItem> currTodos;
 
 	public enum Mode {
 		/*
@@ -31,7 +32,8 @@ public class FlexiArea extends TextFlow {
 		 * SORT_STATUS: Sort by status SORT_CONTENTS: Sort by contents HEAT_MAP:
 		 * show the heat map
 		 */
-		SORT_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS, HEAT_MAP
+		SORT_START_DATE, SORT_DUE_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS, HEAT_MAP, 
+		SEARCH_RESULTS
 	};
 
 	public enum TimeState {
@@ -40,12 +42,13 @@ public class FlexiArea extends TextFlow {
 		 * week MONTH: view each month ALL: everything, in a big bag FUTURE:
 		 * everything in the future, in a big bag
 		 */
-		DAY, WEEK, MONTH, ALL, FUTURE
+		DAY, WEEK, MONTH, ALL, FUTURE, FLOATING
 	}
 
 	public FlexiArea(TodoFile info) {
 		this.todos = info;
-		setTimeState(TimeState.ALL);
+		setTimeState(DEFAULT_TIME);
+		currTodos = new ArrayList<TodoItem>();
 	}
 
 	/*
@@ -67,11 +70,13 @@ public class FlexiArea extends TextFlow {
 			break;
 		case FUTURE:
 			start = LocalDate.now().atStartOfDay();
-		default:
+			break;
+		case FLOATING:
+			break;
+		case ALL:
 			break;
 		}
 	}
-
 	public void previousTimeChunk() {
 		switch (timeState) {
 		case DAY:
@@ -88,7 +93,10 @@ public class FlexiArea extends TextFlow {
 			break;
 		case FUTURE:
 			start = LocalDate.now().atStartOfDay();
-		default:
+			break;
+		case FLOATING:
+			break;
+		case ALL:
 			break;
 		}
 	}
@@ -123,8 +131,9 @@ public class FlexiArea extends TextFlow {
 			start = LocalDate.now().atStartOfDay();
 			end = LocalDateTime.MAX;
 			break;
+		case FLOATING:
+			break;
 		}
-
 		this.timeState = timeState;
 		refresh();
 	}
@@ -135,7 +144,36 @@ public class FlexiArea extends TextFlow {
 
 	public void setMode(Mode newState) {
 		this.getChildren().clear();
-
+		if (timeState == TimeState.FLOATING) {
+			List<TodoItem> floatingTodos = todos.filterFloatingTodos();
+			switch (newState) {
+			case SORT_PRIORITY:
+				Collections.sort(floatingTodos, TodoItem.getPriorityComparator());
+				break;
+			case SORT_CONTENTS:
+				Collections.sort(floatingTodos, TodoItem.getContentsComparator());
+				break;
+			case SORT_START_DATE:
+			case HEAT_MAP:
+			case SORT_DUE_DATE:
+				break;
+			case SORT_STATUS:
+				Collections.sort(floatingTodos, TodoItem.getStatusComparator());
+				break;
+			case SEARCH_RESULTS:
+				System.err.println("invalid state");
+				//TODO make this narrow to only results that are floating
+				break;
+			}
+			currTodos = floatingTodos;
+			printFloatingTodos(floatingTodos);
+			this.mode = newState;
+			return;
+		}
+		if (timeState == TimeState.DAY || timeState == TimeState.WEEK 
+				|| timeState == TimeState.MONTH || timeState == TimeState.FUTURE) {
+			println("Starting " + start + "\n");
+		}
 		List<TodoItem> startTodos = todos.filterStartDates(start, end);
 		List<TodoItem> dueTodos = todos.filterDueDates(start, end);
 		switch (newState) {
@@ -147,7 +185,8 @@ public class FlexiArea extends TextFlow {
 			Collections.sort(startTodos, TodoItem.getContentsComparator());
 			Collections.sort(dueTodos, TodoItem.getContentsComparator());
 			break;
-		case SORT_DATE:
+		case SORT_START_DATE:
+		case SORT_DUE_DATE:
 		case HEAT_MAP:
 			Collections.sort(startTodos, TodoItem.getStartDateComparator());
 			Collections.sort(dueTodos, TodoItem.getDueDateComparator());
@@ -156,14 +195,26 @@ public class FlexiArea extends TextFlow {
 			Collections.sort(startTodos, TodoItem.getStatusComparator());
 			Collections.sort(dueTodos, TodoItem.getStatusComparator());
 			break;
-
+		case SEARCH_RESULTS:
+			//TODO
+			break;
 		}
+		currTodos = new ArrayList<TodoItem>();
+		currTodos.addAll(dueTodos);
+		currTodos.addAll(startTodos);
 		printDueTodos(dueTodos);
 		printStartTodos(startTodos);
-
+		if (timeState == TimeState.DAY || timeState == TimeState.WEEK 
+				|| timeState == TimeState.MONTH) {
+			println("Ending " + start + "\n");
+		}
 		this.mode = newState;
 	}
 
+	public void setTodos(TodoFile todos) {
+		this.todos = todos;
+		refresh();
+	}
 	public void printStartTodos(List<TodoItem> startTodos) {
 		List<Node> children = this.getChildren();
 		for (TodoItem t : startTodos) {
@@ -177,6 +228,20 @@ public class FlexiArea extends TextFlow {
 			}
 			children.add(txt);
 		}
+	}	
+	public void printFloatingTodos(List<TodoItem> startTodos) {
+		List<Node> children = this.getChildren();
+		for (TodoItem t : startTodos) {
+			Text txt;
+			if (t.isDone()) {
+				txt = new Text("DONE || " + t.getContents() + "\n");
+				txt.setFill(Color.BLUE);
+			} else {
+				txt = new Text("TODO || " + t.getContents() + "\n");
+				txt.setFill(Color.RED);
+			}
+			children.add(txt);
+		}
 	}
 
 	public void printDueTodos(List<TodoItem> dueTodos) {
@@ -184,20 +249,24 @@ public class FlexiArea extends TextFlow {
 		for (TodoItem t : dueTodos) {
 			Text txt;
 			if (t.isDone()) {
-				txt = new Text("DONE, Start date at " + t.getDueDate() + " || " + t.getContents() + "\n");
+				txt = new Text("DONE, Due date at " + t.getDueDate() + " || " + t.getContents() + "\n");
 				txt.setFill(Color.BLUE);
 			} else {
-				txt = new Text("TODO, Start date at " + t.getDueDate() + " || " + t.getContents() + "\n");
+				txt = new Text("TODO, Due date at " + t.getDueDate() + " || " + t.getContents() + "\n");
 				txt.setFill(Color.RED);
 			}
 			children.add(txt);
 		}
 	}
-
+	public void println(String s) {
+		this.getChildren().add(new Text(s));
+	}
 	public Mode getMode() {
 		return mode;
 	}
-
+	public TodoItem getNthTodo(int i) {
+		return currTodos.get(i);
+	}
 	public String start() {
 		return start.toString();
 	}
@@ -208,5 +277,32 @@ public class FlexiArea extends TextFlow {
 
 	public TimeState getTimeState() {
 		return timeState;
+	}
+
+	public void powerSearchString(String trim) {
+		todos.powerSearchString(trim);
+	}
+
+	public void searchDate(Date parsedSearchDate) {
+		todos.searchDate(parsedSearchDate);
+		
+	}
+
+	public void searchPriority(int prty) {
+		todos.searchPriority(prty);	
+	}
+
+	public void findFreeTime() {
+		todos.findFreeTime();
+		
+	}
+
+	public void findOverlap() {
+		todos.findOverlap();
+		
+	}
+
+	public void searchInTimeBlock(Date searchBlkStartDate, Date searchBlkEndDate) {
+		todos.searchInTimeBlock(searchBlkStartDate, searchBlkStartDate);
 	}
 }

@@ -15,10 +15,12 @@ public class Undoer {
 	}
 
 	public void add(Operation op) {
+		assert op != null;
 		operations.push(op);
 	}
 
 	public void undo() {
-		operations.pop().inverse();
+		if (operations.size() > 0) 
+			operations.pop().inverse();
 	}
 }

@@ -253,6 +253,7 @@ public class TodoFile {
 		}
 		writer.flush();
 		System.out.printf("Wrote to %s.\n", this.fileName);
+		writer.close();
 	}
 
 	public void clear() {
@@ -488,6 +489,16 @@ public class TodoFile {
 	public void searchInTimeBlock(Date timeBlockStart, Date timeBlockEnd){
 		TodoDateSearcher tds = new TodoDateSearcher();
 		tds.searchTimeBlock(todos, timeBlockStart, timeBlockEnd);
+	}
+
+	public List<TodoItem> filterFloatingTodos() {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
+		for (TodoItem todo : todos) {
+			if (todo.getStartDate() == null && todo.getDueDate() == null) {
+				ret.add(todo);
+			}
+		}
+		return ret;
 	}
 }
 

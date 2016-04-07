@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -7,12 +8,14 @@ import java.util.logging.Logger;
 public class TodoStringSearcher {
 	private final static Logger LOGGER = Logger.getLogger(TodoStringSearcher.class.getName());
 
-	public void searchString(List<TodoItem> todos, String toFind) {
+	public List<TodoItem> searchString(List<TodoItem> todos, String toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			boolean stringFound = false;
 			int i = 1;
 			for (TodoItem tdi : todos) {
 				if (tdi.getContents().contains(toFind)) {
+					ret.add(tdi);
 					System.out.println(toFind + " found in line " + i + ". " + tdi.getContents());
 					stringFound = true;
 				}
@@ -25,14 +28,17 @@ public class TodoStringSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching String");
 		}
+		return ret;
 	}
 	
-	public void searchExactString(List<TodoItem> todos, String toFind) {
+	public List<TodoItem> searchExactString(List<TodoItem> todos, String toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
 				if (tdi.getContents().equals(toFind)) {
 					System.out.println(toFind + " found in line " + i + ". " + tdi.getContents());
+					ret.add(tdi);
 				}
 				i++;
 			}
@@ -40,5 +46,6 @@ public class TodoStringSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching exact String");
 		}
+		return ret;
 	}
 }
