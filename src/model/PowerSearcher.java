@@ -15,14 +15,13 @@ public class PowerSearcher {
 	/*
 	 * Free Time Power Search
 	 */
-	//TODO this shit needs to output something that can be used by the model.
 	public void findFreeTime(List<TodoItem> todos){
 		Timeline events = new Timeline();
 		for (TodoItem tdi: todos){
 			if (tdi.getDueDate() != null && tdi.getStartDate() != null){
 				events.add(new TimelineNode(tdi.getStartDate(),tdi.getContents()));
 				events.add(new TimelineNode(tdi.getContents(),tdi.getDueDate()));
-				//System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + " has been added to the timeline");
+				System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + " has been added to the timeline");
 			}
 		}
 		Date freeTimeEnd = new Date();
@@ -36,7 +35,7 @@ public class PowerSearcher {
 				currOverlap.add(event);
 			}else{
 				if (currOverlap.size()==1){
-					//System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
+					System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
 					if (freeTimeSlots.contains(freeTimeEnd)){
 						freeTimeSlots.remove(freeTimeEnd);
 						freeTimeSlots.add(event.getDate());

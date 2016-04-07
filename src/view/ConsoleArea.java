@@ -6,15 +6,15 @@ import java.io.OutputStream;
 import javafx.scene.control.TextArea;
 
 public class ConsoleArea extends OutputStream {
-	private FlexiArea out;
+	private TextArea out;
 
-	public ConsoleArea(FlexiArea out) {
+	public ConsoleArea(TextArea out) {
 		this.out = out;
 	}
 
 	@Override
 	public void write(int b) throws IOException {
-		out.println(String.valueOf((char) b));
+		out.appendText(String.valueOf((char) b));
 	}
 
 }

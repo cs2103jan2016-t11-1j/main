@@ -27,7 +27,6 @@ public class CommandInterpreter {
 		this.lastCommand = null;
 		this.flexiView = flexiView;
 		undos = new Undoer();
-		flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
 	}
 
 	public void nextCommand(String text) {
@@ -255,25 +254,25 @@ public class CommandInterpreter {
 		case "sortc":
 		case "sortcontents":
 			todos.sortByContents();
-			System.out.println("Sorted by Contents");
+			flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
 			break;
 		case "sortpriority":
 		case "sortp":
 		case "sortprior":
 			todos.sortByPriority();
-			System.out.println("Sorted by Priority");
+			flexiView.setMode(FlexiArea.Mode.SORT_PRIORITY);
 			break;
 		case "sortdate":
 		case "sortdd":
 		case "sortduedd":
 			todos.sortByDueDate();
-			System.out.println("Sorted by Due Date");
+			flexiView.setMode(FlexiArea.Mode.SORT_DUE_DATE);
 			break;
 		case "sortstartdate":
 		case "sortsd":
 		case "sortstartd":
 			todos.sortByStartDate();
-			System.out.println("Sorted by Start Date");
+			flexiView.setMode(FlexiArea.Mode.SORT_START_DATE);
 			break;
 		case "searchstr":
 		case "searchs":
@@ -389,8 +388,11 @@ public class CommandInterpreter {
 			case SORT_CONTENTS:
 				System.out.println("The current mode is Sort Contents.");
 				break;
-			case SORT_DATE:
-				System.out.println("The current mode is Sort Date.");
+			case SORT_DUE_DATE:
+				System.out.println("The current mode is Sort Due Date.");
+				break;
+			case SORT_START_DATE:
+				System.out.println("The current mode is Sort Start Date.");
 				break;
 			case SORT_PRIORITY:
 				System.out.println("The current mode is Sort Priority.");
@@ -412,7 +414,11 @@ public class CommandInterpreter {
 				System.out.println("The possible modes are date, priority, status, contents, and heat.");
 				break;
 			case "date":
-				flexiView.setMode(FlexiArea.Mode.SORT_DATE);
+			case "duedate":
+				flexiView.setMode(FlexiArea.Mode.SORT_DUE_DATE);
+				break;
+			case "startdate":
+				flexiView.setMode(FlexiArea.Mode.SORT_START_DATE);
 				break;
 			case "priority":
 				flexiView.setMode(FlexiArea.Mode.SORT_PRIORITY);
@@ -434,14 +440,14 @@ public class CommandInterpreter {
 		case "whattime":
 			switch (flexiView.getTimeState()) {
 			case ALL:
-				System.out.println("The current time mode is all from " + flexiView.start() + " to " + flexiView.end());
+				System.out.println("The current time mode is All.");
 				break;
 			case DAY:
 				System.out.println("The current time mode is day from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			case FUTURE:
 				System.out.println(
-						"The current time mode is future from " + flexiView.start() + " to " + flexiView.end());
+						"The current time mode is future from " + flexiView.start() + " onwards.");
 				break;
 			case MONTH:
 				System.out
@@ -450,6 +456,11 @@ public class CommandInterpreter {
 			case WEEK:
 				System.out
 				.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
+				break;
+			case FLOATING:
+				System.out.println("The current time mode is Floating.");
+				break;
+			default:
 				break;
 			}
 			break;
@@ -491,6 +502,10 @@ public class CommandInterpreter {
 				System.out.println("Time chunk not recognized not recognized.");
 				break;
 			}
+			break;
+		case "floating":
+			flexiView.setTimeState(FlexiArea.TimeState.FLOATING);
+			System.out.println("Set time interval to floating");
 			break;
 		case "todo":
 		case "done":
@@ -676,7 +691,6 @@ public class CommandInterpreter {
 			System.out.println("Command not recognized.");
 			break;
 		}
-		flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
 	}
 	public void setTodoFile(TodoFile t) {
 		todos = t;

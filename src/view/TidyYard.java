@@ -37,6 +37,7 @@ public class TidyYard extends Application {
 	private void addCommandResult() {
 		this.commandResult = new TextArea();
 		this.commandResult.setEditable(false);
+		this.commandResult.setVisible(true);
 		this.border.setBottom(this.commandResult);
 	}
 
@@ -44,13 +45,12 @@ public class TidyYard extends Application {
 		this.flexiView = new FlexiArea(todos);
 		this.flexiView.setVisible(true);
 		this.flexiView.setId("flexi-view");
-		this.border.setBottom(this.flexiView);
+		this.border.setCenter(this.flexiView);
 	}
 
 	private void redirect() {
-		PrintStream stream = new PrintStream(new ConsoleArea(this.flexiView), true);
+		PrintStream stream = new PrintStream(new ConsoleArea(commandResult), true);
 		System.setOut(stream);
-		System.setErr(stream);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class TidyYard extends Application {
 		primaryStage.setTitle("Tidy Yard");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		//redirect();
+		redirect();
 	}
 
 	@Override

@@ -11,11 +11,13 @@ public class TodoDateSearcher {
 			"May", "June", "July", "September", "October", "November", "December"};
 
 	public List<TodoItem> searchDueDate(List<TodoItem> todos, Date toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
 				if (tdi.getDueDate().equals(toFind)) {
 					System.out.println("Due Date: " + toFind + "found in line " + i);
+					ret.add(tdi);
 				}
 				i++;
 			}
@@ -23,14 +25,17 @@ public class TodoDateSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by dueDate");
 		}
+		return ret;
 	}
 	
 	public List<TodoItem> searchStartDate(List<TodoItem> todos, Date toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
 				if (tdi.getStartDate().equals(toFind)) {
 					System.out.println("Start Date: " + toFind + "found in line " + i);
+					ret.add(tdi);
 				}
 				i++;
 			}
@@ -38,19 +43,24 @@ public class TodoDateSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by startDate");
 		}
+		return ret;
 	}
 
 	public List<TodoItem> searchDate(List<TodoItem> todos, Date toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
 				if (tdi.getStartDate().equals(toFind) && tdi.getStartDate().equals(toFind)) {
 					System.out.println("Start Date and End Date: " + toFind + "found in line " + i);
+					ret.add(tdi);
 				}else if(tdi.getStartDate().equals(toFind)){
 					System.out.println("Start Date: " + toFind + "found in line " + i);	
+					ret.add(tdi);
 				}
 				else if (tdi.getDueDate().equals(toFind)) {
 					System.out.println("Due Date: " + toFind + "found in line " + i);
+					ret.add(tdi);
 				}
 				i++;
 			}
@@ -58,9 +68,11 @@ public class TodoDateSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by Date");
 		}
+		return ret;
 	}
 	
 	public List<TodoItem> searchByMonth(List<TodoItem> todos, Date toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -68,10 +80,13 @@ public class TodoDateSearcher {
 				boolean sameDueMonth = tdi.getDueDate().getMonth()==toFind.getMonth();
 				if(sameStartMonth && sameDueMonth){
 					System.out.println("Start Date and Due Date are in " + Month[toFind.getMonth()] + " in line " + i);
+					ret.add(tdi);
 				}else if (sameStartMonth) {
 					System.out.println("Start Date is in " + Month[toFind.getMonth()] + " in line " + i);
+					ret.add(tdi);
 				}else if (sameDueMonth) {
 					System.out.println("Due Date is in " + Month[toFind.getMonth()] + " in line " + i);
+					ret.add(tdi);
 				}
 				i++;
 			}
@@ -79,9 +94,11 @@ public class TodoDateSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by Date");
 		}
+		return ret;
 	}
 
 	public List<TodoItem> searchByYear(List<TodoItem> todos, Date toFind) {
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
@@ -89,10 +106,13 @@ public class TodoDateSearcher {
 				boolean sameDueYear = tdi.getDueDate().getYear()==toFind.getYear();
 				if(sameStartYear && sameDueYear){
 					System.out.println("Start Date and Due Date are in " + (toFind.getYear()+1900) + " in line " + i);
+					ret.add(tdi);
 				}else if (sameStartYear) {
 					System.out.println("Start Date is in " + (toFind.getYear()+1900) + " in line " + i);
+					ret.add(tdi);
 				}else if (sameDueYear) {
 					System.out.println("Due Date is in " + (toFind.getYear()+1900) + " in line " + i);
+					ret.add(tdi);
 				}
 				i++;
 			}
@@ -100,9 +120,11 @@ public class TodoDateSearcher {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by Date");
 		}
+		return ret;
 	}
 	
 	public List<TodoItem> searchTimeBlock(List<TodoItem> todos, Date blockStart, Date blockEnd){
+		List<TodoItem> ret = new ArrayList<TodoItem>();
 		ArrayList<TodoItem> insideTimeBlock = new ArrayList<TodoItem>();
 		for (int i=0; i<todos.size(); i++){
 			TodoItem tdi = todos.get(i);
@@ -126,7 +148,9 @@ public class TodoDateSearcher {
 			System.out.println("Todos found inside time block " + blockStart + " - " + blockEnd + ": ");
 			for (TodoItem tdi: insideTimeBlock){
 				System.out.println(todos.indexOf(tdi) + ". " + tdi);
+				ret.add(tdi);
 			}
 		}
+		return ret;
 	}
 }

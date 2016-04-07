@@ -78,8 +78,8 @@ public class FlexiAreaTest {
 		flexiArea.setTimeState(FlexiArea.TimeState.ALL);
 		int start = flexiArea.getChildren().size();
 		todoFile.add(1, "Hi there");
-		flexiArea.setMode(FlexiArea.Mode.SORT_DATE);
-		assertEquals(flexiArea.getMode(), FlexiArea.Mode.SORT_DATE);
+		flexiArea.setMode(FlexiArea.Mode.SORT_START_DATE);
+		assertEquals(flexiArea.getMode(), FlexiArea.Mode.SORT_START_DATE);
 		assertEquals(flexiArea.getChildren().size(), start + 1);
 	}
 
