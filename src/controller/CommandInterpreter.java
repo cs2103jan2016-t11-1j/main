@@ -303,7 +303,7 @@ public class CommandInterpreter {
 			}
 			String searchDate = "";
 			if (splitString.length < 2) {
-				System.out.println("Displaying all, please enter specific text to search");
+				System.out.println("Enter specific date text to search");
 			} else {
 				for (int i = 1; i < splitString.length; i++){
 					searchDate = searchDate + " " + splitString[i];

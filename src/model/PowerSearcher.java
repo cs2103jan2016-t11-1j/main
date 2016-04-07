@@ -35,7 +35,7 @@ public class PowerSearcher {
 				currOverlap.add(event);
 			}else{
 				if (currOverlap.size()==1){
-					System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
+					//System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
 					if (freeTimeSlots.contains(freeTimeEnd)){
 						freeTimeSlots.remove(freeTimeEnd);
 						freeTimeSlots.add(event.getDate());
