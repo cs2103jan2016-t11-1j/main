@@ -44,7 +44,6 @@ public class CommandInterpreter {
 
 		// TODO make the command ignore case
 		switch (command) {
-
 		case "back":
 		case "display":
 		case "dis":
@@ -54,7 +53,6 @@ public class CommandInterpreter {
 			op.execute();
 			undos.add(op);
 			break;
-
 		case "add":
 		case "ad":
 		case "addd":
@@ -200,6 +198,7 @@ public class CommandInterpreter {
 			parsedDueDate = null;
 			parsedStartDate = null;
 			parsedEndDate = null;
+			flexiView.refresh();
 			break;
 
 		case "delete":
@@ -227,6 +226,7 @@ public class CommandInterpreter {
 			op = new DeleteOperation(todos, todos.getItem(index - 1));
 			op.execute();
 			undos.add(op);
+			flexiView.refresh();
 			break;
 		case "clear":
 		case "clr":
@@ -499,10 +499,11 @@ public class CommandInterpreter {
 				System.out.println("Set time interval to floating");
 				break;
 			default:
-				System.out.println("Time chunk not recognized not recognized.");
+				System.out.println("Time chunk not recognized.");
 				break;
 			}
 			break;
+		case "float":
 		case "floating":
 			flexiView.setTimeState(FlexiArea.TimeState.FLOATING);
 			System.out.println("Set time interval to floating");
@@ -560,6 +561,7 @@ public class CommandInterpreter {
 			op = new UpdateMessageOperation(todos, todos.getItem(index - 1), newMsg);
 			op.execute();
 			undos.add(op);
+			flexiView.refresh();
 			break;
 		case "updated":
 		case "uped":
@@ -589,6 +591,7 @@ public class CommandInterpreter {
 			op = new UpdateEndDateOperation(todos, todos.getItem(index - 1), newDate);
 			op.execute();
 			undos.add(op);
+			flexiView.refresh();
 			break;
 		case "updatesd":
 		case "upsd":
@@ -617,6 +620,7 @@ public class CommandInterpreter {
 			op = new UpdateStartDateOperation(todos, todos.getItem(index - 1), newDate2);
 			op.execute();
 			undos.add(op);
+			flexiView.refresh();
 			break;
 		case "updatep":
 		case "updp":
@@ -647,6 +651,7 @@ public class CommandInterpreter {
 			op = new UpdatePriorityOperation(todos, todos.getItem(index - 1), newP);
 			op.execute();
 			undos.add(op);
+			flexiView.refresh();
 			break;
 		case "help":
 		case "/":
@@ -680,12 +685,14 @@ public class CommandInterpreter {
 		case "un":
 		case "ud":
 			undos.undo();
+			flexiView.refresh();
 			break;
 		case "cd":
 			String rest = getRest(command).trim();
 			op = new ChangeDirectoryOperation(todos, rest, this);
 			op.execute();
 			undos.add(op);
+			flexiView.refresh();
 			break;
 		default:
 			System.out.println("Command not recognized.");

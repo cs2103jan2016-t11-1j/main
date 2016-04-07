@@ -143,7 +143,6 @@ public class FlexiArea extends TextFlow {
 	}
 
 	public void setMode(Mode newState) {
-		System.out.println("Changing mode: " + newState);
 		this.getChildren().clear();
 		if (timeState == TimeState.FLOATING) {
 			List<TodoItem> floatingTodos = todos.filterFloatingTodos();
@@ -156,10 +155,7 @@ public class FlexiArea extends TextFlow {
 				break;
 			case SORT_START_DATE:
 			case HEAT_MAP:
-				Collections.sort(floatingTodos, TodoItem.getStartDateComparator());
-				break;
 			case SORT_DUE_DATE:
-				Collections.sort(floatingTodos, TodoItem.getDueDateComparator());
 				break;
 			case SORT_STATUS:
 				Collections.sort(floatingTodos, TodoItem.getStatusComparator());
