@@ -29,7 +29,7 @@ public class TodoDateSearcher {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
-				if (tdi.getStartDate().equals(toFind)) {
+				if (sameDate(toFind, tdi.getStartDate())) {
 					System.out.println("Start Date: " + toFind + "found in line " + i);
 				}
 				i++;
@@ -43,29 +43,59 @@ public class TodoDateSearcher {
 	public void searchDate(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
+			boolean notFound = true;
 			for (TodoItem tdi : todos) {
-				if (tdi.getStartDate().equals(toFind) && tdi.getStartDate().equals(toFind)) {
-					System.out.println("Start Date and End Date: " + toFind + "found in line " + i);
-				}else if(tdi.getStartDate().equals(toFind)){
-					System.out.println("Start Date: " + toFind + "found in line " + i);	
+				if (tdi.getStartDate()!=null && tdi.getDueDate()!=null){
+					if (sameDate(toFind, tdi.getStartDate()) && sameDate(toFind, tdi.getDueDate())) {
+						System.out.println("Start Date and End Date: " + toFind + " found in line " + i);
+						notFound = false;
+					}else if(sameDate(toFind, tdi.getStartDate())){
+						System.out.println("Start Date: " + toFind + " found in line " + i);	
+						notFound = false;
+					}else if (sameDate(toFind, tdi.getDueDate())) {
+						System.out.println("Due Date: " + toFind + " found in line " + i);
+						notFound = false;
+					}
+				}else if (tdi.getStartDate()!=null){
+					if(sameDate(toFind, tdi.getStartDate())){
+						System.out.println("Start Date: " + toFind + "found in line " + i);	
+						notFound = false;
+					}
+				}else if (tdi.getDueDate()!=null){
+					if (sameDate(toFind, tdi.getDueDate())) {
+						System.out.println("Due Date: " + toFind + "found in line " + i);
+						notFound = false;
+					}
 				}
-				else if (tdi.getDueDate().equals(toFind)) {
-					System.out.println("Due Date: " + toFind + "found in line " + i);
-				}
-				i++;
+			}
+			if (notFound){
+				System.out.println("The date: " + toFind + " was not found.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.severe("Error searching by Date");
 		}
 	}
+
+	private boolean sameDate(Date toFind, Date tdiDate) {
+		boolean sameDate = toFind.getDate()==tdiDate.getDate();
+		boolean sameMonth = toFind.getMonth()==tdiDate.getMonth();
+		boolean sameYear = toFind.getYear()==tdiDate.getYear();
+		return (sameDate && sameMonth && sameYear);
+	}
 	
 	public void searchByMonth(List<TodoItem> todos, Date toFind) {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
-				boolean sameStartMonth = tdi.getStartDate().getMonth()==toFind.getMonth();
-				boolean sameDueMonth = tdi.getDueDate().getMonth()==toFind.getMonth();
+				boolean sameStartMonth = false;
+				boolean sameDueMonth = false;
+				if (tdi.getStartDate()!=null){
+					sameStartMonth = tdi.getStartDate().getMonth()==toFind.getMonth();
+				}
+				if (tdi.getStartDate()!=null){
+					sameDueMonth = tdi.getDueDate().getMonth()==toFind.getMonth();
+				}
 				if(sameStartMonth && sameDueMonth){
 					System.out.println("Start Date and Due Date are in " + Month[toFind.getMonth()] + " in line " + i);
 				}else if (sameStartMonth) {
@@ -85,8 +115,14 @@ public class TodoDateSearcher {
 		try {
 			int i = 1;
 			for (TodoItem tdi : todos) {
-				boolean sameStartYear = tdi.getStartDate().getYear()==toFind.getYear();
-				boolean sameDueYear = tdi.getDueDate().getYear()==toFind.getYear();
+				boolean sameStartYear = false;
+				if (tdi.getStartDate()!=null){
+					sameStartYear = tdi.getStartDate().getYear()==toFind.getYear();
+				}
+				boolean sameDueYear = false;
+				if (tdi.getDueDate()!=null){
+					sameDueYear = tdi.getDueDate().getYear()==toFind.getYear();
+				}
 				if(sameStartYear && sameDueYear){
 					System.out.println("Start Date and Due Date are in " + (toFind.getYear()+1900) + " in line " + i);
 				}else if (sameStartYear) {
