@@ -100,6 +100,7 @@ public class PowerSearcher {
 	 */
 	
 	public void powerSearchString(List<TodoItem> todos, String toFind) {
+		toFind = toFind.toLowerCase();
 		ArrayList<String> permutations = new ArrayList<String>();
 		String[] permutationComponents = toFind.split(" ");
 		ArrayList<String> toPermutate = new ArrayList<String>();
@@ -111,7 +112,7 @@ public class PowerSearcher {
 		int[] hits = new int[todos.size()];
 		for (int i=0; i<todos.size(); i++){
 			for (String s: permutated){
-				if (todos.get(i).getContents().contains(s)){
+				if (todos.get(i).getContents().toLowerCase().contains(s.toLowerCase())){
 					hits[i] = hits[i] + 1;
 				}
 			}

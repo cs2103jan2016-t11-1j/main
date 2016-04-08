@@ -278,6 +278,7 @@ public class CommandInterpreter {
 		case "searchs":
 		case "srchs":
 		case "schstr":
+		case "saerchs":
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to search\n");
 				return;
@@ -296,6 +297,7 @@ public class CommandInterpreter {
 		case "searchdate":
 		case "searchd":
 		case "srchd":
+		case "saerchd":
 		case "schdate":
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to search\n");
@@ -317,6 +319,7 @@ public class CommandInterpreter {
 		case "searchpriority":
 		case "srchp":
 		case "schp":
+		case "saerchp":
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to search\n");
 				return;
@@ -345,6 +348,7 @@ public class CommandInterpreter {
 		case "srchf":
 		case "schfree":
 		case "search free":
+		case "saerchf":
 			flexiView.findFreeTime();
 			break;
 		case "searchclash":
@@ -353,12 +357,14 @@ public class CommandInterpreter {
 		case "schclash":
 		case "searchoverlap":
 		case "searcho":
+		case "saerchc":
 			flexiView.findOverlap();
 			break;
 		case "searchnext":
 		case "searchn":
 		case "srchnxt":
 		case "searchnxt":
+		case "saerchn":
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to search\n");
 				return;
@@ -528,6 +534,7 @@ public class CommandInterpreter {
 				}
 			}
 			todos.toggle(todos.getItem(indx - 1));
+			flexiView.refresh();
 			break;
 		case "previous":
 		case "prev":
