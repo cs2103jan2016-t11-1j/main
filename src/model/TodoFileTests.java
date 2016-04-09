@@ -45,7 +45,7 @@ public class TodoFileTests {
 		assert (!todos.isEmpty());
 		todos.clear();
 	}
-	
+
 	@Test
 	public void TestPowerSearch() {
 		DateParser dp = new DateParser();

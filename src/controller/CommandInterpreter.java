@@ -20,12 +20,14 @@ public class CommandInterpreter {
 	private TodoFile todos;
 	private FlexiArea flexiView;
 	private Undoer undos;
+	private boolean confirming;
 
 	public CommandInterpreter(TodoFile todos, FlexiArea flexiView) {
 		this.todos = todos;
 		this.lastCommand = null;
 		this.flexiView = flexiView;
 		undos = new Undoer();
+		this.confirming = false;
 	}
 
 	public void nextCommand(String text) {
@@ -43,9 +45,8 @@ public class CommandInterpreter {
 		command = command.toLowerCase();
 
 		/*
-		 * Operations that user enters.
-		 * Multiple cases for each command to ensure that some
-		 * spelling errors can be checked.  
+		 * Operations that user enters. Multiple cases for each command to
+		 * ensure that some spelling errors can be checked.
 		 */
 
 		switch (command) {
@@ -81,15 +82,14 @@ public class CommandInterpreter {
 			}
 			toDoMessage = toDoMessage.trim();
 
-			if (hexIndex > 0){
+			if (hexIndex > 0) {
 				String hexedPriority = splitString[hexIndex];
 				if (!hexedPriority.substring(1).equals("")) {
 					intPriority = Integer.parseInt(hexedPriority.substring(1));
 				}
 			}
 			/*
-			 * Manual date parsing for the Natty Parser 
-			 * to recognize the input. 
+			 * Manual date parsing for the Natty Parser to recognize the input.
 			 */
 
 			String dateParsingString = "";
@@ -144,7 +144,7 @@ public class CommandInterpreter {
 				endDateForNatty = endDateForNatty.trim();
 				parsedStartDate = dp.parse(startDateForNatty);
 				parsedEndDate = dp.parse(endDateForNatty);
-			} else if (fromIdx > 0 && toIdx < 0){
+			} else if (fromIdx > 0 && toIdx < 0) {
 				for (int j = 0; j < fromIdx; j++) {
 					beforeFrom = beforeFrom + " " + dateStringArray[j];
 				}
@@ -159,7 +159,7 @@ public class CommandInterpreter {
 				endDateForNatty = endDateForNatty.trim();
 				parsedStartDate = dp.parse(startDateForNatty);
 				parsedEndDate = dp.parse(endDateForNatty);
-			} else if(fromIdx < 0 && toIdx > 0){
+			} else if (fromIdx < 0 && toIdx > 0) {
 				for (int j = 0; j < toIdx; j++) {
 					beforeTo = beforeTo + " " + dateStringArray[j];
 				}
@@ -174,7 +174,7 @@ public class CommandInterpreter {
 				endDateForNatty = endDateForNatty.trim();
 				parsedStartDate = dp.parse(startDateForNatty);
 				parsedEndDate = dp.parse(endDateForNatty);
-			} else if (fromIdx < 0 && toIdx < 0){
+			} else if (fromIdx < 0 && toIdx < 0) {
 				dateForNatty = dateParsingString;
 				parsedDueDate = dp.parse(dateForNatty);
 			}
@@ -225,7 +225,7 @@ public class CommandInterpreter {
 					return;
 				}
 			}
-			op = new DeleteOperation(todos, todos.getItem(index - 1));
+			op = new DeleteOperation(todos, flexiView.getTodoItem(index - 1));
 			op.execute();
 			undos.add(op);
 			flexiView.refresh();
@@ -237,8 +237,12 @@ public class CommandInterpreter {
 		case "clr":
 		case "cl":
 		case "cle":
-			// TODO Change to OP
+			System.out.println("Clearing the TodoFile cannot be undone. Please input 'yes' to confirm operation.");
+			confirming = true;
+			break;
+		case "yes":
 			todos.clear();
+			confirming = false;
 			System.out.println("all todos deleted");
 			break;
 		/*
@@ -258,13 +262,12 @@ public class CommandInterpreter {
 		case "save":
 		case "sav":
 		case "sv":
-			// TODO Change to OP
 			todos.write();
 			break;
 		/*
-		* Different Sort Operations
-		* Sort by contents, priority, dates, Done/Todo tasks
-		*/
+		 * Different Sort Operations Sort by contents, priority, dates,
+		 * Done/Todo tasks
+		 */
 		case "sortcont":
 		case "sortc":
 		case "sortcontents":
@@ -296,10 +299,8 @@ public class CommandInterpreter {
 			flexiView.setMode(FlexiArea.Mode.SORT_STATUS);
 			break;
 		/*
-		 * Different PowerSearch Operations:
-		 * Search by contents, time, dates, 
-		 * next few days, overlaps in events,
-		 * free time, priority
+		 * Different PowerSearch Operations: Search by contents, time, dates,
+		 * next few days, overlaps in events, free time, priority
 		 */
 		case "searchstr":
 		case "searchs":
@@ -315,7 +316,7 @@ public class CommandInterpreter {
 				System.out.println("Displaying all, please enter specific text to search");
 			} else {
 
-				for (int i = 1; i < splitString.length; i++){
+				for (int i = 1; i < splitString.length; i++) {
 					searchString = searchString + " " + splitString[i];
 				}
 			}
@@ -335,7 +336,7 @@ public class CommandInterpreter {
 			if (splitString.length < 2) {
 				System.out.println("Enter specific date text to search");
 			} else {
-				for (int i = 1; i < splitString.length; i++){
+				for (int i = 1; i < splitString.length; i++) {
 					searchDate = searchDate + " " + splitString[i];
 				}
 			}
@@ -360,9 +361,9 @@ public class CommandInterpreter {
 				prty = -1;
 			} else {
 				try {
-					if (pp < 1){
+					if (pp < 1) {
 						prty = -1;
-					}else {
+					} else {
 						prty = pp;
 					}
 				} catch (NumberFormatException e) {
@@ -403,25 +404,25 @@ public class CommandInterpreter {
 			}
 			String now = "now";
 			Date searchBlkStartDate = dp.parse(now);
-			Date searchBlkEndDate = null; 
+			Date searchBlkEndDate = null;
 			String searchBlkEndDateString = "";
 			if (splitString.length < 2) {
 				System.out.println("Displaying all, please enter specific text to search");
-			}else if (splitString.length == 3){
+			} else if (splitString.length == 3) {
 				searchBlkEndDateString = splitString[1] + " " + splitString[2] + "  from now";
 				searchBlkEndDate = dp.parse(searchBlkEndDateString);
-			}else {
+			} else {
 				// assume days if not specified
 				searchBlkEndDateString = splitString[1] + " days from now";
 				searchBlkEndDate = dp.parse(searchBlkEndDateString);
 			}
-			//System.out.println(searchBlkStartDate + "    " +  searchBlkEndDate);
+			// System.out.println(searchBlkStartDate + " " + searchBlkEndDate);
 			flexiView.searchInTimeBlock(searchBlkStartDate, searchBlkEndDate);
 			searchBlkEndDate = null;
 			break;
 		/*
-		* Switch mode of display
-		*/
+		 * Switch mode of display
+		 */
 		case "whatmode":
 			switch (flexiView.getMode()) {
 			case HEAT_MAP:
@@ -488,16 +489,15 @@ public class CommandInterpreter {
 				System.out.println("The current time mode is day from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			case FUTURE:
-				System.out.println(
-						"The current time mode is future from " + flexiView.start() + " onwards.");
+				System.out.println("The current time mode is future from " + flexiView.start() + " onwards.");
 				break;
 			case MONTH:
 				System.out
-				.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
+						.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			case WEEK:
 				System.out
-				.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
+						.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
 				break;
 			case FLOATING:
 				System.out.println("The current time mode is Floating.");
@@ -574,7 +574,7 @@ public class CommandInterpreter {
 					return;
 				}
 			}
-			todos.toggle(todos.getItem(indx - 1));
+			todos.toggle(flexiView.getTodoItem(indx - 1));
 			flexiView.refresh();
 			break;
 		case "previous":
@@ -610,7 +610,7 @@ public class CommandInterpreter {
 				newMsg = newMsg + " " + splitString[i];
 			}
 			newMsg = newMsg.trim();
-			op = new UpdateMessageOperation(todos, todos.getItem(index - 1), newMsg);
+			op = new UpdateMessageOperation(todos, flexiView.getTodoItem(index - 1), newMsg);
 			op.execute();
 			undos.add(op);
 			flexiView.refresh();
@@ -640,7 +640,7 @@ public class CommandInterpreter {
 				newDate += " " + splitString[i];
 			}
 			newDate = newDate.trim();
-			op = new UpdateEndDateOperation(todos, todos.getItem(index - 1), newDate);
+			op = new UpdateEndDateOperation(todos, flexiView.getTodoItem(index - 1), newDate);
 			op.execute();
 			undos.add(op);
 			flexiView.refresh();
@@ -669,7 +669,7 @@ public class CommandInterpreter {
 				newDate2 += " " + splitString[i];
 			}
 			newDate2 = newDate2.trim();
-			op = new UpdateStartDateOperation(todos, todos.getItem(index - 1), newDate2);
+			op = new UpdateStartDateOperation(todos, flexiView.getTodoItem(index - 1), newDate2);
 			op.execute();
 			undos.add(op);
 			flexiView.refresh();
@@ -694,13 +694,13 @@ public class CommandInterpreter {
 				}
 			}
 			int newP;
-			if (Integer.parseInt(splitString[2]) > 0){
+			if (Integer.parseInt(splitString[2]) > 0) {
 				newP = Integer.parseInt(splitString[2]);
 			} else {
 				newP = -1;
 			}
 
-			op = new UpdatePriorityOperation(todos, todos.getItem(index - 1), newP);
+			op = new UpdatePriorityOperation(todos, flexiView.getTodoItem(index - 1), newP);
 			op.execute();
 			undos.add(op);
 			flexiView.refresh();
@@ -763,6 +763,7 @@ public class CommandInterpreter {
 			break;
 		}
 	}
+
 	public void setTodoFile(TodoFile t) {
 		todos = t;
 		flexiView.setTodos(t);
@@ -775,6 +776,7 @@ public class CommandInterpreter {
 	private String getRest(String command) {
 		return lastCommand.substring(command.length());
 	}
+
 	public void exit() {
 		todos.exit();
 		System.exit(0);

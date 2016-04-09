@@ -154,7 +154,7 @@ public class TodoFile {
 		TodoTimeSearcher tdts = new TodoTimeSearcher();
 		tdts.searchTime(todos, toFind);
 	}
-	
+
 	public void display() {
 		if (this.isEmpty()) {
 			System.out.println(fileName + " is empty");
@@ -346,30 +346,29 @@ public class TodoFile {
 	public void markDone(TodoItem tdi) {
 		tdi.markDone();
 		if (tdi.getFreq() != TodoItem.Frequency.NONE) {
-			TodoItem replacement = new TodoItem(TodoItem.Status.TODO,
-					tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
-					tdi.getContents(), Frequency.NONE);
+			TodoItem replacement = new TodoItem(TodoItem.Status.TODO, tdi.getPriority(), tdi.getStartDate(),
+					tdi.getDueDate(), tdi.getContents(), Frequency.NONE);
 			switch (tdi.getFreq()) {
 			case DAILY:
-				if (tdi.getStartDate()!=null){
+				if (tdi.getStartDate() != null) {
 					tdi.getStartDate().setDate(tdi.getStartDate().getDate() + 1);
 				}
 				tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 1);
 				break;
 			case WEEKLY:
-				if (tdi.getStartDate()!=null){
+				if (tdi.getStartDate() != null) {
 					tdi.getStartDate().setDate(tdi.getStartDate().getDate() + 7);
 				}
 				tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 7);
 				break;
 			case MONTHLY:
-				if (tdi.getStartDate()!=null){
+				if (tdi.getStartDate() != null) {
 					tdi.getStartDate().setMonth(tdi.getStartDate().getMonth() + 1);
 				}
 				tdi.getDueDate().setMonth(tdi.getDueDate().getMonth() + 1);
 				break;
 			case YEARLY:
-				if (tdi.getStartDate()!=null){
+				if (tdi.getStartDate() != null) {
 					tdi.getStartDate().setYear(tdi.getStartDate().getYear() + 1);
 				}
 				tdi.getDueDate().setYear(tdi.getDueDate().getYear() + 1);
@@ -417,76 +416,80 @@ public class TodoFile {
 		write();
 	}
 
-	private void updateRecur(){
+	private void updateRecur() {
 		Date now = new Date();
-		for (TodoItem tdi: todos){
+		for (TodoItem tdi : todos) {
 			TodoItem replacement;
-			switch (tdi.getFreq()){
+			switch (tdi.getFreq()) {
 			case DAILY:
-				while (tdi.getDueDate().before(now)){
-					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(), tdi.getContents(), Frequency.NONE);
+				while (tdi.getDueDate().before(now)) {
+					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
+							tdi.getContents(), Frequency.NONE);
 					todos.add(replacement);
-					if (tdi.getStartDate()!=null){
+					if (tdi.getStartDate() != null) {
 						tdi.getStartDate().setDate(tdi.getStartDate().getDate() + 1);
 					}
-					tdi.getDueDate().setDate(tdi.getDueDate().getDate()+1);
+					tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 1);
 				}
 				break;
 			case WEEKLY:
-				while (tdi.getDueDate().before(now)){
-					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(), tdi.getContents(), Frequency.NONE);
+				while (tdi.getDueDate().before(now)) {
+					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
+							tdi.getContents(), Frequency.NONE);
 					todos.add(replacement);
-					if (tdi.getStartDate()!=null){
+					if (tdi.getStartDate() != null) {
 						tdi.getStartDate().setDate(tdi.getStartDate().getDate() + 7);
 					}
-					tdi.getDueDate().setDate(tdi.getDueDate().getDate()+7);
+					tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 7);
 				}
 				break;
 			case MONTHLY:
-				while (tdi.getDueDate().before(now)){
-					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(), tdi.getContents(), Frequency.NONE);
+				while (tdi.getDueDate().before(now)) {
+					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
+							tdi.getContents(), Frequency.NONE);
 					todos.add(replacement);
-					if (tdi.getStartDate()!=null){
+					if (tdi.getStartDate() != null) {
 						tdi.getStartDate().setMonth(tdi.getStartDate().getMonth() + 1);
 					}
-					tdi.getDueDate().setMonth(tdi.getDueDate().getMonth()+1);
+					tdi.getDueDate().setMonth(tdi.getDueDate().getMonth() + 1);
 				}
 				break;
 			case YEARLY:
-				while (tdi.getDueDate().before(now)){
-					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(), tdi.getContents(), Frequency.NONE);
+				while (tdi.getDueDate().before(now)) {
+					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
+							tdi.getContents(), Frequency.NONE);
 					todos.add(replacement);
-					if (tdi.getStartDate()!=null){
+					if (tdi.getStartDate() != null) {
 						tdi.getStartDate().setYear(tdi.getStartDate().getYear() + 1);
 					}
-					tdi.getDueDate().setYear(tdi.getDueDate().getYear()+1);
+					tdi.getDueDate().setYear(tdi.getDueDate().getYear() + 1);
 				}
 				break;
 			}
 		}
 	}
-	
-	public void powerSearchString(String toFind){
+
+	public void powerSearchString(String toFind) {
 		PowerSearcher ps = new PowerSearcher();
 		ps.powerSearchString(todos, toFind);
 	}
-	
-	public void findFreeTime(){
+
+	public void findFreeTime() {
 		PowerSearcher ps = new PowerSearcher();
 		ps.findFreeTime(todos);
 	}
-	
-	public void findOverlap(){
+
+	public void findOverlap() {
 		PowerSearcher ps = new PowerSearcher();
 		ps.findOverlap(todos);
 	}
-	
-	public void searchPriority(int p){
+
+	public void searchPriority(int p) {
 		PowerSearcher ps = new PowerSearcher();
 		ps.prioritySearch(todos, p);
 	}
-	
-	public void searchInTimeBlock(Date timeBlockStart, Date timeBlockEnd){
+
+	public void searchInTimeBlock(Date timeBlockStart, Date timeBlockEnd) {
 		TodoDateSearcher tds = new TodoDateSearcher();
 		tds.searchTimeBlock(todos, timeBlockStart, timeBlockEnd);
 	}
@@ -501,4 +504,3 @@ public class TodoFile {
 		return ret;
 	}
 }
-

@@ -30,8 +30,6 @@ public class FlexiArea extends TextFlow {
 	private List<GuiTodo> currTodos;
 	private boolean doneLast;
 
-
-
 	public enum Mode {
 		/*
 		 * SORT_DATE: Show the due dates SORT_PRIORITY: Sort by priority
@@ -53,7 +51,6 @@ public class FlexiArea extends TextFlow {
 	public FlexiArea(TodoFile info) {
 		this.todos = info;
 		setTimeState(DEFAULT_TIME);
-		currTodos = new ArrayList<GuiTodo>();
 	}
 
 	/*
@@ -204,7 +201,9 @@ public class FlexiArea extends TextFlow {
 			currTodos.addAll(dueTodos);
 			currTodos.addAll(startTodos);
 		}
-		if (doneLast) { Collections.sort(currTodos, GuiTodo.getStatusComparator());	}
+		if (doneLast) {
+			Collections.sort(currTodos, GuiTodo.getStatusComparator());
+		}
 		printGuiTodos(currTodos);
 		if (timeState == TimeState.DAY || timeState == TimeState.WEEK || timeState == TimeState.MONTH) {
 			println("Ending " + start + "\n");
@@ -213,21 +212,21 @@ public class FlexiArea extends TextFlow {
 	}
 
 	private void printGuiTodos(List<GuiTodo> todos) {
+		int i = 1;
 		List<Node> children = this.getChildren();
 		for (GuiTodo t : todos) {
 			Text txt;
 			TodoItem todo = t.getTodo();
 			if (t.getStatus() == GuiTodo.SoD.FLOATING) {
-				txt = new Text(todo.getStatus().name() + " || " + todo.getContents() + "\n");
+				txt = new Text(i + ". " + todo.getStatus().name() + " || " + todo.getContents() + "\n");
 				if (todo.isDone()) {
 					txt.setFill(Color.BLUE);
-				} else {				
+				} else {
 					txt.setFill(Color.GREEN);
 				}
 			} else {
-				String ret = todo.getStatus().name() + ", " + 
-							 t.getStatus().name() + " date at " + 
-							 todo.getDueDate();
+				String ret = i + ". " + todo.getStatus().name() + ", " + t.getStatus().name() + " date at "
+						+ todo.getDueDate();
 				txt = new Text(leftPad(ret, PAD_SIZE) + " || " + todo.getContents() + "\n");
 				txt.setFont(Font.font("monospaced"));
 				if (todo.isDone()) {
@@ -241,6 +240,7 @@ public class FlexiArea extends TextFlow {
 				}
 			}
 			children.add(txt);
+			i++;
 		}
 	}
 
@@ -265,10 +265,6 @@ public class FlexiArea extends TextFlow {
 
 	public Mode getMode() {
 		return mode;
-	}
-
-	public TodoItem getNthTodo(int i) {
-		return currTodos.get(i).getTodo();
 	}
 
 	public String start() {
@@ -317,6 +313,10 @@ public class FlexiArea extends TextFlow {
 	public void toggleDoneLast() {
 		this.doneLast = !this.doneLast;
 		refresh();
+	}
+
+	public TodoItem getTodoItem(int i) {
+		return currTodos.get(i).getTodo();
 	}
 
 	public void searchInTimeBlock(Date searchBlkStartDate, Date searchBlkEndDate) {

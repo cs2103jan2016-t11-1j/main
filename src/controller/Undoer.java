@@ -20,7 +20,7 @@ public class Undoer {
 	}
 
 	public void undo() {
-		if (operations.size() > 0) 
+		if (operations.size() > 0)
 			operations.pop().inverse();
 	}
 }

@@ -73,7 +73,7 @@ public class TidyYard extends Application {
 				}
 			}
 		});
-		//scene.getStylesheets().add(TidyYard.class.getResource("resources/styles/test.css").toExternalForm());
+		// scene.getStylesheets().add(TidyYard.class.getResource("resources/styles/test.css").toExternalForm());
 		primaryStage.setTitle("Tidy Yard");
 		primaryStage.setScene(scene);
 		primaryStage.show();

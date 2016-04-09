@@ -21,7 +21,7 @@ public class TodoStringSearcher {
 				}
 				i++;
 			}
-			if (!stringFound){
+			if (!stringFound) {
 				System.out.println(toFind + " was not found in todos");
 			}
 		} catch (Exception e) {
@@ -30,7 +30,7 @@ public class TodoStringSearcher {
 		}
 		return ret;
 	}
-	
+
 	public List<TodoItem> searchExactString(List<TodoItem> todos, String toFind) {
 		List<TodoItem> ret = new ArrayList<TodoItem>();
 		try {

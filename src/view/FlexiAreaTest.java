@@ -22,6 +22,7 @@ import model.TodoItem;
 public class FlexiAreaTest {
 	private FlexiArea flexiArea;
 	private TodoFile todoFile;
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -30,6 +31,7 @@ public class FlexiAreaTest {
 		todoFile = new TodoFile("test.arst");
 		flexiArea = new FlexiArea(todoFile);
 	}
+
 	/**
 	 * Test method for {@link view.FlexiArea#FlexiArea()}.
 	 */
@@ -38,6 +40,7 @@ public class FlexiAreaTest {
 		assertEquals(flexiArea.getTimeState(), FlexiArea.DEFAULT_TIME);
 		assertEquals(flexiArea.getMode(), FlexiArea.DEFAULT_MODE);
 	}
+
 	/**
 	 * Test method for {@link view.FlexiArea#nextTimeChunk()}.
 	 */
@@ -55,7 +58,8 @@ public class FlexiAreaTest {
 	}
 
 	/**
-	 * Test method for {@link view.FlexiArea#setTimeState(view.FlexiArea.TimeState)}.
+	 * Test method for
+	 * {@link view.FlexiArea#setTimeState(view.FlexiArea.TimeState)}.
 	 */
 	@Test
 	public void testSetTimeState() {
@@ -109,7 +113,7 @@ public class FlexiAreaTest {
 		starts.add(new TodoItem("All"));
 		int s = flexiArea.getChildren().size();
 		flexiArea.printStartTodos(starts);
-		assertEquals(s + 3, flexiArea.getChildren().size());		
+		assertEquals(s + 3, flexiArea.getChildren().size());
 		assertTrue(flexiArea.getChildren().get(s + 2) instanceof Text);
 	}
 
@@ -120,9 +124,9 @@ public class FlexiAreaTest {
 	public void testPrintln() {
 		int s = flexiArea.getChildren().size();
 		flexiArea.println("Hi There");
-		assertEquals(s + 1, flexiArea.getChildren().size());		
+		assertEquals(s + 1, flexiArea.getChildren().size());
 		assertTrue(flexiArea.getChildren().get(s) instanceof Text);
-		assertTrue(((Text)flexiArea.getChildren().get(s)).getText().equals("Hi There"));
+		assertTrue(((Text) flexiArea.getChildren().get(s)).getText().equals("Hi There"));
 	}
 
 	/**

@@ -27,6 +27,7 @@ public class TodoItem {
 		this.dueDate = null;
 		this.contents = contents;
 	}
+
 	public TodoItem(Status stat, int priority, Date startDate, Date dueDate, String contents, Frequency freq) {
 		this.status = stat;
 		this.priority = priority;

@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 public class Timeline {
 	private ArrayList<TimelineNode> timeline;
-	
-	public Timeline(){
+
+	public Timeline() {
 		timeline = new ArrayList<TimelineNode>();
 	}
-	
-	public void add(TimelineNode tln){
+
+	public void add(TimelineNode tln) {
 		timeline.add(tln);
 		timeline.sort(tln);
 	}
-	
-	public ArrayList<TimelineNode> getTimeline(){
+
+	public ArrayList<TimelineNode> getTimeline() {
 		return timeline;
 	}
 }
