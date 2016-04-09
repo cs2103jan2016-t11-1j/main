@@ -1,6 +1,5 @@
 package view;
 
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -22,7 +21,8 @@ import java.util.Date;
 public class FlexiArea extends TextFlow {
 	public static final Mode DEFAULT_MODE = Mode.SORT_START_DATE;
 	public static final TimeState DEFAULT_TIME = TimeState.ALL;
-	public static int PAD_SIZE = 54;
+	public static int padSize = 54;
+	public static int floatingSize = 15;
 	private TodoFile todos;
 	private Mode mode = DEFAULT_MODE;
 	private TimeState timeState;
@@ -36,7 +36,7 @@ public class FlexiArea extends TextFlow {
 		 * SORT_STATUS: Sort by status SORT_CONTENTS: Sort by contents HEAT_MAP:
 		 * show the heat map
 		 */
-		SORT_START_DATE, SORT_DUE_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS, HEAT_MAP
+		SORT_START_DATE, SORT_DUE_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS
 	};
 
 	public enum TimeState {
@@ -155,7 +155,7 @@ public class FlexiArea extends TextFlow {
 
 	public void setMode(Mode newState) {
 		this.getChildren().clear();
-		if (timeState == TimeState.FLOATING) {
+if (timeState == TimeState.FLOATING) {
 			currTodos = toGuiTodos(todos.filterFloatingTodos(), GuiTodo.SoD.FLOATING);
 			switch (newState) {
 			case SORT_PRIORITY:
@@ -165,7 +165,6 @@ public class FlexiArea extends TextFlow {
 				Collections.sort(currTodos, GuiTodo.getContentsComparator());
 				break;
 			case SORT_START_DATE:
-			case HEAT_MAP:
 			case SORT_DUE_DATE:
 				break;
 			case SORT_STATUS:
@@ -190,7 +189,6 @@ public class FlexiArea extends TextFlow {
 				break;
 			case SORT_START_DATE:
 			case SORT_DUE_DATE:
-			case HEAT_MAP:
 				Collections.sort(startTodos, GuiTodo.getStartDateComparator());
 				Collections.sort(dueTodos, GuiTodo.getDueDateComparator());
 				break;
@@ -213,36 +211,40 @@ public class FlexiArea extends TextFlow {
 
 	private void printGuiTodos(List<GuiTodo> todos) {
 		int i = 1;
-		List<Node> children = this.getChildren();
 		for (GuiTodo t : todos) {
-			Text txt;
-			TodoItem todo = t.getTodo();
-			if (t.getStatus() == GuiTodo.SoD.FLOATING) {
-				String ret = i + ". " + todo.getStatus().name() + " || ";
-				txt = new Text(leftPad(ret, PAD_SIZE) + todo.getContents() + "\n");
-				if (todo.isDone()) {
-					txt.setFill(Color.BLUE);
+			printTodo(i, t);
+			i++;
+		}
+	}
+
+	private void printTodo(int i, GuiTodo t) {
+		Text txt;
+		TodoItem todo = t.getTodo();
+		if (t.getStatus() == GuiTodo.SoD.FLOATING) {
+			String ret = leftPad(i + ". ", 6) + todo.getStatus().name();
+			txt = new Text(ret + " || " + todo.getContents() + "\n");
+			txt.setFont(Font.font("monospaced"));
+			if (todo.isDone()) {
+				txt.setFill(Color.BLUE);
+			} else {
+				txt.setFill(Color.GREEN);
+			}
+		} else {
+			String ret = leftPad(i + ". ", 6) + todo.getStatus().name() + ", " + leftPad(t.getStatus().name(), 5)
+					+ " date at " + todo.getDueDate();
+			txt = new Text(leftPad(ret, padSize) + " || " + todo.getContents() + "\n");
+			txt.setFont(Font.font("monospaced"));
+			if (todo.isDone()) {
+				txt.setFill(Color.BLUE);
+			} else {
+				if (todo.getDueDate() != null && Instant.now().isAfter(todo.getDueDate().toInstant())) {
+					txt.setFill(Color.RED);
 				} else {
 					txt.setFill(Color.GREEN);
 				}
-			} else {
-				String ret = i + ". " + todo.getStatus().name() + ", " + t.getStatus().name() + " date at "
-						+ todo.getDueDate();
-				txt = new Text(leftPad(ret, PAD_SIZE) + " || " + todo.getContents() + "\n");
-				txt.setFont(Font.font("monospaced"));
-				if (todo.isDone()) {
-					txt.setFill(Color.BLUE);
-				} else {
-					if (todo.getDueDate() != null && Instant.now().isAfter(todo.getDueDate().toInstant())) {
-						txt.setFill(Color.RED);
-					} else {
-						txt.setFill(Color.GREEN);
-					}
-				}
 			}
-			children.add(txt);
-			i++;
 		}
+		this.getChildren().add(txt);
 	}
 
 	private static String leftPad(String s, int pad) {

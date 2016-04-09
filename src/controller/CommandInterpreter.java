@@ -1,6 +1,9 @@
 package controller;
 
 import java.util.Date;
+
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import model.TodoFile;
 import model.TodoItem;
 import model.TodoItem.Frequency;
@@ -19,15 +22,17 @@ public class CommandInterpreter {
 	private String lastCommand;
 	private TodoFile todos;
 	private FlexiArea flexiView;
+	private ScrollPane scroll;
 	private Undoer undos;
 	private boolean confirming;
 	private boolean echoing;
 
-	public CommandInterpreter(TodoFile todos, FlexiArea flexiView) {
+	public CommandInterpreter(TodoFile todos, ScrollPane scroll) {
 		this.todos = todos;
 		this.lastCommand = null;
-		this.flexiView = flexiView;
-		undos = new Undoer();
+		this.flexiView = (FlexiArea)scroll.getContent();
+		this.scroll = scroll;
+		this.undos = new Undoer();
 		this.confirming = false;
 	}
 
@@ -35,7 +40,7 @@ public class CommandInterpreter {
 		lastCommand = text;
 	}
 
-	public void executeCommand() {		
+	public void executeCommand() {
 		if (echoing) {
 			System.out.println(lastCommand);
 		}
@@ -245,9 +250,11 @@ public class CommandInterpreter {
 			confirming = true;
 			break;
 		case "yes":
-			todos.clear();
-			confirming = false;
-			System.out.println("all todos deleted");
+			if (confirming) {
+				todos.clear();
+				confirming = false;
+				System.out.println("all todos deleted");
+			}
 			break;
 		case "echo":
 			echoing = !echoing;
@@ -437,9 +444,6 @@ public class CommandInterpreter {
 		 */
 		case "whatmode":
 			switch (flexiView.getMode()) {
-			case HEAT_MAP:
-				System.out.println("The current mode is Heat map.");
-				break;
 			case SORT_CONTENTS:
 				System.out.println("The current mode is Sort Contents.");
 				break;
@@ -483,9 +487,6 @@ public class CommandInterpreter {
 				break;
 			case "contents":
 				flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
-				break;
-			case "heat":
-				flexiView.setMode(FlexiArea.Mode.HEAT_MAP);
 				break;
 			default:
 				System.out.println("Mode not recognized.");
@@ -769,6 +770,19 @@ public class CommandInterpreter {
 			break;
 		case "donelast":
 			flexiView.toggleDoneLast();
+			break;
+		case "horizontalwrap":
+		case "hw":
+			if (scroll.getHbarPolicy() == ScrollBarPolicy.AS_NEEDED) {
+				scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+			} else {
+				scroll.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+			}
+			flexiView.refresh();
+			break;
+		case "refresh":
+			flexiView.refresh();
+			System.out.println("refreshed.");
 			break;
 		default:
 			System.out.println("Command not recognized.");

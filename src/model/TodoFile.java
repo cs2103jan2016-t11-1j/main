@@ -503,4 +503,9 @@ public class TodoFile {
 		}
 		return ret;
 	}
+
+	public TodoItem topPriority() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

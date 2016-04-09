@@ -6,6 +6,7 @@ import controller.CommandInterpreter;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -22,6 +23,7 @@ public class TidyYard extends Application {
 	private TextField inputField;
 	private TextArea commandResult;
 	private FlexiArea flexiView;
+	private ScrollPane scroll;
 	private BorderPane border;
 
 	public static void main(String[] args) {
@@ -45,7 +47,9 @@ public class TidyYard extends Application {
 		this.flexiView = new FlexiArea(todos);
 		this.flexiView.setVisible(true);
 		this.flexiView.setId("flexi-view");
-		this.border.setCenter(this.flexiView);
+		this.scroll = new ScrollPane();
+		this.scroll.setContent(this.flexiView);
+		this.border.setCenter(this.scroll);
 	}
 
 	private void redirect() {
@@ -60,7 +64,7 @@ public class TidyYard extends Application {
 		addCommandResult();
 		todos = new TodoFile(DEFAULT_FILE);
 		addFlexiView();
-		controller = new CommandInterpreter(todos, flexiView);
+		controller = new CommandInterpreter(todos, scroll);
 
 		Scene scene = new Scene(border, 1000, 800, Color.BLACK);
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
