@@ -274,6 +274,12 @@ public class CommandInterpreter {
 			todos.sortByStartDate();
 			flexiView.setMode(FlexiArea.Mode.SORT_START_DATE);
 			break;
+		case "sortstatus":
+		case "sorts":
+		case "sortst":
+			todos.sortByStatus();
+			flexiView.setMode(FlexiArea.Mode.SORT_STATUS);
+			break;
 		case "searchstr":
 		case "searchs":
 		case "srchs":

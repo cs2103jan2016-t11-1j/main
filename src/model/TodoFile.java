@@ -287,7 +287,7 @@ public class TodoFile {
 	}
 
 	public void sortByStatus() {
-		Collections.sort(todos, TodoItem.getStatusComparator());
+		Collections.sort(todos, TodoItem.getStatusComparator().reversed());
 		write();
 	}
 
