@@ -16,7 +16,7 @@ import com.joestelmach.natty.Parser;
 public class DateParser {
 	protected Parser natty = null;
 
-	protected DateParser() {
+	public DateParser() {
 		//BasicConfigurator.configure();
 		natty = new Parser();
 

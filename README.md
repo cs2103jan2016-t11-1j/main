@@ -10,33 +10,33 @@ Tidy Yard is a system for managing TODOs for power users who don't want to leave
 # Usage
 ## Add
 ### Normal
-    a Take out the trash
+    add Take out the trash
 ### With a due date
-    a monday Walk the dog
+    add Walk the dog # monday
 ### With a priority
-    a #B monday World domination
-    a #A tuesday World Peace
-## Display
+    add World domination #2 monday
+    add World Peace #1 tuesday
+//## Display 
     dis
     > 1. 11/2/2016 #B TODO: World domination
     > 2.              TODO: Take out the trash
     > 3. 11/2/2016    TODO: Walk the dog
-### Only Display TODO items
+//### Only Display TODO items
     dis t
     > 1. 11/2/2016 #B TODO: World domination
-### Display Organized by Priority
-    dis p
+//### Display Organized by Priority
+    sortp
     > 1. 11/2/2016 #A TODO: World Peace
     > 1. 11/2/2016 #B TODO: World domination
     > 2.              TODO: Take out the trash
     > 3. 11/2/2016    TODO: Walk the dog
-## Change the Status
-    mark done 2
+//## Change the Status
+    done 2
     > 1. DONE: Take out the trash
-    mark done 3
+    done 3
     > 1. TODO: Take out the trash
-## Undo
+//## Undo
     mark done 2
     > 1. DONE: Take out the trash
-    u
+    undo
     > 1. TODO: Take out the trash

@@ -5,6 +5,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
+import controller.DateParser;
 import model.TodoItem.Frequency;
 
 public class TodoFileTests {
@@ -47,6 +48,9 @@ public class TodoFileTests {
 	
 	@Test
 	public void TestPowerSearch() {
+		DateParser dp = new DateParser();
+		String now = "now";
+		String then = "7 days from now";
 		System.out.println("////___NOW TESTING POWER SEARCH METHOD IN TODOFILE CLASS___\\\\");
 		todos.add(3, new Date(2000000), new Date(5000000), "SAN CHEZ NO!");
 		todos.add(2, new Date(6000000), new Date(8000000), "SAN JOSE YES!");
@@ -60,7 +64,7 @@ public class TodoFileTests {
 		todos.findOverlap();
 		todos.add(9, new Date(6000000), new Date(7000000), "Another test");
 		todos.add(19, new Date(6500000), new Date(7600000), "The test is a lie");
-		todos.searchInTimeBlock(new Date(4500000), new Date(8000000));
+		todos.searchInTimeBlock((dp.parse(now)), (dp.parse(then)));
 		todos.clear();
 	}
 }

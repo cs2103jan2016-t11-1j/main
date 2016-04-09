@@ -35,15 +35,24 @@ public class CommandInterpreter {
 
 	public void executeCommand() {
 		/*
-		 * String is split into command, message, priority and date
+		 * String is split into command, message, priority and dates.
 		 */
 		Operation op = null;
 		DateParser dp = new DateParser();
 		String[] splitString = lastCommand.split(WHITESPACE);
 		String command = splitString[0];
+		command = command.toLowerCase();
 
-		// TODO make the command ignore case
+		/*
+		 * Operations that user enters.
+		 * Multiple cases for each command to ensure that some
+		 * spelling errors can be checked.  
+		 */
+
 		switch (command) {
+		/*
+		 * Display Operation
+		 */
 		case "back":
 		case "display":
 		case "dis":
@@ -53,6 +62,9 @@ public class CommandInterpreter {
 			op.execute();
 			undos.add(op);
 			break;
+		/*
+		 * Add Operation
+		 */
 		case "add":
 		case "ad":
 		case "addd":
@@ -78,18 +90,8 @@ public class CommandInterpreter {
 				}
 			}
 			/*
-			 * Date parsing starts here Walkthrough for the code below using
-			 * example: 'tomorrow from 5 to 6' 
-			 * 1. Search for 'from' and 'to'equivalents. 
-			 * 2. If found then: 
-			 *   a. startdate = tomorrow + at + 5
-			 *   b. enddate = tomorrow + at + 6 
-			 *   (Note how 'from' and 'to' is changed to 'at' for natty to recognize) 
-			 * 3. If not found then send entire string as duedate (like before). 
-			 * Eg. day after tomorrow(no 'from' or 'to' found, so can parse entire string with natty)
-			 * 4. For adding, if start and end date exist, then add accordingly.
-			 * 5. Have to use this implementation as natty doesn't return 2
-			 *    values and doesn't recognize the from...to... format.
+			 * Manual date parsing for the Natty Parser 
+			 * to recognize the input. 
 			 */
 
 			String dateParsingString = "";
@@ -200,7 +202,9 @@ public class CommandInterpreter {
 			parsedEndDate = null;
 			flexiView.refresh();
 			break;
-
+		/*
+		 * Delete Operation
+		 */
 		case "delete":
 		case "del":
 		case "de":
@@ -228,6 +232,9 @@ public class CommandInterpreter {
 			undos.add(op);
 			flexiView.refresh();
 			break;
+		/*
+		 * Clear Operation
+		 */
 		case "clear":
 		case "clr":
 		case "cl":
@@ -236,11 +243,17 @@ public class CommandInterpreter {
 			todos.clear();
 			System.out.println("all todos deleted");
 			break;
+		/*
+		 * Exit Operation
+		 */
 		case "exit":
 		case "ext":
 		case "ex":
 			exit();
 			break;
+		/*
+		 * Save Operation
+		 */
 		case "write":
 		case "wrt":
 		case "writ":
@@ -250,6 +263,10 @@ public class CommandInterpreter {
 			// TODO Change to OP
 			todos.write();
 			break;
+		/*
+		* Different Sort Operations
+		* Sort by contents, priority, dates, Done/Todo tasks
+		*/
 		case "sortcont":
 		case "sortc":
 		case "sortcontents":
@@ -274,10 +291,23 @@ public class CommandInterpreter {
 			todos.sortByStartDate();
 			flexiView.setMode(FlexiArea.Mode.SORT_START_DATE);
 			break;
+		case "sortstatus":
+		case "sorts":
+		case "sortst":
+			todos.sortByStatus();
+			flexiView.setMode(FlexiArea.Mode.SORT_STATUS);
+			break;
+		/*
+		 * Different PowerSearch Operations:
+		 * Search by contents, time, dates, 
+		 * next few days, overlaps in events,
+		 * free time, priority
+		 */
 		case "searchstr":
 		case "searchs":
 		case "srchs":
 		case "schstr":
+		case "saerchs":
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to search\n");
 				return;
@@ -296,14 +326,16 @@ public class CommandInterpreter {
 		case "searchdate":
 		case "searchd":
 		case "srchd":
+		case "saerchd":
 		case "schdate":
+			System.out.println("Search Results:");
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to search\n");
 				return;
 			}
 			String searchDate = "";
 			if (splitString.length < 2) {
-				System.out.println("Displaying all, please enter specific text to search");
+				System.out.println("Enter specific date text to search");
 			} else {
 				for (int i = 1; i < splitString.length; i++){
 					searchDate = searchDate + " " + splitString[i];
@@ -317,6 +349,8 @@ public class CommandInterpreter {
 		case "searchpriority":
 		case "srchp":
 		case "schp":
+		case "saerchp":
+			System.out.println("Search Results:");
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to search\n");
 				return;
@@ -324,7 +358,7 @@ public class CommandInterpreter {
 			int prty = -1;
 			int pp = Integer.parseInt(splitString[1]);
 			if (splitString.length < 2) {
-				System.out.println("Displaying all, please enter specific text to search");
+				System.out.println("Displaying all results, please enter specific text to search");
 				prty = -1;
 			} else {
 				try {
@@ -345,6 +379,8 @@ public class CommandInterpreter {
 		case "srchf":
 		case "schfree":
 		case "search free":
+		case "saerchf":
+			System.out.println("Search Results:");
 			flexiView.findFreeTime();
 			break;
 		case "searchclash":
@@ -353,12 +389,16 @@ public class CommandInterpreter {
 		case "schclash":
 		case "searchoverlap":
 		case "searcho":
+		case "saerchc":
+			System.out.println("Search Results:");
 			flexiView.findOverlap();
 			break;
 		case "searchnext":
 		case "searchn":
 		case "srchnxt":
 		case "searchnxt":
+		case "saerchn":
+			System.out.println("Search Results:");
 			if (todos.isEmpty()) {
 				System.out.printf("No todos to search\n");
 				return;
@@ -377,9 +417,13 @@ public class CommandInterpreter {
 				searchBlkEndDateString = splitString[1] + " days from now";
 				searchBlkEndDate = dp.parse(searchBlkEndDateString);
 			}
+			//System.out.println(searchBlkStartDate + "    " +  searchBlkEndDate);
 			flexiView.searchInTimeBlock(searchBlkStartDate, searchBlkEndDate);
 			searchBlkEndDate = null;
 			break;
+		/*
+		* Switch mode of display
+		*/
 		case "whatmode":
 			switch (flexiView.getMode()) {
 			case HEAT_MAP:
@@ -503,11 +547,17 @@ public class CommandInterpreter {
 				break;
 			}
 			break;
+		/*
+		 * Display floating tasks operation
+		 */
 		case "float":
 		case "floating":
 			flexiView.setTimeState(FlexiArea.TimeState.FLOATING);
 			System.out.println("Set time interval to floating");
 			break;
+		/*
+		 * Mark as done/todo Operation
+		 */
 		case "todo":
 		case "done":
 			if (todos.isEmpty()) {
@@ -527,6 +577,7 @@ public class CommandInterpreter {
 				}
 			}
 			todos.toggle(todos.getItem(indx - 1));
+			flexiView.refresh();
 			break;
 		case "previous":
 		case "prev":
@@ -536,6 +587,9 @@ public class CommandInterpreter {
 		case "nxt":
 			flexiView.nextTimeChunk();
 			break;
+		/*
+		 * Update Operations
+		 */
 		case "updatem":
 		case "upm":
 			if (todos.isEmpty()) {
@@ -653,6 +707,9 @@ public class CommandInterpreter {
 			undos.add(op);
 			flexiView.refresh();
 			break;
+		/*
+		 * Help for user Operation
+		 */
 		case "help":
 		case "/":
 			System.out.println("Commands");
@@ -681,12 +738,18 @@ public class CommandInterpreter {
 			System.out.println("next: change to the next time chunk.");
 			System.out.println("todo/done: toggle the status of an item item as todo/done");
 			break;
+		/*
+		 * Undo Operation
+		 */
 		case "undo":
 		case "un":
 		case "ud":
 			undos.undo();
 			flexiView.refresh();
 			break;
+		/*
+		 * Change directory Operation
+		 */
 		case "cd":
 			String rest = getRest(command).trim();
 			op = new ChangeDirectoryOperation(todos, rest, this);
@@ -710,7 +773,7 @@ public class CommandInterpreter {
 	public String getLastCommand() {
 		return lastCommand;
 	}
-	
+
 	private String getRest(String command) {
 		return lastCommand.substring(command.length());
 	}

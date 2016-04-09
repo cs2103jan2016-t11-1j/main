@@ -21,7 +21,7 @@ public class PowerSearcher {
 			if (tdi.getDueDate() != null && tdi.getStartDate() != null){
 				events.add(new TimelineNode(tdi.getStartDate(),tdi.getContents()));
 				events.add(new TimelineNode(tdi.getContents(),tdi.getDueDate()));
-				System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + " has been added to the timeline");
+				//System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + " has been added to the timeline");
 			}
 		}
 		Date freeTimeEnd = new Date();
@@ -35,7 +35,7 @@ public class PowerSearcher {
 				currOverlap.add(event);
 			}else{
 				if (currOverlap.size()==1){
-					System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
+					//System.out.println("Free Time found before " + freeTimeEnd + " and after " + event.getDate());
 					if (freeTimeSlots.contains(freeTimeEnd)){
 						freeTimeSlots.remove(freeTimeEnd);
 						freeTimeSlots.add(event.getDate());
@@ -100,6 +100,7 @@ public class PowerSearcher {
 	 */
 	
 	public void powerSearchString(List<TodoItem> todos, String toFind) {
+		toFind = toFind.toLowerCase();
 		ArrayList<String> permutations = new ArrayList<String>();
 		String[] permutationComponents = toFind.split(" ");
 		ArrayList<String> toPermutate = new ArrayList<String>();
@@ -111,7 +112,7 @@ public class PowerSearcher {
 		int[] hits = new int[todos.size()];
 		for (int i=0; i<todos.size(); i++){
 			for (String s: permutated){
-				if (todos.get(i).getContents().contains(s)){
+				if (todos.get(i).getContents().toLowerCase().contains(s.toLowerCase())){
 					hits[i] = hits[i] + 1;
 				}
 			}
@@ -123,7 +124,7 @@ public class PowerSearcher {
 			}
 		}
 		if (mostHits>0){
-			System.out.println("User Power Search Results:");
+			System.out.println("Search Results:");
 			for (int i=mostHits; i>0; i--){
 				for (int j=0; j<hits.length; j++){
 					if (hits[j]==i){

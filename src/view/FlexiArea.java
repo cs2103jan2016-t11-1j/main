@@ -320,6 +320,6 @@ public class FlexiArea extends TextFlow {
 	}
 
 	public void searchInTimeBlock(Date searchBlkStartDate, Date searchBlkEndDate) {
-		todos.searchInTimeBlock(searchBlkStartDate, searchBlkStartDate);
+		todos.searchInTimeBlock(searchBlkStartDate, searchBlkEndDate);
 	}
 }
