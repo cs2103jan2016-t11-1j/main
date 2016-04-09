@@ -10,7 +10,6 @@ public class CommandInterpreter {
 	private static final String WHITESPACE = "\\s+"; // whitespace regex
 	private static final char SEPERATOR = '#';
 	private static String toDoMessage = "";
-	public static Integer intPriority;
 	private static String dateForNatty = "";
 	private static String startDateForNatty = "";
 	private static String endDateForNatty = "";
@@ -70,6 +69,7 @@ public class CommandInterpreter {
 		case "addd":
 		case "asd":
 		case "ads":
+			int intPriority = -1;
 			int hexIndex = -1;
 			for (int j = 1; j < splitString.length; j++) {
 				if (splitString[j].charAt(0) == SEPERATOR) {
@@ -85,8 +85,6 @@ public class CommandInterpreter {
 				String hexedPriority = splitString[hexIndex];
 				if (!hexedPriority.substring(1).equals("")) {
 					intPriority = Integer.parseInt(hexedPriority.substring(1));
-				} else {
-					intPriority = -1;
 				}
 			}
 			/*
