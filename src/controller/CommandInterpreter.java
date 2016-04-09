@@ -694,6 +694,9 @@ public class CommandInterpreter {
 			undos.add(op);
 			flexiView.refresh();
 			break;
+		case "donelast":
+			flexiView.toggleDoneLast();
+			break;
 		default:
 			System.out.println("Command not recognized.");
 			break;

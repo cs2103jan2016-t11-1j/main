@@ -179,10 +179,10 @@ public class TodoItem {
 					if (j.getStatus() == Status.TODO) {
 						return 0;
 					}
-					return 1;
+					return -1;
 				} else {
 					if (j.getStatus() == Status.TODO) {
-						return -1;
+						return 1;
 					}
 					return 0;
 				}

@@ -2,6 +2,7 @@ package view;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import model.TodoFile;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
@@ -20,11 +22,15 @@ import java.util.Date;
 public class FlexiArea extends TextFlow {
 	public static final Mode DEFAULT_MODE = Mode.SORT_START_DATE;
 	public static final TimeState DEFAULT_TIME = TimeState.ALL;
+	public static final int PAD_SIZE = 46;
 	private TodoFile todos;
 	private Mode mode = DEFAULT_MODE;
 	private TimeState timeState;
 	private LocalDateTime start, end; // null when floating
-	private List<TodoItem> currTodos;
+	private List<GuiTodo> currTodos;
+	private boolean doneLast;
+
+
 
 	public enum Mode {
 		/*
@@ -32,8 +38,7 @@ public class FlexiArea extends TextFlow {
 		 * SORT_STATUS: Sort by status SORT_CONTENTS: Sort by contents HEAT_MAP:
 		 * show the heat map
 		 */
-		SORT_START_DATE, SORT_DUE_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS, HEAT_MAP, 
-		SEARCH_RESULTS
+		SORT_START_DATE, SORT_DUE_DATE, SORT_PRIORITY, SORT_STATUS, SORT_CONTENTS, HEAT_MAP
 	};
 
 	public enum TimeState {
@@ -48,7 +53,7 @@ public class FlexiArea extends TextFlow {
 	public FlexiArea(TodoFile info) {
 		this.todos = info;
 		setTimeState(DEFAULT_TIME);
-		currTodos = new ArrayList<TodoItem>();
+		currTodos = new ArrayList<GuiTodo>();
 	}
 
 	/*
@@ -77,6 +82,7 @@ public class FlexiArea extends TextFlow {
 			break;
 		}
 	}
+
 	public void previousTimeChunk() {
 		switch (timeState) {
 		case DAY:
@@ -142,131 +148,129 @@ public class FlexiArea extends TextFlow {
 		setMode(mode);
 	}
 
+	private List<GuiTodo> toGuiTodos(List<TodoItem> todos, GuiTodo.SoD status) {
+		List<GuiTodo> ret = new ArrayList<GuiTodo>();
+		for (TodoItem todo : todos) {
+			ret.add(new GuiTodo(todo, status));
+		}
+		return ret;
+	}
+
 	public void setMode(Mode newState) {
 		this.getChildren().clear();
 		if (timeState == TimeState.FLOATING) {
-			List<TodoItem> floatingTodos = todos.filterFloatingTodos();
+			currTodos = toGuiTodos(todos.filterFloatingTodos(), GuiTodo.SoD.FLOATING);
 			switch (newState) {
 			case SORT_PRIORITY:
-				Collections.sort(floatingTodos, TodoItem.getPriorityComparator());
+				Collections.sort(currTodos, GuiTodo.getPriorityComparator());
 				break;
 			case SORT_CONTENTS:
-				Collections.sort(floatingTodos, TodoItem.getContentsComparator());
+				Collections.sort(currTodos, GuiTodo.getContentsComparator());
 				break;
 			case SORT_START_DATE:
 			case HEAT_MAP:
 			case SORT_DUE_DATE:
 				break;
 			case SORT_STATUS:
-				Collections.sort(floatingTodos, TodoItem.getStatusComparator());
-				break;
-			case SEARCH_RESULTS:
-				System.err.println("invalid state");
-				//TODO make this narrow to only results that are floating
+				Collections.sort(currTodos, GuiTodo.getStatusComparator());
 				break;
 			}
-			currTodos = floatingTodos;
-			printFloatingTodos(floatingTodos);
-			this.mode = newState;
-			return;
+		} else {
+			if (timeState != TimeState.ALL) {
+				println("Starting " + start + "\n");
+			}
+			List<GuiTodo> startTodos = toGuiTodos(todos.filterStartDates(start, end), GuiTodo.SoD.START);
+			List<GuiTodo> dueTodos = toGuiTodos(todos.filterDueDates(start, end), GuiTodo.SoD.DUE);
+
+			switch (newState) {
+			case SORT_PRIORITY:
+				Collections.sort(startTodos, GuiTodo.getPriorityComparator());
+				Collections.sort(dueTodos, GuiTodo.getPriorityComparator());
+				break;
+			case SORT_CONTENTS:
+				Collections.sort(startTodos, GuiTodo.getContentsComparator());
+				Collections.sort(dueTodos, GuiTodo.getContentsComparator());
+				break;
+			case SORT_START_DATE:
+			case SORT_DUE_DATE:
+			case HEAT_MAP:
+				Collections.sort(startTodos, GuiTodo.getStartDateComparator());
+				Collections.sort(dueTodos, GuiTodo.getDueDateComparator());
+				break;
+			case SORT_STATUS:
+				break;
+			}
+			currTodos = new ArrayList<GuiTodo>();
+			currTodos.addAll(dueTodos);
+			currTodos.addAll(startTodos);
 		}
-		if (timeState == TimeState.DAY || timeState == TimeState.WEEK 
-				|| timeState == TimeState.MONTH || timeState == TimeState.FUTURE) {
-			println("Starting " + start + "\n");
-		}
-		List<TodoItem> startTodos = todos.filterStartDates(start, end);
-		List<TodoItem> dueTodos = todos.filterDueDates(start, end);
-		switch (newState) {
-		case SORT_PRIORITY:
-			Collections.sort(startTodos, TodoItem.getPriorityComparator());
-			Collections.sort(dueTodos, TodoItem.getPriorityComparator());
-			break;
-		case SORT_CONTENTS:
-			Collections.sort(startTodos, TodoItem.getContentsComparator());
-			Collections.sort(dueTodos, TodoItem.getContentsComparator());
-			break;
-		case SORT_START_DATE:
-		case SORT_DUE_DATE:
-		case HEAT_MAP:
-			Collections.sort(startTodos, TodoItem.getStartDateComparator());
-			Collections.sort(dueTodos, TodoItem.getDueDateComparator());
-			break;
-		case SORT_STATUS:
-			Collections.sort(startTodos, TodoItem.getStatusComparator());
-			Collections.sort(dueTodos, TodoItem.getStatusComparator());
-			break;
-		case SEARCH_RESULTS:
-			//TODO
-			break;
-		}
-		currTodos = new ArrayList<TodoItem>();
-		currTodos.addAll(dueTodos);
-		currTodos.addAll(startTodos);
-		printDueTodos(dueTodos);
-		printStartTodos(startTodos);
-		if (timeState == TimeState.DAY || timeState == TimeState.WEEK 
-				|| timeState == TimeState.MONTH) {
+		if (doneLast) { Collections.sort(currTodos, GuiTodo.getStatusComparator());	}
+		printGuiTodos(currTodos);
+		if (timeState == TimeState.DAY || timeState == TimeState.WEEK || timeState == TimeState.MONTH) {
 			println("Ending " + start + "\n");
 		}
 		this.mode = newState;
 	}
 
-	public void setTodos(TodoFile todos) {
-		this.todos = todos;
-		refresh();
-	}
-	public void printStartTodos(List<TodoItem> startTodos) {
+	private void printGuiTodos(List<GuiTodo> todos) {
 		List<Node> children = this.getChildren();
-		for (TodoItem t : startTodos) {
+		for (GuiTodo t : todos) {
 			Text txt;
-			if (t.isDone()) {
-				txt = new Text("DONE, Start date at " + t.getStartDate() + " || " + t.getContents() + "\n");
-				txt.setFill(Color.BLUE);
+			TodoItem todo = t.getTodo();
+			if (t.getStatus() == GuiTodo.SoD.FLOATING) {
+				txt = new Text(todo.getStatus().name() + " || " + todo.getContents() + "\n");
+				if (todo.isDone()) {
+					txt.setFill(Color.BLUE);
+				} else {				
+					txt.setFill(Color.GREEN);
+				}
 			} else {
-				txt = new Text("TODO, Start date at " + t.getStartDate() + " || " + t.getContents() + "\n");
-				txt.setFill(Color.RED);
-			}
-			children.add(txt);
-		}
-	}	
-	public void printFloatingTodos(List<TodoItem> startTodos) {
-		List<Node> children = this.getChildren();
-		for (TodoItem t : startTodos) {
-			Text txt;
-			if (t.isDone()) {
-				txt = new Text("DONE || " + t.getContents() + "\n");
-				txt.setFill(Color.BLUE);
-			} else {
-				txt = new Text("TODO || " + t.getContents() + "\n");
-				txt.setFill(Color.RED);
+				String ret = todo.getStatus().name() + ", " + 
+							 t.getStatus().name() + " date at " + 
+							 todo.getDueDate();
+				txt = new Text(leftPad(ret, PAD_SIZE) + " || " + todo.getContents() + "\n");
+				txt.setFont(Font.font("monospaced"));
+				if (todo.isDone()) {
+					txt.setFill(Color.BLUE);
+				} else {
+					if (todo.getDueDate() != null && Instant.now().isAfter(todo.getDueDate().toInstant())) {
+						txt.setFill(Color.RED);
+					} else {
+						txt.setFill(Color.GREEN);
+					}
+				}
 			}
 			children.add(txt);
 		}
 	}
 
-	public void printDueTodos(List<TodoItem> dueTodos) {
-		List<Node> children = this.getChildren();
-		for (TodoItem t : dueTodos) {
-			Text txt;
-			if (t.isDone()) {
-				txt = new Text("DONE, Due date at " + t.getDueDate() + " || " + t.getContents() + "\n");
-				txt.setFill(Color.BLUE);
-			} else {
-				txt = new Text("TODO, Due date at " + t.getDueDate() + " || " + t.getContents() + "\n");
-				txt.setFill(Color.RED);
-			}
-			children.add(txt);
+	private static String leftPad(String s, int pad) {
+		if (s.length() < pad) {
+			return s.concat(repeat(pad - s.length()));
 		}
+		return s;
 	}
+
+	private static String repeat(int count, String with) {
+		return new String(new char[count]).replace("\0", with);
+	}
+
+	private static String repeat(int count) {
+		return repeat(count, " ");
+	}
+
 	public void println(String s) {
 		this.getChildren().add(new Text(s));
 	}
+
 	public Mode getMode() {
 		return mode;
 	}
+
 	public TodoItem getNthTodo(int i) {
-		return currTodos.get(i);
+		return currTodos.get(i).getTodo();
 	}
+
 	public String start() {
 		return start.toString();
 	}
@@ -285,21 +289,34 @@ public class FlexiArea extends TextFlow {
 
 	public void searchDate(Date parsedSearchDate) {
 		todos.searchDate(parsedSearchDate);
-		
+
 	}
 
 	public void searchPriority(int prty) {
-		todos.searchPriority(prty);	
+		todos.searchPriority(prty);
 	}
 
 	public void findFreeTime() {
 		todos.findFreeTime();
-		
+
 	}
 
 	public void findOverlap() {
 		todos.findOverlap();
-		
+	}
+
+	public void setTodos(TodoFile todos) {
+		this.todos = todos;
+		refresh();
+	}
+
+	public boolean isDoneLast() {
+		return doneLast;
+	}
+
+	public void toggleDoneLast() {
+		this.doneLast = !this.doneLast;
+		refresh();
 	}
 
 	public void searchInTimeBlock(Date searchBlkStartDate, Date searchBlkEndDate) {
