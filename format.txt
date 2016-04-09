@@ -1,15 +1,14 @@
-Status|Priority (optional)|Due Date (optional)|The Rest of the TODO item
+Status|Priority (optional)|Start Date (optional)|Due/End Date (optional)|Frequency of Task|The Rest of the TODO item
 
 ------
 Types:
 ------
-{TODO|DONE}|Integer|Time Stamp|String
+{TODO|DONE}|Integer|Time Stamp|Time Stamp|Integer|String
 
 ---------
 Examples:
 ---------
-TODO||| Dinner with Timmy
-DONE|2|*IDK what date time stamp to use yet*| Make a boat 
-TODO|3|*IDK what date time stamp to use yet*| play tennis
-
+TODO|4||Thu Apr 07 16:00:00 SGT 2016||Go to School
+DONE|||Thu Apr 07 10:00:00 SGT 2016||Play Golf
+TODO|2|Fri Apr 08 19:00:00 SGT 2016|Fri Apr 08 20:00:00 SGT 2016||Dinner at Jimmy
 

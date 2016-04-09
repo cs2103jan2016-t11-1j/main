@@ -21,7 +21,7 @@ public class PowerSearcher {
 			if (tdi.getDueDate() != null && tdi.getStartDate() != null){
 				events.add(new TimelineNode(tdi.getStartDate(),tdi.getContents()));
 				events.add(new TimelineNode(tdi.getContents(),tdi.getDueDate()));
-				System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + " has been added to the timeline");
+				//System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + " has been added to the timeline");
 			}
 		}
 		Date freeTimeEnd = new Date();
@@ -124,7 +124,7 @@ public class PowerSearcher {
 			}
 		}
 		if (mostHits>0){
-			System.out.println("User Power Search Results:");
+			System.out.println("Search Results:");
 			for (int i=mostHits; i>0; i--){
 				for (int j=0; j<hits.length; j++){
 					if (hits[j]==i){
