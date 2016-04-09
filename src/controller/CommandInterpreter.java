@@ -21,6 +21,7 @@ public class CommandInterpreter {
 	private FlexiArea flexiView;
 	private Undoer undos;
 	private boolean confirming;
+	private boolean echoing;
 
 	public CommandInterpreter(TodoFile todos, FlexiArea flexiView) {
 		this.todos = todos;
@@ -34,7 +35,10 @@ public class CommandInterpreter {
 		lastCommand = text;
 	}
 
-	public void executeCommand() {
+	public void executeCommand() {		
+		if (echoing) {
+			System.out.println(lastCommand);
+		}
 		/*
 		 * String is split into command, message, priority and dates.
 		 */
@@ -244,6 +248,14 @@ public class CommandInterpreter {
 			todos.clear();
 			confirming = false;
 			System.out.println("all todos deleted");
+			break;
+		case "echo":
+			echoing = !echoing;
+			if (echoing) {
+				System.out.println("Echoing user commands.");
+			} else {
+				System.out.println("Not echoing user commands.");
+			}
 			break;
 		/*
 		 * Exit Operation
@@ -762,6 +774,7 @@ public class CommandInterpreter {
 			System.out.println("Command not recognized.");
 			break;
 		}
+
 	}
 
 	public void setTodoFile(TodoFile t) {

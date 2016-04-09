@@ -22,7 +22,7 @@ import java.util.Date;
 public class FlexiArea extends TextFlow {
 	public static final Mode DEFAULT_MODE = Mode.SORT_START_DATE;
 	public static final TimeState DEFAULT_TIME = TimeState.ALL;
-	public static final int PAD_SIZE = 46;
+	public static int PAD_SIZE = 54;
 	private TodoFile todos;
 	private Mode mode = DEFAULT_MODE;
 	private TimeState timeState;
@@ -218,7 +218,8 @@ public class FlexiArea extends TextFlow {
 			Text txt;
 			TodoItem todo = t.getTodo();
 			if (t.getStatus() == GuiTodo.SoD.FLOATING) {
-				txt = new Text(i + ". " + todo.getStatus().name() + " || " + todo.getContents() + "\n");
+				String ret = i + ". " + todo.getStatus().name() + " || ";
+				txt = new Text(leftPad(ret, PAD_SIZE) + todo.getContents() + "\n");
 				if (todo.isDone()) {
 					txt.setFill(Color.BLUE);
 				} else {
