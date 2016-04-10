@@ -57,17 +57,9 @@ public class TidyYard extends Application {
 	private void redirect() {
 		PrintStream stream = new PrintStream(new ConsoleArea(commandResult), true);
 		System.setOut(stream);
-	}
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		border = new BorderPane();
-		addTopInput();
-		addCommandResult();
-		todos = new TodoFile(defaultFile);
-		addFlexiView();
-		controller = new CommandInterpreter(todos, scroll);
-
+	}	
+	
+	private void setScene(Stage primaryStage) {
 		Scene scene = new Scene(border, 1000, 800, Color.BLACK);
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -79,11 +71,23 @@ public class TidyYard extends Application {
 				}
 			}
 		});
-		// scene.getStylesheets().add(TidyYard.class.getResource("resources/styles/test.css").toExternalForm());
 		primaryStage.setTitle("Tidy Yard");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		redirect();
+	}
+
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		border = new BorderPane();
+		addTopInput();
+		addCommandResult();
+		todos = new TodoFile(defaultFile);
+		addFlexiView();
+		controller = new CommandInterpreter(todos, scroll);
+
+		setScene(primaryStage);
 	}
 
 	@Override
