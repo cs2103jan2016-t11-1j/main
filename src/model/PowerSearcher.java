@@ -112,6 +112,37 @@ public class PowerSearcher {
 		List<String> permutated = permutate(toPermutate);
 		Collections.sort(permutated, CustomStringComparator());
 		int[] hits = new int[todos.size()];
+		for (int i=0; i<todos.size(); i++){
+			String[] words = todos.get(i).getContents().split(" ");
+			for (String s: permutated){
+				for (String word: words){
+					int hitCounter;
+					if (s.length()<=3 || word.length()<=3){
+						hitCounter = 3 - LevenshteinDist(s, word);
+						/*
+						if (s.length()>word.length()){
+							hitCounter = word.length();
+						}else{
+							hitCounter = s.length();
+						}
+						*/
+					}else{
+						hitCounter = word.length() - LevenshteinDist(s, word);
+						/*
+						if (s.length()>word.length()){
+							hitCounter = s.length() - (s.length()-word.length());
+						}else{
+							hitCounter = word.length() - (word.length()-s.length());
+						}
+						*/
+					}
+					hitCounter = hitCounter - LevenshteinDist(s,word);
+					if (hitCounter>0){
+						hits[i] += hitCounter;
+					}
+				}
+			}
+		}
 		for (int i = 0; i < todos.size(); i++) {
 			for (String s : permutated) {
 				if (todos.get(i).getContents().toLowerCase().contains(s.toLowerCase())) {
@@ -125,11 +156,18 @@ public class PowerSearcher {
 				mostHits = i;
 			}
 		}
-		if (mostHits > 0) {
-			System.out.println("Search Results:");
-			for (int i = mostHits; i > 0; i--) {
-				for (int j = 0; j < hits.length; j++) {
-					if (hits[j] == i) {
+		if (mostHits>0){
+			System.out.printf("User Power Search Results for %s:\n", toFind);
+			for (int i=mostHits; i>0; i--){
+				if (i==mostHits){
+					System.out.println("Most relevant:");
+				}else if (i==(mostHits/3*2)){
+					System.out.println("Moderately relevant:");
+				}else if(i==(mostHits/3)){
+					System.out.println("Least relevant:");
+				}
+				for (int j=0; j<hits.length; j++){
+					if (hits[j]==i){
 						System.out.println(j + ". " + todos.get(j));
 					}
 				}
@@ -137,7 +175,6 @@ public class PowerSearcher {
 		} else {
 			System.out.println(toFind + " was not found.");
 		}
-
 	}
 
 	private List<String> permutate(List<String> toPermutate) {
@@ -179,5 +216,36 @@ public class PowerSearcher {
 				System.out.println("Priority " + p + " found in line " + (i + 1) + ". " + todos.get(i).getContents());
 			}
 		}
+	}
+	
+	/**
+	 * The method compares 2 strings and returns the Levenshtein (edit) distance between them.
+	 * the Levenshtein distance between two words is the minimum number of single-character edits
+	 * (i.e. insertions, deletions or substitutions) required to change one word into the other.
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @returns the integer representing the Levenshtein (edit) distance between s1 and s2
+	 */
+	
+	public int LevenshteinDist(String s1, String s2) {
+		s1 = s1.toLowerCase();
+		s2 = s2.toLowerCase();
+		// i == 0
+		int [] costs = new int [s2.length() + 1];
+		for (int j = 0; j < costs.length; j++){
+			costs[j] = j;
+		}
+		for (int i = 1; i <= s1.length(); i++) {
+			// j == 0; nw = lev(i - 1, j)
+			costs[0] = i;
+			int nw = i - 1;
+			for (int j = 1; j <= s2.length(); j++){
+				int cj = Math.min(1 + Math.min(costs[j], costs[j - 1]), s1.charAt(i - 1) == s2.charAt(j - 1) ? nw : nw + 1);
+				nw = costs[j];
+				costs[j] = cj;
+			}
+		}
+		return costs[s2.length()];
 	}
 }
