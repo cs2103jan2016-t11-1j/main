@@ -5,39 +5,26 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
-
 import model.TimelineNode.DateType;
 
 public class PowerSearcher {
-	private final static Logger LOGGER = Logger.getLogger(TodoDateSearcher.class.getName());
-
 	/*
 	 * Free Time Power Search
 	 */
 	public void findFreeTime(List<TodoItem> todos) {
 		Timeline events = new Timeline();
-		for (TodoItem tdi : todos) {
-			if (tdi.getDueDate() != null && tdi.getStartDate() != null) {
-				events.add(new TimelineNode(tdi.getStartDate(), tdi.getContents()));
-				events.add(new TimelineNode(tdi.getContents(), tdi.getDueDate()));
-				// System.out.println((todos.indexOf(tdi)+1) + ". " + tdi + "
-				// has been added to the timeline");
-			}
-		}
+		addAllEventsAsTimelineNodesToTimeline(todos, events);
 		Date freeTimeEnd = new Date();
 		ArrayList<TimelineNode> currOverlap = new ArrayList<TimelineNode>();
 		ArrayList<Date> freeTimeSlots = new ArrayList<Date>();
 		for (TimelineNode event : events.getTimeline()) {
 			if (event.getDateType() == DateType.START) {
-				if (currOverlap.size() == 0) {
-					freeTimeEnd = event.getDate();
+				if (currOverlap.size() == 0) { //if no overlap
+					freeTimeEnd = event.getDate(); //record the overlap start
 				}
 				currOverlap.add(event);
 			} else {
-				if (currOverlap.size() == 1) {
-					// System.out.println("Free Time found before " +
-					// freeTimeEnd + " and after " + event.getDate());
+				if (currOverlap.size() == 1) { //if only one event is left open
 					if (freeTimeSlots.contains(freeTimeEnd)) {
 						freeTimeSlots.remove(freeTimeEnd);
 						freeTimeSlots.add(event.getDate());
@@ -54,13 +41,36 @@ public class PowerSearcher {
 				}
 			}
 		}
-		for (int i = 0; i < freeTimeSlots.size(); i++) {
-			if (i % 2 == 0) {
-				System.out.println("Free Time found before: " + freeTimeSlots.get(i));
+		if (freeTimeSlots.size()!=0){
+			printFreeTimeSlots(freeTimeSlots);
+		}else{
+			System.out.println("You are completely free.");
+		}
+	}
+
+	private void printFreeTimeSlots(ArrayList<Date> freeTimeSlots) {
+		System.out.println("Free Time found before:  " + freeTimeSlots.get(0));
+		for (int i = 1; i < freeTimeSlots.size()-1; i++) {
+			if (i % 2 == 1) {
+				System.out.print("and From:  " + freeTimeSlots.get(i));
 			} else {
-				System.out.println("Free Time found after: " + freeTimeSlots.get(i));
+				System.out.println("  To:  " + freeTimeSlots.get(i));
 			}
 		}
+		System.out.println("And after:  " + freeTimeSlots.get(freeTimeSlots.size()-1));
+	}
+
+	private void addAllEventsAsTimelineNodesToTimeline(List<TodoItem> todos, Timeline events) {
+		for (TodoItem tdi : todos) {
+			if (isEvent(tdi)) {
+				events.add(new TimelineNode(tdi.getStartDate(), tdi.getContents()));
+				events.add(new TimelineNode(tdi.getContents(), tdi.getDueDate()));
+			}
+		}
+	}
+
+	private boolean isEvent(TodoItem tdi) {
+		return tdi.getDueDate() != null && tdi.getStartDate() != null;
 	}
 
 	/*
@@ -69,14 +79,10 @@ public class PowerSearcher {
 
 	public void findOverlap(List<TodoItem> todos) {
 		Timeline events = new Timeline();
-		for (TodoItem tdi : todos) {
-			if (tdi.getDueDate() != null && tdi.getStartDate() != null) {
-				events.add(new TimelineNode(tdi.getStartDate(), tdi.getContents()));
-				events.add(new TimelineNode(tdi.getContents(), tdi.getDueDate()));
-			}
-		}
+		addAllEventsAsTimelineNodesToTimeline(todos, events);
 		ArrayList<TimelineNode> currOverlap = new ArrayList<TimelineNode>();
 		Date overlapStart = new Date(0);
+		String toPrint = "";
 		for (TimelineNode event : events.getTimeline()) {
 			if (event.getDateType() == DateType.START) {
 				if (currOverlap.size() == 1) {
@@ -85,7 +91,8 @@ public class PowerSearcher {
 				currOverlap.add(event);
 			} else {
 				if (currOverlap.size() == 2) {
-					System.out.println("Overlap found from " + overlapStart + " to " + event.getDate());
+					toPrint += "Overlap found from " + overlapStart + " to " + event.getDate();
+					toPrint += "\n";
 				}
 				for (TimelineNode tln : currOverlap) {
 					if (tln.getContent().equals(event.getContent())) {
@@ -95,6 +102,11 @@ public class PowerSearcher {
 				}
 			}
 		}
+		if (toPrint.equals("")){
+			System.out.println("No overlaps in events found");
+		}else{
+			System.out.println(toPrint);
+		}
 	}
 
 	/*
@@ -103,7 +115,6 @@ public class PowerSearcher {
 
 	public void powerSearchString(List<TodoItem> todos, String toFind) {
 		toFind = toFind.toLowerCase();
-		ArrayList<String> permutations = new ArrayList<String>();
 		String[] permutationComponents = toFind.split(" ");
 		ArrayList<String> toPermutate = new ArrayList<String>();
 		for (String s : permutationComponents) {
