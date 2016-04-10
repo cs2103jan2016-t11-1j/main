@@ -55,7 +55,7 @@ public class TodoFileTests {
 		todos.add(3, new Date(2000000), new Date(5000000), "SAN CHEZ NO!");
 		todos.add(2, new Date(6000000), new Date(8000000), "SAN JOSE YES!");
 		todos.add(1, new Date(4500000), new Date(7500000), "SAN RICO YO!");
-		todos.add(4, new Date(30000000), new Date(80000000), "I'm here just test this");
+		todos.add(4, new Date(30000000), new Date(80000000), "I'm here just to test this");
 		todos.add(3, new Date(20000000), new Date(70000000), "SANPAI NOTICE ME!");
 		todos.add(2, new Date(60000000), new Date(90000000), "YOUR WAIFU IS TRASH!");
 		todos.add("What is the topic?");
@@ -66,5 +66,12 @@ public class TodoFileTests {
 		todos.add(19, new Date(6500000), new Date(7600000), "The test is a lie");
 		todos.searchInTimeBlock((dp.parse(now)), (dp.parse(then)));
 		todos.clear();
+	}
+	
+	@Test
+	public void TestDateSearch() {
+		todos.add(3, new Date(200000000), new Date(230000000), "first entry");
+		todos.add(2, "MAMA! OOOOoooooOOOOHHHHH", new Date(190000000));
+		todos.searchDate(new Date(200000000));
 	}
 }

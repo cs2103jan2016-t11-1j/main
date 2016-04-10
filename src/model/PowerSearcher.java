@@ -33,18 +33,22 @@ public class PowerSearcher {
 						freeTimeSlots.add(event.getDate());
 					}
 				}
-				for (TimelineNode tln : currOverlap) {
-					if (tln.getContent().equals(event.getContent())) {
-						currOverlap.remove(tln);
-						break;
-					}
-				}
+				removeEventFromOverlap(currOverlap, event);
 			}
 		}
 		if (freeTimeSlots.size()!=0){
 			printFreeTimeSlots(freeTimeSlots);
 		}else{
 			System.out.println("You are completely free.");
+		}
+	}
+
+	private void removeEventFromOverlap(ArrayList<TimelineNode> currOverlap, TimelineNode event) {
+		for (TimelineNode tln : currOverlap) {
+			if (tln.getContent().equals(event.getContent())) {
+				currOverlap.remove(tln);
+				break;
+			}
 		}
 	}
 
@@ -94,12 +98,7 @@ public class PowerSearcher {
 					toPrint += "Overlap found from " + overlapStart + " to " + event.getDate();
 					toPrint += "\n";
 				}
-				for (TimelineNode tln : currOverlap) {
-					if (tln.getContent().equals(event.getContent())) {
-						currOverlap.remove(tln);
-						break;
-					}
-				}
+				removeEventFromOverlap(currOverlap, event);
 			}
 		}
 		if (toPrint.equals("")){
