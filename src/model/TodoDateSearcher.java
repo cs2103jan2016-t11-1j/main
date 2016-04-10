@@ -53,30 +53,16 @@ public class TodoDateSearcher {
 			boolean notFound = true;
 			for (TodoItem tdi : todos) {
 				if (tdi.getStartDate() != null && tdi.getDueDate() != null) {
-					if (sameDate(toFind, tdi.getStartDate()) && sameDate(toFind, tdi.getDueDate())) {
-						System.out.println("Start Date and End Date: " + toFind + " found in line " + i);
-						notFound = false;
-					} else if (sameDate(toFind, tdi.getStartDate())) {
-						System.out.println("Start Date: " + toFind + " found in line " + i);
-						notFound = false;
-					} else if (sameDate(toFind, tdi.getDueDate())) {
-						System.out.println("Due Date: " + toFind + " found in line " + i);
-						notFound = false;
-					}
+					notFound = printDateFoundInEvent(toFind, i, notFound, tdi);
 				} else if (tdi.getStartDate() != null) {
-					if (sameDate(toFind, tdi.getStartDate())) {
-						System.out.println("Start Date: " + toFind + "found in line " + i);
-						notFound = false;
-					}
+					notFound = printDateFoundInStartDate(toFind, i, notFound, tdi);
 				} else if (tdi.getDueDate() != null) {
-					if (sameDate(toFind, tdi.getDueDate())) {
-						System.out.println("Due Date: " + toFind + "found in line " + i);
-						notFound = false;
-					}
+					notFound = printDateFoundInDeadline(toFind, i, notFound, tdi);
 				}
+				i++;
 			}
 			if (notFound) {
-				System.out.println("The date: " + toFind + " was not found.");
+				System.out.println("The date: " + getDate(toFind) + " was not found.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,6 +71,43 @@ public class TodoDateSearcher {
 		return ret;
 	}
 
+	private boolean printDateFoundInDeadline(Date toFind, int i, boolean notFound, TodoItem tdi) {
+		if (sameDate(toFind, tdi.getDueDate())) {
+			System.out.println("Due Date: " + getDate(toFind) + " found in line " + i);
+			notFound = false;
+		}
+		return notFound;
+	}
+
+	private boolean printDateFoundInStartDate(Date toFind, int i, boolean notFound, TodoItem tdi) {
+		if (sameDate(toFind, tdi.getStartDate())) {
+			System.out.println("Start Date: " + getDate(toFind) + " found in line " + i);
+			notFound = false;
+		}
+		return notFound;
+	}
+
+	private boolean printDateFoundInEvent(Date toFind, int i, boolean notFound, TodoItem tdi) {
+		if (sameDate(toFind, tdi.getStartDate()) && sameDate(toFind, tdi.getDueDate())) {
+			System.out.println("Start Date and End Date, " + getDate(toFind) + ", found in line " + i);
+			notFound = false;
+		} else if (sameDate(toFind, tdi.getStartDate())) {
+			System.out.println("Start Date, " + getDate(toFind) + ", found in line " + i);
+			notFound = false;
+		} else if (sameDate(toFind, tdi.getDueDate())) {
+			System.out.println("Due Date, " + getDate(toFind) + ", found in line " + i);
+			notFound = false;
+		}
+		return notFound;
+	}
+
+	private String getDate(Date d){
+		int date = d.getDate();
+		int month = d.getMonth()+1;
+		int year = d.getYear()+1900;
+		return date + "/" + month + "/" + year;
+	}
+	
 	private boolean sameDate(Date toFind, Date tdiDate) {
 		boolean sameDate = toFind.getDate() == tdiDate.getDate();
 		boolean sameMonth = toFind.getMonth() == tdiDate.getMonth();
@@ -98,10 +121,10 @@ public class TodoDateSearcher {
 			int i = 1;
 			for (TodoItem tdi : todos) {
 				boolean sameStartMonth = false;
-				boolean sameDueMonth = false;
 				if (tdi.getStartDate() != null) {
 					sameStartMonth = tdi.getStartDate().getMonth() == toFind.getMonth();
 				}
+				boolean sameDueMonth = false;
 				if (tdi.getStartDate() != null) {
 					sameDueMonth = tdi.getDueDate().getMonth() == toFind.getMonth();
 				}
@@ -170,12 +193,14 @@ public class TodoDateSearcher {
 				dueInsideBlock = tdi.getDueDate().getTime() >= blockStart.getTime()
 						&& tdi.getDueDate().getTime() <= blockEnd.getTime();
 			}
-			if (startInsideBlock && dueInsideBlock) {
-				insideTimeBlock.add(tdi);
-			} else if (tdi.getStartDate() == null && dueInsideBlock) {
-				insideTimeBlock.add(tdi);
-			}
+			addIntoTimeBlock(insideTimeBlock, tdi, startInsideBlock, dueInsideBlock);
 		}
+		printInsideTimeBlock(todos, blockStart, blockEnd, ret, insideTimeBlock);
+		return ret;
+	}
+
+	private void printInsideTimeBlock(List<TodoItem> todos, Date blockStart, Date blockEnd, List<TodoItem> ret,
+			ArrayList<TodoItem> insideTimeBlock) {
 		if (insideTimeBlock.size() == 0) {
 			System.out.println("No todos inside time block");
 		} else {
@@ -185,6 +210,14 @@ public class TodoDateSearcher {
 				ret.add(tdi);
 			}
 		}
-		return ret;
+	}
+
+	private void addIntoTimeBlock(ArrayList<TodoItem> insideTimeBlock, TodoItem tdi, boolean startInsideBlock,
+			boolean dueInsideBlock) {
+		if (startInsideBlock && dueInsideBlock) {
+			insideTimeBlock.add(tdi);
+		} else if (tdi.getStartDate() == null && dueInsideBlock) {
+			insideTimeBlock.add(tdi);
+		}
 	}
 }

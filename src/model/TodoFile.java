@@ -39,7 +39,6 @@ public class TodoFile {
 			while ((currLine = reader.readLine()) != null) {
 				TodoItem t = parseTodo(currLine);
 				assert t != null;
-
 				todos.add(t);
 				lines++;
 			}
@@ -57,38 +56,28 @@ public class TodoFile {
 			error("Wrong number of sections", lines);
 		}
 		// status,prior,start,due,freq,content
-		TodoItem.Status s = null;
-		if (parts[0].equals("TODO")) {
-			s = TodoItem.Status.TODO;
-		} else if (parts[0].equals("DONE")) {
-			s = TodoItem.Status.DONE;
-		} else {
-			error("Status: " + parts[0] + " is incorrect format", lines);
-		}
+		TodoItem.Status s = todoStatusParsing(parts);
+		int p = todoPriorityParsing(parts);
+		Date sD = todoStartDateParsing(parts);
+		Date dD = todoEndDateParsing(parts);
+		Frequency f = todoFrequencyParsing(parts);
+		String c = todoContentParsing(parts);
+		return new TodoItem(s, p, sD, dD, c, f);
+	}
 
-		int p = -1;
-		try {
-			p = parts[1].isEmpty() ? -1 : Integer.parseInt(parts[1]);
-		} catch (Exception e) {
-			error("Priority is not a valid int", lines);
+	private String todoContentParsing(String[] parts) {
+		String c = "";
+		for (int i = 5; i < parts.length; i++) {
+			if (i == 5) {
+				c += parts[i];
+			} else {
+				c += ("|" + parts[i]);
+			}
 		}
+		return c;
+	}
 
-		Date sD = null;
-		try {
-			sD = parts[2].isEmpty() ? null : (Date) FORMATTER.parse(parts[2]);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			error("Error parsing start date", lines);
-		}
-
-		Date dD = null;
-		try {
-			dD = parts[3].isEmpty() ? null : (Date) FORMATTER.parse(parts[3]);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			error("Error parsing due date", lines);
-		}
-
+	private Frequency todoFrequencyParsing(String[] parts) {
 		Frequency f = null;
 		if (parts[4].equals("")) {
 			f = Frequency.NONE;
@@ -104,16 +93,51 @@ public class TodoFile {
 			System.out.println(parts[4]);
 			error("Error parsing frequency", lines);
 		}
+		return f;
+	}
 
-		String c = "";
-		for (int i = 5; i < parts.length; i++) {
-			if (i == 5) {
-				c += parts[i];
-			} else {
-				c += ("|" + parts[i]);
-			}
+	private Date todoEndDateParsing(String[] parts) {
+		Date dD = null;
+		try {
+			dD = parts[3].isEmpty() ? null : (Date) FORMATTER.parse(parts[3]);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			error("Error parsing due date", lines);
 		}
-		return new TodoItem(s, p, sD, dD, c, f);
+		return dD;
+	}
+
+	private Date todoStartDateParsing(String[] parts) {
+		Date sD = null;
+		try {
+			sD = parts[2].isEmpty() ? null : (Date) FORMATTER.parse(parts[2]);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			error("Error parsing start date", lines);
+		}
+		return sD;
+	}
+
+	private int todoPriorityParsing(String[] parts) {
+		int p = -1;
+		try {
+			p = parts[1].isEmpty() ? -1 : Integer.parseInt(parts[1]);
+		} catch (Exception e) {
+			error("Priority is not a valid int", lines);
+		}
+		return p;
+	}
+
+	private TodoItem.Status todoStatusParsing(String[] parts) {
+		TodoItem.Status s = null;
+		if (parts[0].equals("TODO")) {
+			s = TodoItem.Status.TODO;
+		} else if (parts[0].equals("DONE")) {
+			s = TodoItem.Status.DONE;
+		} else {
+			error("Status: " + parts[0] + " is incorrect format", lines);
+		}
+		return s;
 	}
 
 	private void error(String msg, int l) {
@@ -421,51 +445,77 @@ public class TodoFile {
 			TodoItem replacement;
 			switch (tdi.getFreq()) {
 			case DAILY:
-				while (tdi.getDueDate().before(now)) {
-					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
-							tdi.getContents(), Frequency.NONE);
-					todos.add(replacement);
-					if (tdi.getStartDate() != null) {
-						tdi.getStartDate().setDate(tdi.getStartDate().getDate() + 1);
-					}
-					tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 1);
-				}
+				updateDailyRecur(now, tdi);
 				break;
 			case WEEKLY:
-				while (tdi.getDueDate().before(now)) {
-					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
-							tdi.getContents(), Frequency.NONE);
-					todos.add(replacement);
-					if (tdi.getStartDate() != null) {
-						tdi.getStartDate().setDate(tdi.getStartDate().getDate() + 7);
-					}
-					tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 7);
-				}
+				updateWeeklyRecur(now, tdi);
 				break;
 			case MONTHLY:
-				while (tdi.getDueDate().before(now)) {
-					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
-							tdi.getContents(), Frequency.NONE);
-					todos.add(replacement);
-					if (tdi.getStartDate() != null) {
-						tdi.getStartDate().setMonth(tdi.getStartDate().getMonth() + 1);
-					}
-					tdi.getDueDate().setMonth(tdi.getDueDate().getMonth() + 1);
-				}
+				updateMonthlyRecur(now, tdi);
 				break;
 			case YEARLY:
-				while (tdi.getDueDate().before(now)) {
-					replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(), tdi.getStartDate(), tdi.getDueDate(),
-							tdi.getContents(), Frequency.NONE);
-					todos.add(replacement);
-					if (tdi.getStartDate() != null) {
-						tdi.getStartDate().setYear(tdi.getStartDate().getYear() + 1);
-					}
-					tdi.getDueDate().setYear(tdi.getDueDate().getYear() + 1);
-				}
+				updateYearlyRecur(now, tdi);
+				break;
+			default:
 				break;
 			}
 		}
+	}
+
+	private void updateYearlyRecur(Date now, TodoItem tdi) {
+		TodoItem replacement;
+		while (tdi.getDueDate().before(now)) {
+			replacement = createReplacement(tdi);
+			todos.add(replacement);
+			if (tdi.getStartDate() != null) {
+				tdi.getStartDate().setYear(tdi.getStartDate().getYear() + 1);
+			}
+			tdi.getDueDate().setYear(tdi.getDueDate().getYear() + 1);
+		}
+	}
+
+	private void updateMonthlyRecur(Date now, TodoItem tdi) {
+		TodoItem replacement;
+		while (tdi.getDueDate().before(now)) {
+			replacement = createReplacement(tdi);
+			todos.add(replacement);
+			if (tdi.getStartDate() != null) {
+				tdi.getStartDate().setMonth(tdi.getStartDate().getMonth() + 1);
+			}
+			tdi.getDueDate().setMonth(tdi.getDueDate().getMonth() + 1);
+		}
+	}
+
+	private void updateWeeklyRecur(Date now, TodoItem tdi) {
+		TodoItem replacement;
+		while (tdi.getDueDate().before(now)) {
+			replacement = createReplacement(tdi);
+			todos.add(replacement);
+			if (tdi.getStartDate() != null) {
+				tdi.getStartDate().setDate(tdi.getStartDate().getDate() + 7);
+			}
+			tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 7);
+		}
+	}
+
+	private void updateDailyRecur(Date now, TodoItem tdi) {
+		TodoItem replacement;
+		while (tdi.getDueDate().before(now)) {
+			replacement = createReplacement(tdi);
+			todos.add(replacement);
+			if (tdi.getStartDate() != null) {
+				tdi.getStartDate().setDate(tdi.getStartDate().getDate() + 1);
+			}
+			tdi.getDueDate().setDate(tdi.getDueDate().getDate() + 1);
+		}
+	}
+
+	private TodoItem createReplacement(TodoItem tdi) {
+		TodoItem replacement;
+		replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(),
+				tdi.getStartDate(), tdi.getDueDate(),
+				tdi.getContents(), Frequency.NONE);
+		return replacement;
 	}
 
 	public void powerSearchString(String toFind) {
