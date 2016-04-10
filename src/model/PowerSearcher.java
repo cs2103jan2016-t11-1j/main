@@ -125,26 +125,15 @@ public class PowerSearcher {
 		for (int i=0; i<todos.size(); i++){
 			String[] words = todos.get(i).getContents().split(" ");
 			for (String s: permutated){
+				if (todos.get(i).getContents().contains(s)){
+					hits[i] += s.length()*2/3;
+				}
 				for (String word: words){
 					int hitCounter;
 					if (s.length()<=3 || word.length()<=3){
 						hitCounter = 3 - LevenshteinDist(s, word);
-						/*
-						if (s.length()>word.length()){
-							hitCounter = word.length();
-						}else{
-							hitCounter = s.length();
-						}
-						*/
 					}else{
-						hitCounter = word.length() - LevenshteinDist(s, word);
-						/*
-						if (s.length()>word.length()){
-							hitCounter = s.length() - (s.length()-word.length());
-						}else{
-							hitCounter = word.length() - (word.length()-s.length());
-						}
-						*/
+						hitCounter = 7 - LevenshteinDist(s, word);
 					}
 					hitCounter = hitCounter - LevenshteinDist(s,word);
 					if (hitCounter>0){
