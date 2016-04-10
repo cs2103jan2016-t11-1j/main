@@ -92,12 +92,12 @@ public class FlexiAreaTest {
 	 */
 	@Test
 	public void testPrintStartTodos() {
-		List<TodoItem> starts = new ArrayList<TodoItem>();
-		starts.add(new TodoItem("Hi"));
-		starts.add(new TodoItem("There "));
-		starts.add(new TodoItem("All"));
+		List<GuiTodo> starts = new ArrayList<GuiTodo>();
+		starts.add(new GuiTodo(new TodoItem("Hi"), GuiTodo.SoD.START));
+		starts.add(new GuiTodo(new TodoItem("There"), GuiTodo.SoD.START));
+		starts.add(new GuiTodo(new TodoItem("All"), GuiTodo.SoD.START));
 		int s = flexiArea.getChildren().size();
-		flexiArea.printStartTodos(starts);
+		flexiArea.printGuiTodos(starts);
 		assertEquals(s + 3, flexiArea.getChildren().size());
 		assertTrue(flexiArea.getChildren().get(s + 2) instanceof Text);
 	}
@@ -107,12 +107,12 @@ public class FlexiAreaTest {
 	 */
 	@Test
 	public void testPrintDueTodos() {
-		List<TodoItem> starts = new ArrayList<TodoItem>();
-		starts.add(new TodoItem("Hi"));
-		starts.add(new TodoItem("There "));
-		starts.add(new TodoItem("All"));
+		List<GuiTodo> starts = new ArrayList<GuiTodo>();
+		starts.add(new GuiTodo(new TodoItem("Hi"), GuiTodo.SoD.DUE));
+		starts.add(new GuiTodo(new TodoItem("There"), GuiTodo.SoD.DUE));
+		starts.add(new GuiTodo(new TodoItem("All"), GuiTodo.SoD.DUE));
 		int s = flexiArea.getChildren().size();
-		flexiArea.printStartTodos(starts);
+		flexiArea.printGuiTodos(starts);
 		assertEquals(s + 3, flexiArea.getChildren().size());
 		assertTrue(flexiArea.getChildren().get(s + 2) instanceof Text);
 	}

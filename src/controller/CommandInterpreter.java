@@ -282,6 +282,7 @@ public class CommandInterpreter {
 		case "sav":
 		case "sv":
 			todos.write();
+			System.out.printf("Wrote to %s.\n", todos.getFileName());
 			break;
 		/*
 		 * Different Sort Operations Sort by contents, priority, dates,
@@ -770,6 +771,7 @@ public class CommandInterpreter {
 			break;
 		case "donelast":
 			flexiView.toggleDoneLast();
+			System.out.println("Done items are now displayed last.s");
 			break;
 		case "horizontalwrap":
 		case "hw":

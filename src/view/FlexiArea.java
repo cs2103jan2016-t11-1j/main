@@ -155,7 +155,7 @@ public class FlexiArea extends TextFlow {
 
 	public void setMode(Mode newState) {
 		this.getChildren().clear();
-if (timeState == TimeState.FLOATING) {
+		if (timeState == TimeState.FLOATING) {
 			currTodos = toGuiTodos(todos.filterFloatingTodos(), GuiTodo.SoD.FLOATING);
 			switch (newState) {
 			case SORT_PRIORITY:
@@ -209,7 +209,7 @@ if (timeState == TimeState.FLOATING) {
 		this.mode = newState;
 	}
 
-	private void printGuiTodos(List<GuiTodo> todos) {
+	public void printGuiTodos(List<GuiTodo> todos) {
 		int i = 1;
 		for (GuiTodo t : todos) {
 			printTodo(i, t);

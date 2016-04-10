@@ -6,6 +6,6 @@ package view;
  * @author gabe
  *
  */
-public class TidyYardTest {
+public class TidyYardTest  {
 
 }

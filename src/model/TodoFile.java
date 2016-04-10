@@ -252,7 +252,6 @@ public class TodoFile {
 			writer.println(todos.get(i));
 		}
 		writer.flush();
-		System.out.printf("Wrote to %s.\n", this.fileName);
 		writer.close();
 	}
 
@@ -504,8 +503,9 @@ public class TodoFile {
 		return ret;
 	}
 
-	public TodoItem topPriority() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getFileName() {
+		return this.fileName;
 	}
+
+
 }
