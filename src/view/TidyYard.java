@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import controller.CommandInterpreter;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -17,7 +18,7 @@ import javafx.stage.Stage;
 import model.TodoFile;
 
 public class TidyYard extends Application {
-	private static final String DEFAULT_FILE = "main.todo";
+	private static String defaultFile;
 	private CommandInterpreter controller;
 	private TodoFile todos;
 	private TextField inputField;
@@ -32,7 +33,7 @@ public class TidyYard extends Application {
 
 	private void addTopInput() {
 		this.inputField = new TextField();
-		this.inputField.setId("input-field");
+		this.inputField.setId("input");
 		this.border.setTop(this.inputField);
 	}
 
@@ -40,6 +41,7 @@ public class TidyYard extends Application {
 		this.commandResult = new TextArea();
 		this.commandResult.setEditable(false);
 		this.commandResult.setVisible(true);
+		this.commandResult.setId("console");
 		this.border.setBottom(this.commandResult);
 	}
 
@@ -62,7 +64,7 @@ public class TidyYard extends Application {
 		border = new BorderPane();
 		addTopInput();
 		addCommandResult();
-		todos = new TodoFile(DEFAULT_FILE);
+		todos = new TodoFile(defaultFile);
 		addFlexiView();
 		controller = new CommandInterpreter(todos, scroll);
 

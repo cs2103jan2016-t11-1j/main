@@ -500,18 +500,18 @@ public class CommandInterpreter {
 				System.out.println("The current time mode is All.");
 				break;
 			case DAY:
-				System.out.println("The current time mode is day from " + flexiView.start() + " to " + flexiView.end());
+				System.out.println("The current time mode is day from " + flexiView.startString() + " to " + flexiView.endString());
 				break;
 			case FUTURE:
-				System.out.println("The current time mode is future from " + flexiView.start() + " onwards.");
+				System.out.println("The current time mode is future from " + flexiView.startString() + " onwards.");
 				break;
 			case MONTH:
 				System.out
-						.println("The current time mode is month from " + flexiView.start() + " to " + flexiView.end());
+						.println("The current time mode is month from " + flexiView.startString() + " to " + flexiView.endString());
 				break;
 			case WEEK:
 				System.out
-						.println("The current time mode is week from " + flexiView.start() + " to " + flexiView.end());
+						.println("The current time mode is week from " + flexiView.startString() + " to " + flexiView.endString());
 				break;
 			case FLOATING:
 				System.out.println("The current time mode is Floating.");
