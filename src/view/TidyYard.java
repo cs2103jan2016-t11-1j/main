@@ -1,4 +1,5 @@
 package view;
+
 /**
  * @@author A0149108E
  */
@@ -7,7 +8,6 @@ import java.io.PrintStream;
 import controller.CommandInterpreter;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -59,8 +59,8 @@ public class TidyYard extends Application {
 	private void redirect() {
 		PrintStream stream = new PrintStream(new ConsoleArea(commandResult), true);
 		System.setOut(stream);
-	}	
-	
+	}
+
 	private void setScene(Stage primaryStage) {
 		Scene scene = new Scene(border, 1000, 800, Color.BLACK);
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -78,7 +78,6 @@ public class TidyYard extends Application {
 		primaryStage.show();
 		redirect();
 	}
-
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
