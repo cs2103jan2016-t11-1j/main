@@ -1,7 +1,7 @@
-/**
- * 
- */
 package controller;
+/**
+ * @@author A0149108E
+ */
 
 import static org.junit.Assert.*;
 
@@ -10,10 +10,6 @@ import org.junit.Test;
 
 import model.TodoItem;
 
-/**
- * @author gabe
- *
- */
 public class ChangeStatusOperationTest extends OperationTest {
 	ChangeStatusOperation op;
 

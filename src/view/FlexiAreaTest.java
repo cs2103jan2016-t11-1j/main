@@ -1,6 +1,3 @@
-/**
- * 
- */
 package view;
 
 import static org.junit.Assert.*;
@@ -16,8 +13,7 @@ import model.TodoFile;
 import model.TodoItem;
 
 /**
- * @author gabe
- *
+ * @@author A0149108E
  */
 public class FlexiAreaTest {
 	private FlexiArea flexiArea;

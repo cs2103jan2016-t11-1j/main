@@ -2,8 +2,7 @@ package controller;
 
 /**
  * implements a fixed size stack that holds the operations and their inverses.
- * 
- * @author gabe
+ * @@author A0149108E
  *
  */
 public class Undoer {

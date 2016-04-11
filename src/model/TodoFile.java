@@ -23,6 +23,9 @@ public class TodoFile {
 	private int lines; // line is indexed at 1
 	private PrintWriter writer = null;
 
+	/**
+	 * @param fileName the path to the todo file
+	 */
 	public TodoFile(String fileName) {
 		this.fileName = fileName;
 		this.lines = 1;
@@ -33,6 +36,9 @@ public class TodoFile {
 		updateRecur();
 	}
 
+	/**
+	 * @param path the path to the todo file
+	 */
 	public void readTodos(String path) {
 		try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
 			String currLine;
@@ -47,6 +53,10 @@ public class TodoFile {
 		}
 	}
 
+	/**
+	 * @param todo String
+	 * @return parsed
+	 */
 	private TodoItem parseTodo(String todo) {
 		String[] parts = todo.split(SPLITTER);
 		if (parts.length < 6) {
@@ -140,17 +150,14 @@ public class TodoFile {
 		return s;
 	}
 
+	/**
+	 * @param msg error message
+	 * @param l line number
+	 * @@author A0149108E
+	 */
 	private void error(String msg, int l) {
 		System.err.print(msg + " at line " + l);
 		System.exit(1);
-	}
-
-	public void delete(int index) {
-		if (index < 1 || index > todos.size()) {
-			System.out.printf("The index must be between 1 and %d, inclusive.\n", todos.size());
-		} else {
-			System.out.printf("deleted from %s: \"%s\"\n", fileName, todos.remove(index - 1).toString());
-		}
 	}
 
 	public void delete(TodoItem t) {
@@ -187,9 +194,6 @@ public class TodoFile {
 		printFile();
 	}
 
-	public void displayDone() {
-		printDoneItems();
-	}
 
 	/**
 	 * Adds a TodoItem to the <tt>todos</tt> List with the parameter,
@@ -239,21 +243,6 @@ public class TodoFile {
 		}
 	}
 
-	public void printDoneItems() {
-		boolean hasDone = false;
-		int i = 1;
-		for (TodoItem t : todos) {
-			if (t.isDone()) {
-				System.out.printf("%d. %s\n", i, t);
-				hasDone = true;
-			}
-			i++;
-		}
-		if (!hasDone) {
-			System.out.println(fileName + " has no done items");
-		}
-	}
-
 	public TodoItem getItem(int i) {
 		return this.todos.get(i);
 	}
@@ -266,6 +255,9 @@ public class TodoFile {
 		return this.todos.isEmpty();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void write() {
 		try {
 			this.writer = new PrintWriter(new FileWriter(fileName, false));
@@ -321,12 +313,11 @@ public class TodoFile {
 
 	/**
 	 * returns a list of todo items with due dates between begin and end
+	 * @@author A0149108E
 	 */
 	public List<TodoItem> filterDueDates(LocalDateTime begin, LocalDateTime end) {
 		List<TodoItem> ret = new ArrayList<TodoItem>();
 		for (TodoItem todo : todos) {
-			// TODO the type stored in the TodoItem class to LocalDateTime
-			// TODO remove jada, as java8.time is supersedes it.
 			if (todo.getDueDate() == null)
 				continue;
 			Instant i = Instant.ofEpochMilli(todo.getDueDate().getTime());
@@ -340,6 +331,7 @@ public class TodoFile {
 
 	/**
 	 * returns a list of todo items with start dates between begin and end
+	 * @@author A0149108E
 	 */
 	public List<TodoItem> filterStartDates(LocalDateTime begin, LocalDateTime end) {
 		List<TodoItem> ret = new ArrayList<TodoItem>();
@@ -357,6 +349,9 @@ public class TodoFile {
 		return ret;
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public String toString() {
 		StringBuilder ret = new StringBuilder();
 		for (TodoItem item : todos) {
@@ -559,6 +554,4 @@ public class TodoFile {
 	public String getFileName() {
 		return this.fileName;
 	}
-
-
 }

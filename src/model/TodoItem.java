@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.Comparator;
 
 public class TodoItem {
+	/**
+	 * @@author A0149108E
+	 */
 	public enum Status {
 		TODO, DONE
-	}; // need to handle floating
+	};
 
 	private Status status;
 	private int priority; // -1 if not set
@@ -142,8 +145,8 @@ public class TodoItem {
 		return todo;
 	}
 
-	/*
-	 * Comparators for sorting
+	/**
+	 * @@author A0149108E
 	 */
 	public static Comparator<TodoItem> getDueDateComparator() {
 		return new Comparator<TodoItem>() {
@@ -154,7 +157,9 @@ public class TodoItem {
 			}
 		};
 	}
-
+	/**
+	 * @@author A0149108E
+	 */
 	public static Comparator<TodoItem> getStartDateComparator() {
 		return new Comparator<TodoItem>() {
 			public int compare(TodoItem i, TodoItem j) {
@@ -164,7 +169,9 @@ public class TodoItem {
 			}
 		};
 	}
-
+	/**
+	 * @@author A0149108E
+	 */
 	public static Comparator<TodoItem> getPriorityComparator() {
 		return new Comparator<TodoItem>() {
 			public int compare(TodoItem i, TodoItem j) {
@@ -172,7 +179,9 @@ public class TodoItem {
 			}
 		};
 	}
-
+	/**
+	 * @@author A0149108E
+	 */
 	public static Comparator<TodoItem> getStatusComparator() {
 		return new Comparator<TodoItem>() {
 			public int compare(TodoItem i, TodoItem j) {
@@ -190,7 +199,9 @@ public class TodoItem {
 			}
 		};
 	}
-
+	/**
+	 * @@author A0149108E
+	 */
 	public static Comparator<TodoItem> getContentsComparator() {
 		return new Comparator<TodoItem>() {
 			public int compare(TodoItem i, TodoItem j) {

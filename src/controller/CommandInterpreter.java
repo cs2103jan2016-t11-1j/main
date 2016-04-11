@@ -36,6 +36,10 @@ public class CommandInterpreter {
 		this.confirming = false;
 	}
 
+	/**
+	 * @param text the text of the command
+	 * @@author A0149108E
+	 */
 	public void nextCommand(String text) {
 		lastCommand = text;
 	}
@@ -67,9 +71,7 @@ public class CommandInterpreter {
 		case "dis":
 		case "disp":
 		case "dsp":
-			op = new DisplayOperation(todos);
-			op.execute();
-			undos.add(op);
+			display();
 			break;
 		/*
 		 * Add Operation
@@ -218,26 +220,7 @@ public class CommandInterpreter {
 		case "dlt":
 		case "delt":
 		case "delet":
-			if (todos.isEmpty()) {
-				System.out.printf("No todos\n");
-				return;
-			}
-			int index;
-			if (splitString.length < 2) {
-				System.out.println("No number supplied, deleting first element.");
-				index = 1;
-			} else {
-				try {
-					index = Integer.parseInt(splitString[1]);
-				} catch (NumberFormatException e) {
-					System.out.print("Parameter must be a number\n");
-					return;
-				}
-			}
-			op = new DeleteOperation(todos, flexiView.getTodoItem(index - 1));
-			op.execute();
-			undos.add(op);
-			flexiView.refresh();
+			delete(splitString);
 			break;
 		/*
 		 * Clear Operation
@@ -246,23 +229,13 @@ public class CommandInterpreter {
 		case "clr":
 		case "cl":
 		case "cle":
-			System.out.println("Clearing the TodoFile cannot be undone. Please input 'yes' to confirm operation.");
-			confirming = true;
+			clear();
 			break;
 		case "yes":
-			if (confirming) {
-				todos.clear();
-				confirming = false;
-				System.out.println("all todos deleted");
-			}
+			confirm();
 			break;
 		case "echo":
-			echoing = !echoing;
-			if (echoing) {
-				System.out.println("Echoing user commands.");
-			} else {
-				System.out.println("Not echoing user commands.");
-			}
+			toggleEcho();
 			break;
 		/*
 		 * Exit Operation
@@ -444,120 +417,22 @@ public class CommandInterpreter {
 		 * Switch mode of display
 		 */
 		case "whatmode":
-			switch (flexiView.getMode()) {
-			case SORT_CONTENTS:
-				System.out.println("The current mode is Sort Contents.");
-				break;
-			case SORT_DUE_DATE:
-				System.out.println("The current mode is Sort Due Date.");
-				break;
-			case SORT_START_DATE:
-				System.out.println("The current mode is Sort Start Date.");
-				break;
-			case SORT_PRIORITY:
-				System.out.println("The current mode is Sort Priority.");
-				break;
-			case SORT_STATUS:
-				System.out.println("The current mode is Sort Status.");
-				break;
-			default:
-				break;
-			}
+			displayMode();
 			break;
 		case "mode":
 		case "mod":
 		case "moe":
 		case "modd":
-			String newMode = lastCommand.substring(command.length()).trim();
-			switch (newMode.toLowerCase()) {
-			case "help":
-				System.out.println("The possible modes are date, priority, status, contents, and heat.");
-				break;
-			case "date":
-			case "duedate":
-				flexiView.setMode(FlexiArea.Mode.SORT_DUE_DATE);
-				break;
-			case "startdate":
-				flexiView.setMode(FlexiArea.Mode.SORT_START_DATE);
-				break;
-			case "priority":
-				flexiView.setMode(FlexiArea.Mode.SORT_PRIORITY);
-				break;
-			case "status":
-				flexiView.setMode(FlexiArea.Mode.SORT_STATUS);
-				break;
-			case "contents":
-				flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
-				break;
-			default:
-				System.out.println("Mode not recognized.");
-				break;
-			}
+			changeMode(command);
 			break;
 		case "whattime":
-			switch (flexiView.getTimeState()) {
-			case ALL:
-				System.out.println("The current time mode is All.");
-				break;
-			case DAY:
-				System.out.println("The current time mode is day from " + flexiView.startString() + " to " + flexiView.endString());
-				break;
-			case FUTURE:
-				System.out.println("The current time mode is future from " + flexiView.startString() + " onwards.");
-				break;
-			case MONTH:
-				System.out
-						.println("The current time mode is month from " + flexiView.startString() + " to " + flexiView.endString());
-				break;
-			case WEEK:
-				System.out
-						.println("The current time mode is week from " + flexiView.startString() + " to " + flexiView.endString());
-				break;
-			case FLOATING:
-				System.out.println("The current time mode is Floating.");
-				break;
-			default:
-				break;
-			}
+			displayTime();
 			break;
 		case "time":
 		case "tim":
 		case "tme":
 		case "tie":
-			String newTime = lastCommand.substring(command.length()).trim();
-			switch (newTime.toLowerCase()) {
-			case "help":
-				System.out.println("Possible intervals are day, week, month, all, future");
-				break;
-			case "day":
-				flexiView.setTimeState(FlexiArea.TimeState.DAY);
-				System.out.println("Set time interval to day");
-				break;
-			case "week":
-				flexiView.setTimeState(FlexiArea.TimeState.WEEK);
-				System.out.println("Set time interval to week");
-				break;
-			case "month":
-				flexiView.setTimeState(FlexiArea.TimeState.MONTH);
-				System.out.println("Set time interval to month");
-				break;
-			case "all":
-				flexiView.setTimeState(FlexiArea.TimeState.ALL);
-				System.out.println("Set time interval to all");
-				break;
-			case "future":
-				flexiView.setTimeState(FlexiArea.TimeState.FUTURE);
-				System.out.println("Set time interval to future");
-				break;
-			case "float":
-			case "floating":
-				flexiView.setTimeState(FlexiArea.TimeState.FLOATING);
-				System.out.println("Set time interval to floating");
-				break;
-			default:
-				System.out.println("Time chunk not recognized.");
-				break;
-			}
+			changeTime(command);
 			break;
 		/*
 		 * Display floating tasks operation
@@ -572,6 +447,7 @@ public class CommandInterpreter {
 		 */
 		case "todo":
 		case "done":
+			int index;
 			if (todos.isEmpty()) {
 				System.out.printf("No todos\n");
 				return;
@@ -763,11 +639,7 @@ public class CommandInterpreter {
 		 * Change directory Operation
 		 */
 		case "cd":
-			String rest = getRest(command).trim();
-			op = new ChangeDirectoryOperation(todos, rest, this);
-			op.execute();
-			undos.add(op);
-			flexiView.refresh();
+			changeDirectory(command);
 			break;
 		case "donelast":
 			flexiView.toggleDoneLast();
@@ -775,12 +647,7 @@ public class CommandInterpreter {
 			break;
 		case "horizontalwrap":
 		case "hw":
-			if (scroll.getHbarPolicy() == ScrollBarPolicy.AS_NEEDED) {
-				scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
-			} else {
-				scroll.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
-			}
-			flexiView.refresh();
+			toggleHorizontalWrap();
 			break;
 		case "refresh":
 			flexiView.refresh();
@@ -791,6 +658,232 @@ public class CommandInterpreter {
 			break;
 		}
 
+	}
+
+	/**
+	 * @@author A0149108E
+	 */
+	private void toggleHorizontalWrap() {
+		if (scroll.getHbarPolicy() == ScrollBarPolicy.AS_NEEDED) {
+			scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+		} else {
+			scroll.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		}
+		flexiView.refresh();
+	}
+
+	/**
+	 * @param command the directory to change to
+	 * @@author A0149108E
+	 */
+	private void changeDirectory(String command) {
+		Operation op;
+		String rest = getRest(command).trim();
+		op = new ChangeDirectoryOperation(todos, rest, this);
+		op.execute();
+		undos.add(op);
+		flexiView.refresh();
+	}
+
+	/**
+	 * @param command time to change it to
+	 * @@author A0149108E
+	 */
+	private void changeTime(String command) {
+		String newTime = lastCommand.substring(command.length()).trim();
+		switch (newTime.toLowerCase()) {
+		case "help":
+			System.out.println("Possible intervals are day, week, month, all, future");
+			break;
+		case "day":
+			flexiView.setTimeState(FlexiArea.TimeState.DAY);
+			System.out.println("Set time interval to day");
+			break;
+		case "week":
+			flexiView.setTimeState(FlexiArea.TimeState.WEEK);
+			System.out.println("Set time interval to week");
+			break;
+		case "month":
+			flexiView.setTimeState(FlexiArea.TimeState.MONTH);
+			System.out.println("Set time interval to month");
+			break;
+		case "all":
+			flexiView.setTimeState(FlexiArea.TimeState.ALL);
+			System.out.println("Set time interval to all");
+			break;
+		case "future":
+			flexiView.setTimeState(FlexiArea.TimeState.FUTURE);
+			System.out.println("Set time interval to future");
+			break;
+		case "float":
+		case "floating":
+			flexiView.setTimeState(FlexiArea.TimeState.FLOATING);
+			System.out.println("Set time interval to floating");
+			break;
+		default:
+			System.out.println("Time chunk not recognized.");
+			break;
+		}
+	}
+
+	/**
+	 * @@author A0149108
+	 */
+	private void displayTime() {
+		switch (flexiView.getTimeState()) {
+		case ALL:
+			System.out.println("The current time mode is All.");
+			break;
+		case DAY:
+			System.out.println("The current time mode is day from " + flexiView.startString() + " to " + flexiView.endString());
+			break;
+		case FUTURE:
+			System.out.println("The current time mode is future from " + flexiView.startString() + " onwards.");
+			break;
+		case MONTH:
+			System.out
+					.println("The current time mode is month from " + flexiView.startString() + " to " + flexiView.endString());
+			break;
+		case WEEK:
+			System.out
+					.println("The current time mode is week from " + flexiView.startString() + " to " + flexiView.endString());
+			break;
+		case FLOATING:
+			System.out.println("The current time mode is Floating.");
+			break;
+		default:
+			break;
+		}
+	}
+
+	/**
+	 * @param command what mode to change to
+	 * @@author A0149108E
+	 */
+	private void changeMode(String command) {
+		String newMode = lastCommand.substring(command.length()).trim();
+		switch (newMode.toLowerCase()) {
+		case "help":
+			System.out.println("The possible modes are date, priority, status, contents, and heat.");
+			break;
+		case "date":
+		case "duedate":
+			flexiView.setMode(FlexiArea.Mode.SORT_DUE_DATE);
+			break;
+		case "startdate":
+			flexiView.setMode(FlexiArea.Mode.SORT_START_DATE);
+			break;
+		case "priority":
+			flexiView.setMode(FlexiArea.Mode.SORT_PRIORITY);
+			break;
+		case "status":
+			flexiView.setMode(FlexiArea.Mode.SORT_STATUS);
+			break;
+		case "contents":
+			flexiView.setMode(FlexiArea.Mode.SORT_CONTENTS);
+			break;
+		default:
+			System.out.println("Mode not recognized.");
+			break;
+		}
+	}
+
+	/**
+	 * @@author A0149108E
+	 */
+	private void displayMode() {
+		switch (flexiView.getMode()) {
+		case SORT_CONTENTS:
+			System.out.println("The current mode is Sort Contents.");
+			break;
+		case SORT_DUE_DATE:
+			System.out.println("The current mode is Sort Due Date.");
+			break;
+		case SORT_START_DATE:
+			System.out.println("The current mode is Sort Start Date.");
+			break;
+		case SORT_PRIORITY:
+			System.out.println("The current mode is Sort Priority.");
+			break;
+		case SORT_STATUS:
+			System.out.println("The current mode is Sort Status.");
+			break;
+		default:
+			break;
+		}
+	}
+
+	/**
+	 * @@author A0149108E
+	 */
+	private void toggleEcho() {
+		echoing = !echoing;
+		if (echoing) {
+			System.out.println("Echoing user commands.");
+		} else {
+			System.out.println("Not echoing user commands.");
+		}
+	}
+
+	/**
+	 * @@author A0149108E
+	 */
+	private void clear() {
+		System.out.println("Clearing the TodoFile cannot be undone. Please input 'yes' to confirm operation.");
+		confirming = true;
+	}
+
+	/**
+	 * @@author A0149108E
+	 */
+	private void confirm() {
+		if (confirming) {
+			todos.clear();
+			confirming = false;
+			System.out.println("all todos deleted");
+			flexiView.refresh();
+		}
+	}
+
+
+
+	/**
+	 * @param splitString The split version of the comman
+	 * @@author A0149108E
+	 */
+	private void delete(String[] splitString) {
+		Operation op;
+		if (todos.isEmpty()) {
+			System.out.printf("No todos\n");
+			return;
+		}
+		int index;
+		if (splitString.length < 2) {
+			System.out.println("No number supplied, deleting first element.");
+			index = 1;
+		} else {
+			try {
+				index = Integer.parseInt(splitString[1]);
+			} catch (NumberFormatException e) {
+				System.out.print("Parameter must be a number\n");
+				return;
+			}
+		}
+		op = new DeleteOperation(todos, flexiView.getTodoItem(index - 1));
+		op.execute();
+		undos.add(op);
+		flexiView.refresh();
+	}
+
+	
+	/**
+	 * @@author A0149108E
+	 */
+	private void display() {
+		Operation op;
+		op = new DisplayOperation(todos);
+		op.execute();
+		undos.add(op);
 	}
 
 	public void setTodoFile(TodoFile t) {

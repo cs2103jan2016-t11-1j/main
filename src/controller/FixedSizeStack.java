@@ -1,11 +1,10 @@
 package controller;
-
+/**
+ * @@author A0149108E
+ */
 import java.util.LinkedList;
 
 public class FixedSizeStack<T> extends LinkedList<T> {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int maxSize;
 	private int numElements;
