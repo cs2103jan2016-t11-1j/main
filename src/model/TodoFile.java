@@ -25,6 +25,8 @@ public class TodoFile {
 
 	/**
 	 * @param fileName the path to the todo file
+	 *
+	 * @@author A0149108E; additional contributions by A0135747X
 	 */
 	public TodoFile(String fileName) {
 		this.fileName = fileName;
@@ -38,6 +40,7 @@ public class TodoFile {
 
 	/**
 	 * @param path the path to the todo file
+	 * @@author A0149108E and A0135747X
 	 */
 	public void readTodos(String path) {
 		try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
@@ -56,6 +59,7 @@ public class TodoFile {
 	/**
 	 * @param todo String
 	 * @return parsed
+	 * @@author A0149108E; additional contributions by A0135747X
 	 */
 	private TodoItem parseTodo(String todo) {
 		String[] parts = todo.split(SPLITTER);
@@ -160,6 +164,9 @@ public class TodoFile {
 		System.exit(1);
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void delete(TodoItem t) {
 		try {
 			todos.remove(t);
@@ -171,21 +178,33 @@ public class TodoFile {
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void searchDate(Date toFind) {
 		TodoDateSearcher tdds = new TodoDateSearcher();
 		tdds.searchDate(todos, toFind);
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void searchString(String toFind) {
 		TodoStringSearcher tdss = new TodoStringSearcher();
 		tdss.searchString(todos, toFind);
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void searchTime(Date toFind) {
 		TodoTimeSearcher tdts = new TodoTimeSearcher();
 		tdts.searchTime(todos, toFind);
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void display() {
 		if (this.isEmpty()) {
 			System.out.println(fileName + " is empty");
@@ -201,56 +220,84 @@ public class TodoFile {
 	 * 
 	 * @param message
 	 *            that the user wants to store
+	 * @@author A0149108E
 	 */
 	public void add(String message) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, -1, null, null, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void add(int priority, String message) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, priority, null, null, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void add(int priority, Date startDate, String message) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, priority, startDate, null, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void add(int priority, String message, Date dueDate) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, priority, null, dueDate, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void add(int priority, Date startDate, Date dueDate, String message) {
 		todos.add(new TodoItem(TodoItem.Status.TODO, priority, startDate, dueDate, message, Frequency.NONE));
 		System.out.printf("added to %s: \"%s\"\n", fileName, message);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void add(TodoItem addedItem) {
 		todos.add(addedItem);
 		System.out.printf("added to %s: \"%s\"\n", fileName, addedItem.getContents());
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void printFile() {
 		for (int i = 1; i < todos.size() + 1; i++) {
 			printLine(i);
 		}
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public TodoItem getItem(int i) {
 		return this.todos.get(i);
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	private void printLine(int location) {
 		System.out.printf("%d. %s\n", location, todos.get(location - 1));
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public boolean isEmpty() {
 		return this.todos.isEmpty();
 	}
@@ -271,41 +318,65 @@ public class TodoFile {
 		writer.close();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void clear() {
 		todos.clear();
 		write();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void exit() {
 		write();
 		writer.close();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void sort() {
 		Collections.sort(todos, TodoItem.getDueDateComparator());
 		write();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void sortByDueDate() {
 		Collections.sort(todos, TodoItem.getDueDateComparator());
 		write();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void sortByStartDate() {
 		Collections.sort(todos, TodoItem.getStartDateComparator());
 		write();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void sortByPriority() {
 		Collections.sort(todos, TodoItem.getPriorityComparator());
 		write();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void sortByStatus() {
 		Collections.sort(todos, TodoItem.getStatusComparator().reversed());
 		write();
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public void sortByContents() {
 		Collections.sort(todos, TodoItem.getContentsComparator());
 		write();
@@ -361,6 +432,9 @@ public class TodoFile {
 		return ret.toString();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void markDone(TodoItem tdi) {
 		tdi.markDone();
 		if (tdi.getFreq() != TodoItem.Frequency.NONE) {
@@ -396,10 +470,16 @@ public class TodoFile {
 		}
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void markUndone(TodoItem tdi) {
 		tdi.markUndone();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void toggle(TodoItem tdi) {
 		if (tdi.getStatus() == Status.DONE) {
 			tdi.markUndone();
@@ -409,31 +489,49 @@ public class TodoFile {
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void updateEndDate(TodoItem tdi, Date newDate) {
 		tdi.setDueDate(newDate);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void updateStartDate(TodoItem tdi, Date newDate) {
 		tdi.setStartDate(newDate);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void updatePriority(TodoItem tdi, int newPriority) {
 		tdi.setPriority(newPriority);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void updateFrequency(TodoItem tdi, Frequency newFreq) {
 		tdi.setFreq(newFreq);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void updateContents(TodoItem tdi, String newContents) {
 		tdi.setContents(newContents);
 		write();
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void updateRecur() {
 		Date now = new Date();
 		ArrayList<TodoItem> todosToAdd = new ArrayList<TodoItem>();
@@ -459,6 +557,9 @@ public class TodoFile {
 		todos.addAll(todosToAdd);
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	private void updateYearlyRecur(Date now, TodoItem tdi, ArrayList<TodoItem> todosToAdd) {
 		TodoItem replacement;
 		while (tdi.getDueDate().before(now)) {
@@ -471,6 +572,9 @@ public class TodoFile {
 		}
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	private void updateMonthlyRecur(Date now, TodoItem tdi, ArrayList<TodoItem> todosToAdd) {
 		TodoItem replacement;
 		while (tdi.getDueDate().before(now)) {
@@ -483,6 +587,9 @@ public class TodoFile {
 		}
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	private void updateWeeklyRecur(Date now, TodoItem tdi, ArrayList<TodoItem> todosToAdd) {
 		TodoItem replacement;
 		while (tdi.getDueDate().before(now)) {
@@ -495,6 +602,9 @@ public class TodoFile {
 		}
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	private void updateDailyRecur(Date now, TodoItem tdi, ArrayList<TodoItem> todosToAdd) {
 		TodoItem replacement;
 		while (tdi.getDueDate().before(now)) {
@@ -507,6 +617,9 @@ public class TodoFile {
 		}
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	private TodoItem createReplacement(TodoItem tdi) {
 		TodoItem replacement;
 		replacement = new TodoItem(tdi.getStatus(), tdi.getPriority(),
@@ -516,31 +629,49 @@ public class TodoFile {
 		return replacement;
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void powerSearchString(String toFind) {
 		PowerSearcher ps = new PowerSearcher();
 		ps.powerSearchString(todos, toFind);
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void findFreeTime() {
 		PowerSearcher ps = new PowerSearcher();
 		ps.findFreeTime(todos);
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void findOverlap() {
 		PowerSearcher ps = new PowerSearcher();
 		ps.findOverlap(todos);
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void searchPriority(int p) {
 		PowerSearcher ps = new PowerSearcher();
 		ps.prioritySearch(todos, p);
 	}
 
+	/**
+	 * @@author A0135747X
+	 */
 	public void searchInTimeBlock(Date timeBlockStart, Date timeBlockEnd) {
 		TodoDateSearcher tds = new TodoDateSearcher();
 		tds.searchTimeBlock(todos, timeBlockStart, timeBlockEnd);
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public List<TodoItem> filterFloatingTodos() {
 		List<TodoItem> ret = new ArrayList<TodoItem>();
 		for (TodoItem todo : todos) {
@@ -551,6 +682,9 @@ public class TodoFile {
 		return ret;
 	}
 
+	/**
+	 * @@author A0149108E
+	 */
 	public String getFileName() {
 		return this.fileName;
 	}
