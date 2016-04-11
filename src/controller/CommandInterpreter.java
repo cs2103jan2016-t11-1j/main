@@ -8,7 +8,9 @@ import model.TodoFile;
 import model.TodoItem;
 import model.TodoItem.Frequency;
 import view.FlexiArea;
-
+/**
+ * @@author A0130157R
+ */
 public class CommandInterpreter {
 	private static final String WHITESPACE = "\\s+"; // whitespace regex
 	private static final char SEPERATOR = '#';
@@ -43,7 +45,9 @@ public class CommandInterpreter {
 	public void nextCommand(String text) {
 		lastCommand = text;
 	}
-
+	/**
+	 * @@author A0130157R
+	 */
 	public void executeCommand() {
 		if (echoing) {
 			System.out.println(lastCommand);
@@ -885,20 +889,28 @@ public class CommandInterpreter {
 		op.execute();
 		undos.add(op);
 	}
-
+	/**
+	 * @@author A0130157R
+	 */
 	public void setTodoFile(TodoFile t) {
 		todos = t;
 		flexiView.setTodos(t);
 	}
-
+	/**
+	 * @@author A0130157R
+	 */
 	public String getLastCommand() {
 		return lastCommand;
 	}
-
+	/**
+	 * @@author A0130157R
+	 */
 	private String getRest(String command) {
 		return lastCommand.substring(command.length());
 	}
-
+	/**
+	 * @@author A0130157R
+	 */
 	public void exit() {
 		todos.exit();
 		System.exit(0);

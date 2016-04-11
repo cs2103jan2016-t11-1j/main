@@ -1,4 +1,5 @@
 package view;
+
 /**
  * @@author A0149108E
  */
@@ -245,7 +246,8 @@ public class FlexiArea extends TextFlow {
 	private Text printOther(int i, GuiTodo t, TodoItem todo) {
 		Text txt;
 		String ret = leftPad(i + ". ", 6) + todo.getStatus().name() + ", " + leftPad(t.getStatus().name(), 5)
-				+ " date at " + todo.getDueDate();
+				+ " date at "
+				+ (t.getStatus() == GuiTodo.SoD.DUE ? todo.getDueDate() : todo.getStartDate());
 		txt = new Text(leftPad(ret, padSize) + " || " + todo.getContents() + "\n");
 		txt.setFont(Font.font("monospaced"));
 		if (todo.isDone()) {

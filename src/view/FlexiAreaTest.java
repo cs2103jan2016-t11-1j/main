@@ -56,7 +56,8 @@ public class FlexiAreaTest {
 		starts.add(new GuiTodo(new TodoItem("There"), GuiTodo.SoD.START));
 		starts.add(new GuiTodo(new TodoItem("All"), GuiTodo.SoD.START));
 		return starts;
-	}	
+	}
+
 	public List<GuiTodo> addDues() {
 		List<GuiTodo> starts = new ArrayList<GuiTodo>();
 		starts.add(new GuiTodo(new TodoItem("Hi"), GuiTodo.SoD.DUE));
@@ -99,8 +100,8 @@ public class FlexiAreaTest {
 		assertEquals(s + 1, flexiArea.getChildren().size());
 		assertTrue(flexiArea.getChildren().get(s) instanceof Text);
 		assertTrue(((Text) flexiArea.getChildren().get(s)).getText().equals("Hi There"));
-	}	
-	
+	}
+
 	/**
 	 * Test method for {@link view.FlexiArea#printGuiTodos(java.util.List)}.
 	 */
@@ -119,7 +120,7 @@ public class FlexiAreaTest {
 	 */
 	@Test
 	public void testGetMode() {
-		assertEquals(flexiArea.getMode(), flexiArea.DEFAULT_MODE);
+		assertEquals(flexiArea.getMode(), FlexiArea.DEFAULT_MODE);
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class FlexiAreaTest {
 	 */
 	@Test
 	public void testGetTimeState() {
-		assertEquals(flexiArea.getTimeState(), flexiArea.DEFAULT_TIME);
+		assertEquals(flexiArea.getTimeState(), FlexiArea.DEFAULT_TIME);
 	}
 
 	/**

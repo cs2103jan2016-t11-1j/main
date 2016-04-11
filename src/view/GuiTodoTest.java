@@ -1,4 +1,5 @@
 package view;
+
 /**
  * @@author A0149108E
  */
@@ -15,7 +16,7 @@ import model.TodoItem;
 
 public class GuiTodoTest {
 	List<GuiTodo> todos;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		todos = new ArrayList<GuiTodo>();
@@ -24,10 +25,11 @@ public class GuiTodoTest {
 
 	public void addStandard() {
 		todos.add(new GuiTodo(new TodoItem("hi"), GuiTodo.SoD.FLOATING));
-		todos.add(new GuiTodo(new TodoItem(TodoItem.Status.DONE, -1,
-				new Date(), null, "there", TodoItem.Frequency.NONE), GuiTodo.SoD.START));
-		todos.add(new GuiTodo(new TodoItem(TodoItem.Status.TODO, -1,
-				null, new Date(), "man", TodoItem.Frequency.NONE), GuiTodo.SoD.DUE));
+		todos.add(
+				new GuiTodo(new TodoItem(TodoItem.Status.DONE, -1, new Date(), null, "there", TodoItem.Frequency.NONE),
+						GuiTodo.SoD.START));
+		todos.add(new GuiTodo(new TodoItem(TodoItem.Status.TODO, -1, null, new Date(), "man", TodoItem.Frequency.NONE),
+				GuiTodo.SoD.DUE));
 	}
 
 	@Test
