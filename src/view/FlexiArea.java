@@ -270,11 +270,11 @@ public class FlexiArea extends TextFlow {
 		return mode;
 	}
 
-	public String start() {
+	public String startString() {
 		return start.toString();
 	}
 
-	public String end() {
+	public String endString() {
 		return end.toString();
 	}
 

@@ -42,44 +42,11 @@ public class FlexiAreaTest {
 	}
 
 	/**
-	 * Test method for {@link view.FlexiArea#nextTimeChunk()}.
-	 */
-	@Test
-	public void testNextTimeChunk() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FlexiArea#previousTimeChunk()}.
-	 */
-	@Test
-	public void testPreviousTimeChunk() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for
-	 * {@link view.FlexiArea#setTimeState(view.FlexiArea.TimeState)}.
-	 */
-	@Test
-	public void testSetTimeState() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FlexiArea#refresh()}.
-	 */
-	@Test
-	public void testRefresh() {
-		fail("Not yet implemented");
-	}
-
-	/**
 	 * Test method for {@link view.FlexiArea#setMode(view.FlexiArea.Mode)}.
 	 */
 	@Test
 	public void testSetMode() {
-		flexiArea.setTimeState(FlexiArea.TimeState.ALL);
+		flexiArea.setTimeState(FlexiArea.TimeState.FLOATING);
 		int start = flexiArea.getChildren().size();
 		todoFile.add(1, "Hi there");
 		flexiArea.setMode(FlexiArea.Mode.SORT_START_DATE);
@@ -87,16 +54,28 @@ public class FlexiAreaTest {
 		assertEquals(flexiArea.getChildren().size(), start + 1);
 	}
 
+	public List<GuiTodo> addStarts() {
+		List<GuiTodo> starts = new ArrayList<GuiTodo>();
+		starts.add(new GuiTodo(new TodoItem("Hi"), GuiTodo.SoD.START));
+		starts.add(new GuiTodo(new TodoItem("There"), GuiTodo.SoD.START));
+		starts.add(new GuiTodo(new TodoItem("All"), GuiTodo.SoD.START));
+		return starts;
+	}	
+	public List<GuiTodo> addDues() {
+		List<GuiTodo> starts = new ArrayList<GuiTodo>();
+		starts.add(new GuiTodo(new TodoItem("Hi"), GuiTodo.SoD.DUE));
+		starts.add(new GuiTodo(new TodoItem("There"), GuiTodo.SoD.DUE));
+		starts.add(new GuiTodo(new TodoItem("All"), GuiTodo.SoD.DUE));
+		return starts;
+	}
+
 	/**
 	 * Test method for {@link view.FlexiArea#printStartTodos(java.util.List)}.
 	 */
 	@Test
 	public void testPrintStartTodos() {
-		List<GuiTodo> starts = new ArrayList<GuiTodo>();
-		starts.add(new GuiTodo(new TodoItem("Hi"), GuiTodo.SoD.START));
-		starts.add(new GuiTodo(new TodoItem("There"), GuiTodo.SoD.START));
-		starts.add(new GuiTodo(new TodoItem("All"), GuiTodo.SoD.START));
 		int s = flexiArea.getChildren().size();
+		List<GuiTodo> starts = addStarts();
 		flexiArea.printGuiTodos(starts);
 		assertEquals(s + 3, flexiArea.getChildren().size());
 		assertTrue(flexiArea.getChildren().get(s + 2) instanceof Text);
@@ -107,10 +86,7 @@ public class FlexiAreaTest {
 	 */
 	@Test
 	public void testPrintDueTodos() {
-		List<GuiTodo> starts = new ArrayList<GuiTodo>();
-		starts.add(new GuiTodo(new TodoItem("Hi"), GuiTodo.SoD.DUE));
-		starts.add(new GuiTodo(new TodoItem("There"), GuiTodo.SoD.DUE));
-		starts.add(new GuiTodo(new TodoItem("All"), GuiTodo.SoD.DUE));
+		List<GuiTodo> starts = addDues();
 		int s = flexiArea.getChildren().size();
 		flexiArea.printGuiTodos(starts);
 		assertEquals(s + 3, flexiArea.getChildren().size());
@@ -127,6 +103,19 @@ public class FlexiAreaTest {
 		assertEquals(s + 1, flexiArea.getChildren().size());
 		assertTrue(flexiArea.getChildren().get(s) instanceof Text);
 		assertTrue(((Text) flexiArea.getChildren().get(s)).getText().equals("Hi There"));
+	}	
+	
+	/**
+	 * Test method for {@link view.FlexiArea#printGuiTodos(java.util.List)}.
+	 */
+	@Test
+	public void testPrintGuiTodos() {
+		List<GuiTodo> starts = addStarts();
+		starts.addAll(addDues());
+		int s = flexiArea.getChildren().size();
+		flexiArea.printGuiTodos(starts);
+		assertEquals(s + 6, flexiArea.getChildren().size());
+		assertTrue(flexiArea.getChildren().get(s + 2) instanceof Text);
 	}
 
 	/**
@@ -134,31 +123,7 @@ public class FlexiAreaTest {
 	 */
 	@Test
 	public void testGetMode() {
-		assertEquals(flexiArea.getMode(), FlexiArea.DEFAULT_MODE);
-	}
-
-	/**
-	 * Test method for {@link view.FlexiArea#getNthTodo(int)}.
-	 */
-	@Test
-	public void testGetNthTodo() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FlexiArea#start()}.
-	 */
-	@Test
-	public void testStart() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FlexiArea#end()}.
-	 */
-	@Test
-	public void testEnd() {
-		fail("Not yet implemented");
+		assertEquals(flexiArea.getMode(), flexiArea.DEFAULT_MODE);
 	}
 
 	/**
@@ -166,6 +131,28 @@ public class FlexiAreaTest {
 	 */
 	@Test
 	public void testGetTimeState() {
-		fail("Not yet implemented");
+		assertEquals(flexiArea.getTimeState(), flexiArea.DEFAULT_TIME);
+	}
+
+	/**
+	 * Test method for {@link view.FlexiArea#setTodos(model.TodoFile)}.
+	 */
+	@Test
+	public void testSetTodos() {
+		List<GuiTodo> start = addStarts();
+		flexiArea.printGuiTodos(start);
+		int s = flexiArea.getChildren().size();
+		flexiArea.setTodos(new TodoFile("arst.todo"));
+		assertTrue(flexiArea.getChildren().size() != s);
+	}
+
+	/**
+	 * Test method for {@link view.FlexiArea#toggleDoneLast()}.
+	 */
+	@Test
+	public void testToggleDoneLast() {
+		boolean prev = flexiArea.isDoneLast();
+		flexiArea.toggleDoneLast();
+		assertTrue(prev != flexiArea.isDoneLast());
 	}
 }
