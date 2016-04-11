@@ -26,7 +26,7 @@ public class TodoFile {
 	/**
 	 * @param fileName the path to the todo file
 	 *
-	 * @@author A0149108E; additional contributions by A0135747X
+	 * @@author A0149108E
 	 */
 	public TodoFile(String fileName) {
 		this.fileName = fileName;
@@ -40,7 +40,7 @@ public class TodoFile {
 
 	/**
 	 * @param path the path to the todo file
-	 * @@author A0149108E and A0135747X
+	 * @@author A0135747X
 	 */
 	public void readTodos(String path) {
 		try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
@@ -59,7 +59,7 @@ public class TodoFile {
 	/**
 	 * @param todo String
 	 * @return parsed
-	 * @@author A0149108E; additional contributions by A0135747X
+	 * @@author A0149108E
 	 */
 	private TodoItem parseTodo(String todo) {
 		String[] parts = todo.split(SPLITTER);
