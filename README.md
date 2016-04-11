@@ -9,34 +9,16 @@ Tidy Yard is a system for managing TODOs for power users who don't want to leave
 
 # Usage
 ## Add
-### Normal
-    add Take out the trash
+### Float
+    add White Walker
 ### With a due date
-    add Walk the dog # monday
+    add Melisandre # Apr 8 at 8pm
 ### With a priority
-    add World domination #2 monday
-    add World Peace #1 tuesday
-//## Display 
-    dis
-    > 1. 11/2/2016 #B TODO: World domination
-    > 2.              TODO: Take out the trash
-    > 3. 11/2/2016    TODO: Walk the dog
-//### Only Display TODO items
-    dis t
-    > 1. 11/2/2016 #B TODO: World domination
-//### Display Organized by Priority
-    sortp
-    > 1. 11/2/2016 #A TODO: World Peace
-    > 1. 11/2/2016 #B TODO: World domination
-    > 2.              TODO: Take out the trash
-    > 3. 11/2/2016    TODO: Walk the dog
-//## Change the Status
-    done 2
-    > 1. DONE: Take out the trash
-    done 3
-    > 1. TODO: Take out the trash
-//## Undo
-    mark done 2
-    > 1. DONE: Take out the trash
-    undo
-    > 1. TODO: Take out the trash
+    add Samwell Tarly #2 Apr 9 midnight
+### With a start and end date
+    add #1 Lord Varys Apr 12 from 2pm to 4pm
+##Display
+TODO|||||White Walker
+TODO|||Fri Apr 08 20:00:00 SGT 2016||Melisandre
+TODO|2||Sat Apr 09 00:00:00 SGT 2016||Samwell Tarly
+TODO|1|Tue Apr 12 14:00:00 SGT 2016|Tue Apr 12 16:00:00 SGT 2016||Lord Varys
