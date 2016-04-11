@@ -53,6 +53,7 @@ public class TodoItem {
 		this.startDate = null;
 		this.dueDate = null;
 		this.contents = contents;
+		this.freq = Frequency.NONE;
 	}
 	/**
 	 * @@author A0135747X
