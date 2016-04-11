@@ -4,6 +4,9 @@ package controller;
  */
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.nio.file.Files;
+
 import org.junit.Before;
 
 import model.TodoFile;
@@ -17,6 +20,10 @@ public abstract class OperationTest {
 
 	@Before
 	public void setUp() {
+		File file = new File(TESTNAME);
+		if (file.exists()) {
+			file.delete();
+		}
 		todos = new TodoFile(TESTNAME);
 		item = new TodoItem(TodoItem.Status.TODO, -1, null, null, "This is a test add.", Frequency.NONE);
 	}

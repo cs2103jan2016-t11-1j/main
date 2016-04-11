@@ -1,11 +1,11 @@
 package controller;
-
-import org.junit.Before;
-import org.junit.Test;
-
 /**
  * @author A0149108E
  */
+import org.junit.Before;
+import org.junit.Test;
+
+
 public class AddOperationTest extends OperationTest {
 	AddOperation op;
 

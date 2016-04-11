@@ -1,10 +1,10 @@
 package controller;
-
-import model.TodoFile;
-
 /**
  * @author A0149108E
  */
+import model.TodoFile;
+
+
 public class ChangeDirectoryOperation extends Operation {
 	private CommandInterpreter controller;
 	private TodoFile newTodos;
