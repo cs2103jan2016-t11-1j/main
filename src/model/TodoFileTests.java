@@ -73,5 +73,14 @@ public class TodoFileTests {
 		todos.add(3, new Date(200000000), new Date(230000000), "first entry");
 		todos.add(2, "MAMA! OOOOoooooOOOOHHHHH", new Date(190000000));
 		todos.searchDate(new Date(200000000));
+		todos.clear();
+	}
+	
+	@Test
+	public void TestRecur() {
+		todos.add(3, "Dragon Warrior", new Date(938234));
+		todos.display();
+		todos.updateRecur();
+		todos.display();
 	}
 }
