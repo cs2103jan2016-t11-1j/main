@@ -471,13 +471,17 @@ public class CommandInterpreter {
 			todos.toggle(flexiView.getTodoItem(indx - 1));
 			flexiView.refresh();
 			break;
+		case "p":
 		case "previous":
 		case "prev":
 			flexiView.previousTimeChunk();
+			flexiView.refresh();
 			break;
+		case "n":
 		case "next":
 		case "nxt":
 			flexiView.nextTimeChunk();
+			flexiView.refresh();
 			break;
 		/*
 		 * Update Operations
@@ -731,7 +735,7 @@ public class CommandInterpreter {
 	}
 
 	/**
-	 * @@author A0149108
+	 * @@author A0149108E
 	 */
 	private void displayTime() {
 		switch (flexiView.getTimeState()) {

@@ -172,7 +172,7 @@ public class FlexiArea extends TextFlow {
 		}
 		printGuiTodos(currTodos);
 		if (timeState == TimeState.DAY || timeState == TimeState.WEEK || timeState == TimeState.MONTH) {
-			println("Ending " + start + "\n");
+			println("Ending " + end + "\n");
 		}
 		this.mode = newState;
 	}
