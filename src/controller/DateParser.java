@@ -1,3 +1,4 @@
+
 package controller;
 
 import java.util.Date;
@@ -12,7 +13,9 @@ import com.joestelmach.natty.Parser;
  * Date parser that sets default time to 10 am Parser takes in date only in
  * American format Eg. 12/21 is parsed as 21 December
  */
-
+/**
+ * @@author A0130157R
+ */
 public class DateParser {
 	protected Parser natty = null;
 
