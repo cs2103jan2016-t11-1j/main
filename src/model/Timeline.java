@@ -2,6 +2,11 @@ package model;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author A0135747X
+ *
+ */
 public class Timeline {
 	private ArrayList<TimelineNode> timeline;
 

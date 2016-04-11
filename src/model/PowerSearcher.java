@@ -7,6 +7,12 @@ import java.util.Date;
 import java.util.List;
 import model.TimelineNode.DateType;
 
+/**
+ * 
+ * @author A0135747X
+ *
+ */
+
 public class PowerSearcher {
 	/*
 	 * Free Time Power Search

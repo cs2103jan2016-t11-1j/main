@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * 
+ * @author A0135747X
+ *
+ */
 public class TodoStringSearcher {
 	private final static Logger LOGGER = Logger.getLogger(TodoStringSearcher.class.getName());
 
