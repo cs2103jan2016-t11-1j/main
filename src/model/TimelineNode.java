@@ -3,6 +3,11 @@ package model;
 import java.util.Comparator;
 import java.util.Date;
 
+/**
+ * 
+ * @author A0135747X
+ *
+ */
 public class TimelineNode implements Comparator<TimelineNode> {
 	public enum DateType {
 		START, END

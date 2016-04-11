@@ -5,6 +5,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+
+/**
+ * 
+ * @author A0135747X
+ *
+ */
 public class TodoDateSearcher {
 	private final static Logger LOGGER = Logger.getLogger(TodoDateSearcher.class.getName());
 	private final String[] Month = { "January", "February", "March", "April", "May", "June", "July", "September",

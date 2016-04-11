@@ -5,6 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * 
+ * @author A0135747X
+ *
+ */
 public class TodoTimeSearcher {
 	private final static Logger LOGGER = Logger.getLogger(TodoTimeSearcher.class.getName());
 

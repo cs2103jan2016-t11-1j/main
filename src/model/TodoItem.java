@@ -39,10 +39,13 @@ public class TodoItem {
 		NONE, DAILY, WEEKLY, MONTHLY, YEARLY
 	};
 
+	/**
+	 * @@author A0135747X
+	 */
 	private Frequency freq; // for recurring tasks
 
 	/**
-	 * @@author A0149108E and A0135747X
+	 * @@author A0149108E
 	 */
 	public TodoItem(String contents) {
 		this.status = Status.TODO;
@@ -52,7 +55,7 @@ public class TodoItem {
 		this.contents = contents;
 	}
 	/**
-	 * @@author A0149108E and A0135747X
+	 * @@author A0135747X
 	 */
 	public TodoItem(Status stat, int priority, Date startDate, Date dueDate, String contents, Frequency freq) {
 		this.status = stat;
