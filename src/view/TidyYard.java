@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import model.TodoFile;
 
 public class TidyYard extends Application {
-	private static String defaultFile;
+	private static final String DEFAULT_FILE = "main.todo";
 	private CommandInterpreter controller;
 	private TodoFile todos;
 	private TextField inputField;
@@ -83,7 +83,7 @@ public class TidyYard extends Application {
 		border = new BorderPane();
 		addTopInput();
 		addCommandResult();
-		todos = new TodoFile(defaultFile);
+		todos = new TodoFile(DEFAULT_FILE);
 		addFlexiView();
 		controller = new CommandInterpreter(todos, scroll);
 
